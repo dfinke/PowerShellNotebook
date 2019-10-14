@@ -6,4 +6,34 @@ Describe "Test PS Notebook Content" {
         $actual = Get-Command Get-NotebookContent -ErrorAction SilentlyContinue
         $actual | Should Not Be $Null
     }
+
+    It "testPSNb1.ipynb should have this content" {
+        <#
+            NoteBookName    Type     Source
+            ------------    ----     ------
+            testPSNb1.ipynb code     8+12
+            testPSNb1.ipynb code     8+3
+            testPSNb1.ipynb markdown ## Math...
+        #>
+
+        $actual = Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb"
+
+        $actual.Count | Should Be 3
+
+        $actual[0].NoteBookName | Should Be "testPSNb1.ipynb"
+        $actual[0].Type | Should Be "code"
+        $actual[0].Source | Should Be "8+12"
+
+        $actual[1].NoteBookName | Should Be "testPSNb1.ipynb"
+        $actual[1].Type | Should Be "code"
+        $actual[1].Source | Should Be "8+3"
+
+        $actual[2].NoteBookName | Should Be "testPSNb1.ipynb"
+        $actual[2].Type | Should Be "markdown"
+        $actual[2].Source | Should Be "## Math
+
+- show addition
+- show other
+"
+    }
 }
