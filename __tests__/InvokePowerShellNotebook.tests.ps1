@@ -39,4 +39,8 @@ Describe "Test Invoke PS Notebook" {
         $actual[2].Count | Should Be 10
     }
 
+    # It "Should export this to an Excel file from the testPSExcel.ipynb" {
+    #     $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
+    #     #$actual | Should Be ""
+    # }
 }
