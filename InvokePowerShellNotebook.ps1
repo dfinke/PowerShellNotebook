@@ -21,7 +21,7 @@ function Invoke-PowerShellNotebook {
                     Export-Excel -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
             }
             else {
-                $targetCode | Invoke-Expression
+                , @($targetCode | Invoke-Expression)
             }
         }
 
