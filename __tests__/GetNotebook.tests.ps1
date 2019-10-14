@@ -24,7 +24,7 @@ Describe "Test PS Notebooks" {
 
     It "Should find notebooks in specified directory" {
         $actual = @(Get-Notebook "$PSScriptRoot\GoodNotebooks")
-        $actual.Count | Should Be 2
+        $actual.Count | Should Be 3
     }
 
     It "Should find a notebook by name in specified directory" {

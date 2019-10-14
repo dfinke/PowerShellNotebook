@@ -36,4 +36,30 @@ Describe "Test PS Notebook Content" {
 - show other
 "
     }
+
+    It "testPSNb1.ipynb should have only this code" {
+        $actual = Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb" -JustCode
+
+        $actual.Count | Should Be 2
+        $actual[0].NoteBookName | Should Be "testPSNb1.ipynb"
+        $actual[0].Type | Should Be "code"
+        $actual[0].Source | Should Be "8+12"
+
+        $actual[1].NoteBookName | Should Be "testPSNb1.ipynb"
+        $actual[1].Type | Should Be "code"
+        $actual[1].Source | Should Be "8+3"
+    }
+
+    It "testPSNb1.ipynb should have only this markdown" {
+        $actual = @(Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb" -JustMarkdown)
+
+        $actual[0].NoteBookName | Should Be "testPSNb1.ipynb"
+        $actual[0].Type | Should Be "markdown"
+        $actual[0].Source | Should Be "## Math
+
+- show addition
+- show other
+"
+    }
+
 }
