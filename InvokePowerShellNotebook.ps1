@@ -13,7 +13,8 @@ function Invoke-PowerShellNotebook {
             if ($AsExcel) {
                 if ($idx -eq 0) {
                     $xlfile = $NoteBookFullName -replace ".ipynb", ".xlsx"
-                    $xlfile = "$PSScriptRoot\$xlfile"
+                    #$xlfile = "$PSScriptRoot\$xlfile"
+                    $xlfile = "$($pwd.Path)\$xlfile"
                     Remove-Item $xlfile -ErrorAction SilentlyContinue
                 }
 
@@ -21,9 +22,6 @@ function Invoke-PowerShellNotebook {
                 foreach ($dataSet in , @($targetCode | Invoke-Expression)) {
                     Export-Excel -InputObject $dataSet -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
                 }
-
-                # $targetCode | Invoke-Expression |
-                # Export-Excel -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
             }
             else {
                 , @($targetCode | Invoke-Expression)
