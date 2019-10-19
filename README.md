@@ -24,3 +24,22 @@ Notice the second cell has the results of running `get-process | select company,
 ![](./media/InvokePowerShellNotebookAsExcel.png)
 
 You need to have the PowerShell `ImportExcel` module installed. The module is on the PowerShell Gallery, use `Install-Module ImportExcel` to install it on you machine.
+
+
+# Todo
+
+- [ ] Add Get-Notebook section
+- [ ] Add Get-NotebookContent section
+- [ ] Add create PS Notebook DSL section both AsText and saving to a file
+
+```powershell
+New-PSNotebook -AsText {
+            Add-NotebookCode "8+12"
+            Add-NotebookCode "8+3"
+            Add-NotebookMarkdown @'
+## Math
+
+- show addition
+- show other
+
+```
