@@ -41,5 +41,36 @@ New-PSNotebook -AsText {
 
 - show addition
 - show other
+'@
+}
 
+```
+
+```json
+{
+	"metadata": {
+		"kernelspec": {
+			"name": "powershell",
+			"display_name": "PowerShell"
+		},
+		"language_info": {
+			"name": "powershell",
+			"codemirror_mode": "shell",
+			"mimetype": "text/x-sh",
+			"file_extension": ".ps1"
+		}
+	},
+	"nbformat_minor": 2,
+	"nbformat": 4,
+	"cells": [{
+		"cell_type": "code",
+		"source": "8+12"
+	}, {
+		"cell_type": "code",
+		"source": "8+3"
+	}, {
+		"cell_type": "markdown",
+		"source": "## Math\n\n- show addition\n- show other"
+	}]
+}
 ```
