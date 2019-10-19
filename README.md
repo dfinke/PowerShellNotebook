@@ -8,19 +8,19 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 
 Below is a PowerShell Notebook with three cells, each containing a PowerShell "script".
 
-![](.\media\ADSPowerShellNoteBook.png)
+![](./media/ADSPowerShellNoteBook.png)
 
 Notice the second cell has the results of running `get-process | select company, name, handles -first 10`
 
 
 # Automate the PowerShell Notebook
 
-![](.\media\InvokePowerShellNotebook.png)
+![](./media/InvokePowerShellNotebook.png)
 
 # Bonus Points: Using the `-AsExcel` switch
 
 `Invoke-PowerShellNotebook` sports an `AsExcel` switch. This lets you execute each cell in the PowerShell notebook and the function exports the results to a separate sheet in an Excel file.
 
-![](.\media\InvokePowerShellNotebookAsExcel.png)
+![](./media/InvokePowerShellNotebookAsExcel.png)
 
 You need to have the PowerShell `ImportExcel` module installed. The module is on the PowerShell Gallery, use `Install-Module ImportExcel` to install it on you machine.
