@@ -1,5 +1,3 @@
-$script:codeBlocks = @()
-
 function Add-NotebookCode {
     param($code)
 
@@ -24,6 +22,8 @@ function New-PSNotebook {
         $nbFileName,
         [Switch]$AsText
     )
+
+    $script:codeBlocks = @()
 
     &$sb
 
