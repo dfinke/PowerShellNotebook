@@ -39,11 +39,27 @@ Describe "Test Invoke PS Notebook" {
         $actual[2].Count | Should Be 10
     }
 
-    It "Should export this to an Excel file from the testPSExcel.ipynb" {
+    It "Should " {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
-        $actual | Should Be "$PSScriptRoot\GoodNotebooks\testPSExcel.xlsx"
 
-        $sheets = Get-ExcelSheetInfo .\GoodNotebooks\testPSExcel.xlsx
+        $actualPath = Split-Path $actual
+        $expectedPath = $pwd.path
+
+        $actualPath | Should Be $expectedPath
+
+        $actualExcelFileName = Split-Path $actual -Leaf
+        $expectedExcelFileName = "testPSExcel.xlsx"
+
+        $actualExcelFileName | Should Be $expectedExcelFileName
+
+        Remove-Item $actual #-ErrorAction SilentlyContinue
+    }
+
+    It "Should export to an Excel file to cwd from the testPSExcel.ipynb" {
+        $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
+        $actual | Should Be "$PSScriptRoot\testPSExcel.xlsx"
+
+        $sheets = Get-ExcelSheetInfo $actual
 
         $sheets.Count | Should Be 3
 
