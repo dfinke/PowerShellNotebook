@@ -19,9 +19,11 @@ function Invoke-PowerShellNotebook {
                     Remove-Item $xlfile -ErrorAction SilentlyContinue
                 }
 
-                $uniqueName = "Sheet$($idx+1)"
                 foreach ($dataSet in , @($targetCode | Invoke-Expression)) {
-                    Export-Excel -InputObject $dataSet -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
+                    if ($dataSet) {
+                        $uniqueName = "Sheet$($idx)"
+                        Export-Excel -InputObject $dataSet -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
+                    }
                 }
             }
             else {
