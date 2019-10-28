@@ -63,9 +63,9 @@ Describe "Test Invoke PS Notebook" {
 
         $sheets.Count | Should Be 3
 
-        $sheets[0].Name | Should Be 'Sheet0'
-        $sheets[1].Name | Should Be 'Sheet1'
-        $sheets[2].Name | Should Be 'Sheet2'
+        $sheets[0].Name | Should Be 'Sheet1'
+        $sheets[1].Name | Should Be 'Sheet2'
+        $sheets[2].Name | Should Be 'Sheet3'
 
         Remove-Item $actual -ErrorAction SilentlyContinue
     }

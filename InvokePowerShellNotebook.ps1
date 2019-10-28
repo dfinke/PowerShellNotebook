@@ -8,6 +8,7 @@ function Invoke-PowerShellNotebook {
 
     Process {
         $codeBlocks = Get-NotebookContent $NoteBookFullName -JustCode
+        $SheetCount = 0
         for ($idx = 0; $idx -lt $codeBlocks.Count; $idx++) {
             $targetCode = $codeblocks[$idx].source
             if ($AsExcel) {
@@ -21,7 +22,9 @@ function Invoke-PowerShellNotebook {
 
                 foreach ($dataSet in , @($targetCode | Invoke-Expression)) {
                     if ($dataSet) {
-                        $uniqueName = "Sheet$($idx)"
+                        #$uniqueName = "Sheet$($idx)"
+                        $SheetCount++
+                        $uniqueName = "Sheet$($SheetCount)"
                         Export-Excel -InputObject $dataSet -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
                     }
                 }
