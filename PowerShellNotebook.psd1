@@ -88,7 +88,7 @@ Lets you automate PowerShell Notebooks with PowerShell at the command, exports t
             Category     = "PowerShell Notebook"
 
             # Keyword tags to help users find this module via navigations and search.
-            Tags         = @("PowerShell", "Notebook", "Jupyter", "Azure", "Azure Data Studio")
+            Tags         = @("PowerShell", "Notebook", "Jupyter", "Azure", "AzureDataStudio")
 
             # The web address of an icon which can be used in galleries to represent this module
             #IconUri = "http://pesterbdd.com/images/Pester.png"
