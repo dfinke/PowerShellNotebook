@@ -8,9 +8,14 @@ function Invoke-PowerShellNotebook {
 
     Process {
         $codeBlocks = Get-NotebookContent $NoteBookFullName -JustCode
+        $codeBlockCount = $codeBlocks.Count
         $SheetCount = 0
-        for ($idx = 0; $idx -lt $codeBlocks.Count; $idx++) {
+
+        for ($idx = 0; $idx -lt $codeBlockCount; $idx++) {
             $targetCode = $codeblocks[$idx].source
+
+            Write-Progress -Activity "Executing PowerShell code block - [$(Get-Date)]" -Status (-join $targetCode) -PercentComplete (($idx + 1) / $codeBlockCount * 100)
+
             if ($AsExcel) {
                 if ($idx -eq 0) {
                     $notebookFileName = Split-Path $NoteBookFullName -Leaf
@@ -22,7 +27,6 @@ function Invoke-PowerShellNotebook {
 
                 foreach ($dataSet in , @($targetCode | Invoke-Expression)) {
                     if ($dataSet) {
-                        #$uniqueName = "Sheet$($idx)"
                         $SheetCount++
                         $uniqueName = "Sheet$($SheetCount)"
                         Export-Excel -InputObject $dataSet -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
