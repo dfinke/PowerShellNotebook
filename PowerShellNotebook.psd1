@@ -4,7 +4,7 @@
     RootModule        = 'PowerShellNoteBook.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.0.0'
+    ModuleVersion     = '1.0.1'
 
     # ID used to uniquely identify this module
     GUID              = '2ab0cb25-b339-4726-8a2a-349ca1114bd4'
@@ -20,7 +20,7 @@
 
     # Description of the functionality provided by this module
     Description       = @'
-Lets you automate PowerShell Notebooks with PowerShell at the command, exports to Excel and more.
+Lets you automate PowerShell Notebooks with PowerShell at the command line, exports to Excel and more.
 '@
 
     # Minimum version of the Windows PowerShell engine required by this module
