@@ -17,11 +17,15 @@ function Invoke-PowerShellNotebook {
             Write-Progress -Activity "Executing PowerShell code block - [$(Get-Date)]" -Status (-join $targetCode) -PercentComplete (($idx + 1) / $codeBlockCount * 100)
 
             if ($AsExcel) {
+                if (!(Get-Module -ListAvailable ImportExcel -ErrorAction SilentlyContinue)) {
+                    throw "This feature requires the ImportExcel PowerShell module. Use 'Install-Module -Name ImportExcel' to get it from the PS Gallery."
+                }
+
                 if ($idx -eq 0) {
                     $notebookFileName = Split-Path $NoteBookFullName -Leaf
                     $xlFileName = $notebookFileName -replace ".ipynb", ".xlsx"
 
-                    $xlfile = "{0}\{1}" -f $pwd.Path, $xlFileName
+                    $xlfile = " { 0 }\ { 1 }" -f $pwd.Path, $xlFileName
                     Remove-Item $xlfile -ErrorAction SilentlyContinue
                 }
 
