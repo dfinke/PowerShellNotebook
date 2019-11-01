@@ -25,7 +25,7 @@ function Invoke-PowerShellNotebook {
                     $notebookFileName = Split-Path $NoteBookFullName -Leaf
                     $xlFileName = $notebookFileName -replace ".ipynb", ".xlsx"
 
-                    $xlfile = " { 0 }\ { 1 }" -f $pwd.Path, $xlFileName
+                    $xlfile = "{0}\{1}" -f $pwd.Path, $xlFileName
                     Remove-Item $xlfile -ErrorAction SilentlyContinue
                 }
 
