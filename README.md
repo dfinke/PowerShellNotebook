@@ -4,6 +4,13 @@ This PowerShell module lets you automate the PowerShell notebooks you can create
 
 This module includes the function `Invoke-PowerShellNotebook` which enables you to run the *cells* inside the PowerShell notebook.
 
+| Environment                   | Master                                                                                                                                                                                                                                         |
+|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows                       | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=Windows)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master)       |
+| Windows (Core)                | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=WindowsPSCore)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master) |
+| Ubuntu                        | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=Ubuntu)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master)        |
+| macOS                         | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=macOS)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master)         |
+
 # A PowerShell Notebook with Cells
 
 Below is a PowerShell Notebook with three cells, each containing a PowerShell "script".
