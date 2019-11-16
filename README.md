@@ -1,7 +1,5 @@
 # PowerShell Notebook
 
-This PowerShell module lets you automate the PowerShell notebooks you can create in the Azure Data Studio. Check out the *SQL DBA with A Beard* [PowerShell Notebooks in Azure Data Studio](https://sqldbawithabeard.com/2019/10/17/powershell-notebooks-in-azure-data-studio/).
-
 This module includes the function `Invoke-PowerShellNotebook` which enables you to run the *cells* inside the PowerShell notebook.
 
 # A PowerShell Notebook with Cells
