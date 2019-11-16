@@ -7,7 +7,7 @@ function Invoke-PowerShellNotebook {
     )
 
     Process {
-        $codeBlocks = Get-NotebookContent $NoteBookFullName -JustCode
+        $codeBlocks = @(Get-NotebookContent $NoteBookFullName -JustCode)
         $codeBlockCount = $codeBlocks.Count
         $SheetCount = 0
 

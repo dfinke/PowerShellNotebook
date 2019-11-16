@@ -69,4 +69,34 @@ Describe "Test Invoke PS Notebook" {
 
         Remove-Item $actual -ErrorAction SilentlyContinue
     }
+
+    It "Should read and execute a single code block" {
+        $actual = @(Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\SingleCodeBlock.ipynb")
+
+        $actual.Count | Should Be 1
+
+        $record = $actual[0]
+        $record[0].Region | Should BeExactly "South"
+        $record[0].Item | Should BeExactly "lime"
+        $record[0].TotalSold | Should Be 20
+
+        $record[1].Region | Should BeExactly "West"
+        $record[1].Item | Should BeExactly "melon"
+        $record[1].TotalSold | Should Be 76
+    }
+
+    # It "create xl file" {
+
+    #     $fileName = "SingleCodeBlock.xlsx"
+    #     $fullName = "$($pwd.Path)\$($fileName)"
+    #     $actual = @(Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\SingleCodeBlock.ipynb" -AsExcel)
+
+    #     $actual | should be $fullName
+
+    #     $data = Import-Excel $fullName
+
+    #     $data.Count | Should Be 2
+
+    #     Remove-Item $actual
+    # }
 }
