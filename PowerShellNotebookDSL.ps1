@@ -19,7 +19,7 @@ function Add-NotebookMarkdown {
 function New-PSNotebook {
     param(
         [Scriptblock]$sb,
-        $nbFileName,
+        $NoteBookName,
         [Switch]$AsText
     )
 
@@ -53,7 +53,7 @@ function New-PSNotebook {
         return $result
     }
     else {
-        $result > $nbFileName
+        $result > NoteBookName
     }
 
 }
