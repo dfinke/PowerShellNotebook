@@ -23,15 +23,16 @@ Notice the second cell has the results of running `get-process | select company,
 
 You need to have the PowerShell `ImportExcel` module installed. The module is on the PowerShell Gallery, use `Install-Module ImportExcel` to install it on you machine.
 
+# A Little Language to Create PowerShell Notebooks
+## PowerShell Little Language
 
-# Todo
+### Create and Save a PowerShell Notebook
 
-- [ ] Add Get-Notebook section
-- [ ] Add Get-NotebookContent section
-- [ ] Add create PS Notebook DSL section both AsText and saving to a file
+You can also create PowerShell Notebooks outside if Azure Data Studio with this module. Here is an example.
+It creates two code blocks and a markdown block, and saves it to a file `C:\Temp\test.ipnyb`.
 
 ```powershell
-New-PSNotebook -AsText {
+New-PSNotebook -NoteBookName c:\temp\test.ipynb {
             Add-NotebookCode "8+12"
             Add-NotebookCode "8+3"
             Add-NotebookMarkdown @'
@@ -44,31 +45,39 @@ New-PSNotebook -AsText {
 
 ```
 
+## Result - A PowerShell Notebook
+
+You can do a `Get-Content c:\temp\test.ipynb`, here is the result.
+
 ```json
 {
-	"metadata": {
-		"kernelspec": {
-			"name": "powershell",
-			"display_name": "PowerShell"
-		},
-		"language_info": {
-			"name": "powershell",
-			"codemirror_mode": "shell",
-			"mimetype": "text/x-sh",
-			"file_extension": ".ps1"
-		}
-	},
-	"nbformat_minor": 2,
-	"nbformat": 4,
-	"cells": [{
-		"cell_type": "code",
-		"source": "8+12"
-	}, {
-		"cell_type": "code",
-		"source": "8+3"
-	}, {
-		"cell_type": "markdown",
-		"source": "## Math\n\n- show addition\n- show other"
-	}]
+    "metadata": {
+        "kernelspec": {
+            "name": "powershell",
+            "display_name": "PowerShell"
+        },
+        "language_info": {
+            "name": "powershell",
+            "codemirror_mode": "shell",
+            "mimetype": "text/x-sh",
+            "file_extension": ".ps1"
+        }
+    },
+    "nbformat_minor": 2,
+    "nbformat": 4,
+    "cells": [
+        {
+            "cell_type": "code",
+            "source": "8+12"
+        },
+        {
+            "cell_type": "code",
+            "source": "8+3"
+        },
+        {
+            "cell_type": "markdown",
+            "source": "## Math\n\n- show addition\n- show other"
+        }
+    ]
 }
 ```
