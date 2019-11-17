@@ -53,7 +53,7 @@ function New-PSNotebook {
         return $result
     }
     else {
-        $result > NoteBookName
+        $result > $NoteBookName
     }
 
 }

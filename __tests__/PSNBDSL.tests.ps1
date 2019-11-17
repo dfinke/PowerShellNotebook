@@ -41,4 +41,15 @@ Describe "Test Invoke PS Notebook" {
 - show other
 "
     }
+
+    It "Save file" {
+        $fullName = "TestDrive:\test.ipnyb"
+
+        New-PSNotebook -NoteBookName $fullName {
+            Add-NotebookCode "8+12"
+        }
+
+        $r = Test-Path $fullName
+        $r | should be $true
+    }
 }
