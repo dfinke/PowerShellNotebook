@@ -33,8 +33,9 @@ It creates two code blocks and a markdown block, and saves it to a file `C:\Temp
 
 ```powershell
 New-PSNotebook -NoteBookName c:\temp\test.ipynb {
-            Add-NotebookCode "8+12"
-            Add-NotebookCode "8+3"
+            Add-NotebookCode '$a=8'
+            Add-NotebookCode '$a+12'
+            Add-NotebookCode '$a+3'
             Add-NotebookMarkdown @'
 ## Math
 
@@ -45,39 +46,9 @@ New-PSNotebook -NoteBookName c:\temp\test.ipynb {
 
 ```
 
-## Result - A PowerShell Notebook
+### Open the PowerShell Notebook in Azure Data Studio
 
-You can do a `Get-Content c:\temp\test.ipynb`, here is the result.
+You can open `c:\temp\test.ipynb` in Azure Data Studio and click `Run Cells`
 
-```json
-{
-    "metadata": {
-        "kernelspec": {
-            "name": "powershell",
-            "display_name": "PowerShell"
-        },
-        "language_info": {
-            "name": "powershell",
-            "codemirror_mode": "shell",
-            "mimetype": "text/x-sh",
-            "file_extension": ".ps1"
-        }
-    },
-    "nbformat_minor": 2,
-    "nbformat": 4,
-    "cells": [
-        {
-            "cell_type": "code",
-            "source": "8+12"
-        },
-        {
-            "cell_type": "code",
-            "source": "8+3"
-        },
-        {
-            "cell_type": "markdown",
-            "source": "## Math\n\n- show addition\n- show other"
-        }
-    ]
-}
-```
+![image](./media/CreateNotebookUsingTheDSL.png)
+
