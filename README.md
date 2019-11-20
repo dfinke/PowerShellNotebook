@@ -10,7 +10,6 @@ Below is a PowerShell Notebook with three cells, each containing a PowerShell "s
 
 Notice the second cell has the results of running `get-process | select company, name, handles -first 10`
 
-
 # Automate the PowerShell Notebook
 
 ![](./media/InvokePowerShellNotebook.png)
@@ -52,3 +51,30 @@ You can open `c:\temp\test.ipynb` in Azure Data Studio and click `Run Cells`
 
 ![image](./media/CreateNotebookUsingTheDSL.png)
 
+### Convert a *demo.txt* file to a PowerShell Notebook
+
+If you've used `start-demo.ps1` to setup PowerShell demos, this function will convert that format into a PowerShell Notebook.
+
+```powershell
+ConvertTo-PowerShellNoteBook .\demo.txt .\demo.ipynb
+```
+
+Converts this to a PowerShell Notebook.
+
+```text
+# Get first 10 process
+ps | select -first 10
+
+# Get first 10 services
+gsv | select -first 10
+
+# Create a function
+function SayHello($p) {"Hello $p"}
+
+# Use the function
+SayHello World
+```
+
+#### Here it is in Azure Data Studio
+
+![](./media/ConvertedFromDemoText.png)

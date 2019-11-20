@@ -1,0 +1,11 @@
+﻿# Get first 10 process
+ps | select -first 10
+
+# Get first 10 services
+gsv | select -first 10
+
+# Create a function
+function SayHello($p) {"Hello $p"}
+
+# Use the function
+SayHello World
