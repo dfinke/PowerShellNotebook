@@ -1,10 +1,53 @@
+class PSNotebookRunspace {
+    $Runspace
+    $PowerShell
+
+    PSNotebookRunspace() {
+        $this.Runspace = [runspacefactory]::CreateRunspace()
+        $this.PowerShell = [powershell]::Create()
+        $this.PowerShell.runspace = $this.Runspace
+        $this.Runspace.Open()
+    }
+
+    [object]Invoke($code) {
+        $this.PowerShell.AddScript([scriptblock]::Create($code))
+        $null = $this.PowerShell.AddCommand("Out-String")
+        return $this.PowerShell.Invoke()
+    }
+
+    [void]Close() {
+        $this.Runspace.Close()
+    }
+}
+
+function New-PSNotebookRunspace {
+    [PSNotebookRunspace]::new()
+}
+
 function Add-NotebookCode {
-    param($code)
+    param(
+        $code,
+        $outputText = ""
+    )
+
+    if ($script:IncludeCodeResults) {
+        $outputText = $Script:PSNotebookRunspace.Invoke($code)
+    }
 
     $script:codeBlocks += [PSCustomObject][Ordered]@{
         'cell_type' = 'code'
         'source'    = $code
-    } | ConvertTo-Json
+        'metadata'  = @{
+            'azdata_cell_guid' = '{0}' -f (New-Guid).Guid
+        }
+        'outputs'   = @(
+            @{
+                "output_type" = "stream"
+                "name"        = "stdout"
+                "text"        = $outputText
+            }
+        )
+    } | ConvertTo-Json -Depth 2
 }
 
 function Add-NotebookMarkdown {
@@ -20,10 +63,15 @@ function New-PSNotebook {
     param(
         [Scriptblock]$sb,
         $NoteBookName,
-        [Switch]$AsText
+        [Switch]$AsText,
+        [Switch]$IncludeCodeResults
     )
 
     $script:codeBlocks = @()
+    if ($IncludeCodeResults) {
+        $Script:IncludeCodeResults = $IncludeCodeResults
+        $Script:PSNotebookRunspace = New-PSNotebookRunspace
+    }
 
     &$sb
 
@@ -48,6 +96,12 @@ function New-PSNotebook {
     ]
 }
 "@
+
+    $Script:IncludeCodeResults = $false
+    if ($Script:PSNotebookRunspace) {
+        $Script:PSNotebookRunspace.Close()
+        $Script:PSNotebookRunspace = $null
+    }
 
     if ($AsText) {
         return $result
