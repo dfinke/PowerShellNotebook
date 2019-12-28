@@ -1,4 +1,11 @@
 ﻿function Convert-MarkdownToNoteBook {
+    <#
+        .Example
+        Convert-MarkdownToNoteBook .\demo.md
+
+        .Example
+        Convert-MarkdownToNoteBook .\demo.md -watch
+    #>
     param(
         $filename,
         [Switch]$watch
