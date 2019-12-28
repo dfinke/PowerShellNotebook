@@ -2,6 +2,20 @@
 
 This module includes the function `Invoke-PowerShellNotebook` which enables you to run the *cells* inside the PowerShell notebook.
 
+# Convert a Markdown File to a PowerShell Notebook
+
+## Check out the [Video Here](http://bit.ly/2SylBm4)
+
+In a nutshell.
+
+1. Author your markdown with `Chapter Start and End`, then use fence blocks ``` to indic
+1. In Azure Data Studio PowerShell console, run `Convert-MarkdownToNoteBook .\demo.md -watch`
+    - When you save the file, `Convert-MarkdownToNoteBook` detects and auto converts it to a `PowerShell Notebook`
+1. The converted Interactive PowerShell Notebook. *Note*: `Convert-MarkdownToNoteBook` also runs the code from the markdown file and includes the results.
+
+![](./media/CvtFromMarkdown.png)
+
+
 # A PowerShell Notebook with Cells
 
 Below is a PowerShell Notebook with three cells, each containing a PowerShell "script".
