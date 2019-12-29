@@ -2,6 +2,10 @@
 
 This module includes the function `Invoke-PowerShellNotebook` which enables you to run the *cells* inside the PowerShell notebook.
 
+## Integration Status
+
+[![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
+
 # Convert a Markdown File to a PowerShell Notebook
 
 ## Check out the [Video Here](http://bit.ly/2SylBm4)
