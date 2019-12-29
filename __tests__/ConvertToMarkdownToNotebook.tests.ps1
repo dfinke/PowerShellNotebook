@@ -52,4 +52,30 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
 
         $psnb.cells[3].cell_type | should be markdown
     }
+
+    It "Check the PowerShell fence block NB content" {
+        $sourceMD = "$PSScriptRoot\samplemarkdown\demoPowerShellFenceBlock.md"
+        $nbFile = "$PSScriptRoot\samplemarkdown\demoPowerShellFenceBlock.ipynb"
+
+        Convert-MarkdownToNoteBook -filename $sourceMD
+
+        (Test-Path $nbFile) | should be $true
+
+        $psnb = Get-Content $nbFile | ConvertFrom-Json
+
+        $psnb.cells.count | should be 4
+
+        $psnb.cells[0].cell_type | should be markdown
+        $psnb.cells[0].source | should beexactly '# Chapter 1'
+
+        $psnb.cells[1].cell_type | should be markdown
+        $psnb.cells[1].source.trim() | should beexactly 'This is `addition`'
+
+        $psnb.cells[2].cell_type | should be code
+        $psnb.cells[2].source.trim() | should beexactly "40 + 2"
+        $psnb.cells[2].outputs.text.trim() | should beexactly "42"
+
+        $psnb.cells[3].cell_type | should be markdown
+        Remove-Item $nbFile -ErrorAction SilentlyContinue
+    }
 }

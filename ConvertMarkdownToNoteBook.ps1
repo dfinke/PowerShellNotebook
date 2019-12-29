@@ -68,7 +68,7 @@
             $inCodeBlock = $false
 
             switch ($chapters.$chapter) {
-                '```ps' {
+                { $_ -eq '```ps' -or $_ -eq '```powershell' } {
                     Add-NotebookMarkdown -markdown (-join $markDown)
                     $code = @()
                     $inCodeBlock = $true
