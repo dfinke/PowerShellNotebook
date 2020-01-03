@@ -17,6 +17,23 @@ In a nutshell.
     - When you save the file, `Convert-MarkdownToNoteBook` detects and auto converts it to a `PowerShell Notebook`
 1. The converted Interactive PowerShell Notebook. *Note*: `Convert-MarkdownToNoteBook` also runs the code from the markdown file and includes the results.
 
+### Exclude Results
+
+Sometimes you don't the results to be included in the converted PowerShell Notebook.
+
+You can suppress evaluating the PowerShell code being run and the results being included by have the following comment as the first line in the fence block.
+
+`# Exclude Results`
+
+```
+    ```ps
+    # Exclude Results
+    1+1
+    ```
+```
+
+This will include the `1+1` in the interactive notebook, but will **not** evaluate the PowerShell statement and include it.
+
 ![](./media/CvtFromMarkdown.png)
 
 
