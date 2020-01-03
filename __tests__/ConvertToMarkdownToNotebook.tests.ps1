@@ -78,4 +78,24 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
         $psnb.cells[3].cell_type | should be markdown
         Remove-Item $nbFile -ErrorAction SilentlyContinue
     }
+
+    It "Should exclude results from PowerShell Notebook" {
+        $sourceMD = "$PSScriptRoot\samplemarkdown\excludeResults.md"
+        Convert-MarkdownToNoteBook -filename $sourceMD
+        $expectedOutFileName = "$PSScriptRoot\samplemarkdown\excludeResults.ipynb"
+
+        (Test-Path $expectedOutFileName) | should be $true
+
+        $psnb = Get-Content $expectedOutFileName | ConvertFrom-Json
+
+        $codeBlocks = $psnb.cells | Where-Object { $_.cell_type -eq 'code' }
+        $codeBlocks.count | should be 3
+
+        $codeBlocks[0].outputs.text.length | should be 0
+        $codeBlocks[1].outputs.text.length | should be 0
+        $codeBlocks[2].outputs.text.length | should be 3
+
+        Remove-Item $expectedOutFileName -Force -ErrorAction SilentlyContinue
+    }
 }
+

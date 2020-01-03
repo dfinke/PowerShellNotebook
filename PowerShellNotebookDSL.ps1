@@ -30,8 +30,15 @@ function Add-NotebookCode {
         $outputText = ""
     )
 
-    if ($script:IncludeCodeResults) {
-        $outputText = $Script:PSNotebookRunspace.Invoke($code)
+    $pattern = "^(?i)#(\s+)?exclude(\s+)?results(?-i)"
+    if ($code -match $pattern) {
+        # skip including code results
+        $code = $code -replace $pattern, ""
+    }
+    else {
+        if ($script:IncludeCodeResults) {
+            $outputText = $Script:PSNotebookRunspace.Invoke($code)
+        }
     }
 
     $script:codeBlocks += [PSCustomObject][Ordered]@{
