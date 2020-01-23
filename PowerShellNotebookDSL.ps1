@@ -114,7 +114,8 @@ function New-PSNotebook {
         return $result
     }
     else {
-        $result > $NoteBookName
+        #$result > $NoteBookName
+        $result | Set-Content -Encoding UTF8 -Path $NoteBookName
     }
 
 }
