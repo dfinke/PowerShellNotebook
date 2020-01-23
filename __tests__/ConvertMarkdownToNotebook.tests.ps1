@@ -97,5 +97,28 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
 
         Remove-Item $expectedOutFileName -Force -ErrorAction SilentlyContinue
     }
-}
 
+    It "Should convert more than one chapter" {
+        $sourceMD = "$PSScriptRoot\MultipleChapters\MultipleChapters.md"
+
+        Convert-MarkdownToNoteBook -filename $sourceMD
+
+        $expectedOutFileName = "$PSScriptRoot\MultipleChapters\MultipleChapters.ipynb"
+
+        (Test-Path $expectedOutFileName) | should be $true
+
+        $psnb = Get-Content $expectedOutFileName | ConvertFrom-Json
+
+        $markdownBlocks = $psnb.cells | Where-Object { $_.cell_type -eq 'markdown' }
+        $markdownBlocks.count | should be 5
+
+        $markdownBlocks[0].source | should be "# Chapter 1"
+        $markdownBlocks[2].source | should be "# SUMMARY`r`n"
+        $markdownBlocks[3].source | should be "# Chapter 2"
+
+        $result = $markdownBlocks[4].source -notmatch "^# SUMMARY"
+        $result | should be $true
+
+        Remove-Item $expectedOutFileName -Force -ErrorAction SilentlyContinue
+    }
+}

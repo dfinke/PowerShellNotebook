@@ -90,6 +90,7 @@
 
             if ($markDown) {
                 Add-NotebookMarkdown -markdown (-join $markDown)
+                $markDown = @()
             }
         }
     }
