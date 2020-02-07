@@ -39,7 +39,7 @@ Describe "Test Invoke PS Notebook" {
         $actual[2].Count | Should Be 10
     }
 
-    It "Should " {
+    It "Should create and Excel file" {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
 
         $actualPath = Split-Path $actual
@@ -85,18 +85,17 @@ Describe "Test Invoke PS Notebook" {
         $record[1].TotalSold | Should Be 76
     }
 
-    # It "create xl file" {
+    It "Should read and execute a code block stored as a string" {
+        $actual = @(Invoke-PowerShellNotebook "$PSScriptRoot\MultiLineSourceNotebooks\MultiLineSourceAsString.ipynb")
 
-    #     $fileName = "SingleCodeBlock.xlsx"
-    #     $fullName = "$($pwd.Path)\$($fileName)"
-    #     $actual = @(Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\SingleCodeBlock.ipynb" -AsExcel)
+        $actual[0][0] | Should Be 1
+        $actual[0][9] | Should Be 10
+    }
 
-    #     $actual | should be $fullName
+    It "Should read and execute a code block stored as an array" {
+        $actual = @(Invoke-PowerShellNotebook "$PSScriptRoot\MultiLineSourceNotebooks\MultiLineSourceAsArray.ipynb")
 
-    #     $data = Import-Excel $fullName
-
-    #     $data.Count | Should Be 2
-
-    #     Remove-Item $actual
-    # }
+        $actual[0][0] | Should Be 1
+        $actual[0][9] | Should Be 10
+    }
 }

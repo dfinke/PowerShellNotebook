@@ -12,7 +12,12 @@ function Invoke-PowerShellNotebook {
         $SheetCount = 0
 
         for ($idx = 0; $idx -lt $codeBlockCount; $idx++) {
-            $targetCode = $codeblocks[$idx].source
+
+            if ($codeblocks[$idx].source.GetType().BaseType.Name -eq "Array") {
+                $targetCode = $codeblocks[$idx].source -join "`n"
+            } else {
+                $targetCode = $codeblocks[$idx].source
+            }
 
             Write-Progress -Activity "Executing PowerShell code block - [$(Get-Date)]" -Status (-join $targetCode) -PercentComplete (($idx + 1) / $codeBlockCount * 100)
 
