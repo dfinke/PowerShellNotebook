@@ -1,9 +1,15 @@
 ﻿function Convert-MarkdownToNoteBook {
     <#
+        .SYNOPSIS
+
+        .Description
+
         .Example
+        # converts .\demo.md to demo.ipynb
         Convert-MarkdownToNoteBook .\demo.md
 
         .Example
+        # converts .\demo.md to demo.ipynb and watches the file for changes and automatically converts it again
         Convert-MarkdownToNoteBook .\demo.md -watch
     #>
     param(

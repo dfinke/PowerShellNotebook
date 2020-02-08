@@ -1,4 +1,17 @@
 function Invoke-PowerShellNotebook {
+    <#
+        .SYNOPSIS
+        Invoke-PowerShellNotebook executes all the PowerShell code blocks in a PowerShell Notebook.
+
+        .Example
+        Invoke-PowerShellNotebook .\SingleCodeBlock.ipynb
+
+Region Item  TotalSold
+------ ----  ---------
+South  lime  20
+West   melon 76
+
+    #>
     param(
         [Parameter(ValueFromPipelineByPropertyName)]
         $NoteBookFullName,
@@ -15,7 +28,8 @@ function Invoke-PowerShellNotebook {
 
             if ($codeblocks[$idx].source.GetType().BaseType.Name -eq "Array") {
                 $targetCode = $codeblocks[$idx].source -join "`n"
-            } else {
+            }
+            else {
                 $targetCode = $codeblocks[$idx].source
             }
 
