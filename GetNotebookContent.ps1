@@ -43,7 +43,7 @@ fsharp.ipynb code {printfn "hello world"}
             [PSCustomObject][Ordered]@{
                 NoteBookName = Split-Path -Leaf $NoteBookFullName
                 Type         = $_.'cell_type'
-                Source       = $_.source
+                Source       = -join $_.source
             }
         }
     }
