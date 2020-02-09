@@ -81,7 +81,7 @@ function Add-NotebookCode {
 
     $script:codeBlocks += [PSCustomObject][Ordered]@{
         'cell_type' = 'code'
-        'source'    = $code
+        'source'    = @($code)
         'metadata'  = @{
             'azdata_cell_guid' = '{0}' -f (New-Guid).Guid
         }
@@ -134,7 +134,8 @@ function Add-NotebookMarkdown {
 
     $script:codeBlocks += [PSCustomObject][Ordered]@{
         'cell_type' = 'markdown'
-        'source'    = $markdown
+        'metadata'  = [PSCustomObject]@{ }
+        'source'    = @($markdown)
     } | ConvertTo-Json -Compress
 }
 
@@ -250,7 +251,6 @@ function New-PSNotebook {
         return $result
     }
     else {
-        #$result > $NoteBookName
         $result | Set-Content -Encoding UTF8 -Path $NoteBookName
     }
 

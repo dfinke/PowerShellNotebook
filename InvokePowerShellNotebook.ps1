@@ -26,12 +26,7 @@ West   melon 76
 
         for ($idx = 0; $idx -lt $codeBlockCount; $idx++) {
 
-            if ($codeblocks[$idx].source.GetType().BaseType.Name -eq "Array") {
-                $targetCode = $codeblocks[$idx].source -join "`n"
-            }
-            else {
-                $targetCode = $codeblocks[$idx].source
-            }
+            $targetCode = $codeblocks[$idx].source
 
             Write-Progress -Activity "Executing PowerShell code block - [$(Get-Date)]" -Status (-join $targetCode) -PercentComplete (($idx + 1) / $codeBlockCount * 100)
 

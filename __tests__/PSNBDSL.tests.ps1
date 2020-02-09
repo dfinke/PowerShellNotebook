@@ -52,4 +52,76 @@ Describe "Test Invoke PS Notebook" {
         $r = Test-Path $fullName
         $r | should be $true
     }
+
+    It "Should have correct top level metadata" {
+        $actual = ConvertFrom-Json (New-PSNotebook -AsText { })
+        <#
+                {
+                    "metadata": {
+                        "kernelspec": {
+                            "name": "powershell",
+                            "display_name": "PowerShell"
+                        },
+                        "language_info": {
+                            "name": "powershell",
+                            "codemirror_mode": "shell",
+                            "mimetype": "text/x-sh",
+                            "file_extension": ".ps1"
+                        }
+                    },
+                    "nbformat_minor": 2,
+                    "nbformat": 4,
+                    "cells": [
+
+                    ]
+                }
+        #>
+
+        $actual.metadata | Should Not Be $null
+        $actual.metadata.kernelspec.name | Should BeExactly 'powershell'
+        $actual.metadata.kernelspec.display_name | Should BeExactly 'PowerShell'
+
+        $actual.metadata.language_info.name | Should BeExactly 'powershell'
+        $actual.metadata.language_info.codemirror_mode | Should BeExactly 'shell'
+        $actual.metadata.language_info.mimetype | Should BeExactly 'text/x-sh'
+        $actual.metadata.language_info.file_extension | Should BeExactly '.ps1'
+
+        $actual.nbformat_minor | Should Be 2
+        $actual.nbformat | Should Be 4
+        $actual.cells.Count | Should Be 0
+    }
+
+    It "Should have correct markdown metadata" {
+        <#
+            {
+                "metadata": {
+                    "kernelspec": {
+                        "name": "powershell",
+                        "display_name": "PowerShell"
+                    },
+                    "language_info": {
+                        "name": "powershell",
+                        "codemirror_mode": "shell",
+                        "mimetype": "text/x-sh",
+                        "file_extension": ".ps1"
+                    }
+                },
+                "nbformat_minor": 2,
+                "nbformat": 4,
+                "cells": [
+                    {"cell_type":"markdown","metadata":{},"source":["# Hello World"]}
+                ]
+            }
+        #>
+        $nb = New-PSNotebook -AsText {
+            Add-NotebookMarkdown -markdown "# Hello World"
+        }
+
+        $actual = ConvertFrom-Json $nb
+
+        $actual.cells.Count | should be 1
+        $actual.cells[0].cell_type | should BeExactly 'markdown'
+        $actual.cells[0].metadata.GetType().name | should BeExactly "PSCustomObject"
+        $actual.cells[0].source | should BeExactly '# Hello World'
+    }
 }
