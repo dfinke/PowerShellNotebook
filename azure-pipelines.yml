@@ -22,6 +22,8 @@ jobs:
     steps:
     - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
       displayName: 'Update Pester'
+    - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
+      displayName: 'Install ImportExcel'
     - powershell: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
@@ -51,6 +53,8 @@ jobs:
     steps:
     - pwsh: 'Install-Module -Name Pester -Force'
       displayName: 'Update Pester'
+    - pwsh: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
+      displayName: 'Install ImportExcel'
     - pwsh: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
@@ -67,6 +71,8 @@ jobs:
     steps:
     - powershell: 'Install-Module -Name Pester -Force'
       displayName: 'Update Pester'
+    - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
+      displayName: 'Install ImportExcel'
     - powershell: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
@@ -85,6 +91,8 @@ jobs:
       displayName: 'Install mono-libgdiplus'
     - powershell: 'Install-Module -Name Pester -Force'
       displayName: 'Update Pester'
+    - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
+      displayName: 'Install ImportExcel'
     - powershell: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
