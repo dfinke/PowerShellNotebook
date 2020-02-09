@@ -57,7 +57,10 @@ Describe "Test Invoke PS Notebook" {
 
     It "Should export to an Excel file to cwd from the testPSExcel.ipynb" {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
-        $actual | Should Be "$PSScriptRoot\testPSExcel.xlsx"
+        # $actual | Should Be "$PSScriptRoot\testPSExcel.xlsx"
+        $actualExcelFileName = Split-Path $actual -Leaf
+        $expectedExcelFileName = "testPSExcel.xlsx"
+        $actualExcelFileName | Should Be $expectedExcelFileName
 
         $sheets = Get-ExcelSheetInfo $actual
 
