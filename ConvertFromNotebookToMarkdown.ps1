@@ -1,0 +1,23 @@
+function ConvertFrom-NotebookToMarkdown {
+    param(
+        [Parameter(Mandatory)]
+        $NotebookName,
+        [Switch]$AsText
+    )
+
+    $text = $(switch (Get-NotebookContent -NoteBookFullName $NotebookName) {
+            { $_.Type -eq 'markdown' } { $_.Source }
+            { $_.Type -eq 'code' } {
+                '```powershell' + "`n" + $_.Source + "`n" + '```' + "`n"
+            }
+        })
+
+    if ($AsText) {
+        return $text
+    }
+
+    $mdFilename = (Split-Path -Leaf $NotebookName) -replace 'ipynb', 'md'
+    $text | Set-Content -Encoding UTF8 $mdFilename
+
+    $mdFilename
+}
