@@ -2,11 +2,22 @@
 
 This module includes the function `Invoke-PowerShellNotebook` which enables you to run the *cells* inside the PowerShell notebook.
 
-## Integration Status
+## TDD Status
 
 [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
 
 # Convert a Markdown File to a PowerShell Notebook
+
+`Convert-MarkdownToNoteBook` converts your markdown, recognizes `fenced code blocks` and converts it, and "runs" the PowerShell, including that snippets results in an *executable document*, a PowerShell notebook.
+
+- Share it with colleagues to better illustrate concepts
+- Develop workflows other can use, for diagnostics, testing, and more
+
+```powershell
+Convert-MarkdownToNoteBook .\multiplePSLines.md
+```
+
+![](./media/ConvertMarkdownToNotebook.png)
 
 ## Check out the [Video Here](http://bit.ly/2SylBm4)
 

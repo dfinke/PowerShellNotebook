@@ -1,7 +1,12 @@
 <!-- chapter start -->
+
+## PowerShell Notebooks - Executable Documents
+### Loops
+
 ```ps
-1..10 | % {
-    "Hello World"
+1..5 | % {
+    $_ * 2
 }
 ```
 <!-- chapter end -->
+
