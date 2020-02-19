@@ -79,12 +79,19 @@ function Add-NotebookCode {
         }
     }
 
+    if ($script:TargetNotebookType -eq '') {
+        $codeMetadata = @{
+            'azdata_cell_guid' = '{0}' -f (New-Guid).Guid
+        }
+    }
+    else {
+        $codeMetadata = New-Object PSObject
+    }
+
     $script:codeBlocks += [PSCustomObject][Ordered]@{
         'cell_type' = 'code'
         'source'    = @($code)
-        'metadata'  = @{
-            'azdata_cell_guid' = '{0}' -f (New-Guid).Guid
-        }
+        'metadata'  = $codeMetadata
         'outputs'   = @(
             @{
                 "output_type" = "stream"
@@ -92,7 +99,7 @@ function Add-NotebookCode {
                 "text"        = $outputText
             }
         )
-    } | ConvertTo-Json -Depth 2
+    } | ConvertTo-Json
 }
 
 function Add-NotebookMarkdown {
@@ -208,8 +215,12 @@ function New-PSNotebook {
         [Scriptblock]$sb,
         $NoteBookName,
         [Switch]$AsText,
+        [ValidateSet('AzureDataStudio', 'Jupyter')]
+        $NotebookType = 'AzureDataStudio',
         [Switch]$IncludeCodeResults
     )
+
+    $script:TargetNotebookType = $NotebookType
 
     $script:codeBlocks = @()
     if ($IncludeCodeResults) {
@@ -219,7 +230,8 @@ function New-PSNotebook {
 
     &$sb
 
-    $result = @"
+    if ($script:TargetNotebookType -eq 'AzureDataStudio') {
+        $result = @"
 {
     "metadata": {
         "kernelspec": {
@@ -240,6 +252,32 @@ function New-PSNotebook {
     ]
 }
 "@
+    }
+    elseif ($script:TargetNotebookType -eq 'Jupyter') {
+        $result = @"
+{
+    "metadata": {
+        "kernelspec": {
+            "display_name": ".NET (PowerShell)",
+            "language": "PowerShell",
+            "name": ".net-powershell"
+        },
+        "language_info": {
+            "file_extension": ".ps1",
+            "mimetype": "text/x-powershell",
+            "name": "PowerShell",
+            "pygments_lexer": "powershell",
+            "version": "7.0"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 4,
+    "cells": [
+        $($script:codeBlocks -join ',')
+    ]
+}
+"@
+    }
 
     $Script:IncludeCodeResults = $false
     if ($Script:PSNotebookRunspace) {

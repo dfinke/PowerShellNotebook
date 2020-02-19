@@ -14,6 +14,8 @@
     #>
     param(
         $filename,
+        [ValidateSet('AzureDataStudio', 'Jupyter')]
+        $NotebookType = 'AzureDataStudio',
         [Switch]$watch
     )
 
@@ -65,7 +67,7 @@
     $code = @()
     $markDown = @()
 
-    New-PSNotebook -NoteBookName ($filename -replace '.md', '.ipynb') -IncludeCodeResults {
+    New-PSNotebook -NoteBookName ($filename -replace '.md', '.ipynb') -IncludeCodeResults -NotebookType $NotebookType {
 
         foreach ($chapter in $chapters.Keys) {
 

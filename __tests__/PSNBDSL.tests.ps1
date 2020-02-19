@@ -53,7 +53,7 @@ Describe "Test Invoke PS Notebook" {
         $r | should be $true
     }
 
-    It "Should have correct top level metadata" {
+    It "Should have correct top level metadata fot Azure Data Studio" {
         $actual = ConvertFrom-Json (New-PSNotebook -AsText { })
         <#
                 {
@@ -124,4 +124,43 @@ Describe "Test Invoke PS Notebook" {
         $actual.cells[0].metadata.GetType().name | should BeExactly "PSCustomObject"
         $actual.cells[0].source | should BeExactly '# Hello World'
     }
+
+    It "Should have correct top level metadata fot Jupyter Notebooks" {
+        $actual = ConvertFrom-Json (New-PSNotebook -AsText -NotebookType Jupyter { })
+        <#
+            "metadata": {
+                "kernelspec": {
+                    "display_name": ".NET (PowerShell)",
+                    "language": "PowerShell",
+                    "name": ".net-powershell"
+                },
+                "language_info": {
+                    "file_extension": ".ps1",
+                    "mimetype": "text/x-powershell",
+                    "name": "PowerShell",
+                    "pygments_lexer": "powershell",
+                    "version": "7.0"
+                }
+            },
+            "nbformat": 4,
+            "nbformat_minor": 4
+        #>
+
+        $actual.metadata | Should Not Be $null
+
+        $actual.metadata.kernelspec.display_name | Should BeExactly '.NET (PowerShell)'
+        $actual.metadata.kernelspec.language | Should BeExactly 'PowerShell'
+        $actual.metadata.kernelspec.name | Should BeExactly '.net-powershell'
+
+        $actual.metadata.language_info.file_extension | Should BeExactly '.ps1'
+        $actual.metadata.language_info.mimetype | Should BeExactly 'text/x-powershell'
+        $actual.metadata.language_info.name | Should BeExactly 'PowerShell'
+        $actual.metadata.language_info.pygments_lexer | Should BeExactly 'powershell'
+        $actual.metadata.language_info.version | Should BeExactly '7.0'
+
+        $actual.nbformat | Should Be 4
+        $actual.nbformat_minor | Should Be 4
+        $actual.cells.Count | Should Be 0
+    }
+
 }
