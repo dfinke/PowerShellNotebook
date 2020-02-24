@@ -2,9 +2,18 @@
 
 This module includes the function `Invoke-PowerShellNotebook` which enables you to run the *cells* inside the PowerShell notebook.
 
-## TDD Status
+## Continuous Integration Status
 
 [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
+
+# Check out the [Video Here](http://bit.ly/2SylBm4)
+
+In a nutshell.
+
+1. Author your markdown with `Chapter Start and End`, then use fence blocks ``` to indic
+1. In Azure Data Studio PowerShell console, run `Convert-MarkdownToNoteBook .\demo.md -watch`
+    - When you save the file, `Convert-MarkdownToNoteBook` detects and auto converts it to a `PowerShell Notebook`
+1. The converted Interactive PowerShell Notebook. *Note*: `Convert-MarkdownToNoteBook` also runs the code from the markdown file and includes the results.
 
 # Convert a Markdown File to a PowerShell Notebook
 
@@ -18,15 +27,6 @@ Convert-MarkdownToNoteBook .\multiplePSLines.md
 ```
 
 ![](./media/ConvertMarkdownToNotebook.png)
-
-## Check out the [Video Here](http://bit.ly/2SylBm4)
-
-In a nutshell.
-
-1. Author your markdown with `Chapter Start and End`, then use fence blocks ``` to indic
-1. In Azure Data Studio PowerShell console, run `Convert-MarkdownToNoteBook .\demo.md -watch`
-    - When you save the file, `Convert-MarkdownToNoteBook` detects and auto converts it to a `PowerShell Notebook`
-1. The converted Interactive PowerShell Notebook. *Note*: `Convert-MarkdownToNoteBook` also runs the code from the markdown file and includes the results.
 
 ### Exclude Results
 
@@ -47,6 +47,21 @@ This will include the `1+1` in the interactive notebook, but will **not** evalua
 
 ![](./media/CvtFromMarkdown.png)
 
+# Available Functions
+
+| Function | Synopsis
+|---|---|
+|Add-NotebookCode|Add-NotebookCode adds PowerShell code to a code block
+|Add-NotebookMarkdown|Add-NotebookMarkdown adds Markdown to a markdown block
+|Add-NotebookMarkdown|Add-NotebookMarkdown is intended to be used in a New-PSNotebook scriptblock
+|ConvertFrom-NotebookToMarkdown|Take and exiting PowerShell Notebook and convert it to markdown|
+|Convert-MarkdownToNoteBook|Convert a markdown file to an interactive PowerShell Notebook|
+|Export-NotebookToPowerShellScript|Exports all code blocks from a PowerShell Notebook to a PowerShell script
+|Get-Notebook|Get-Notebook reads the metadata of a single (or folder of) Jupyter Notebooks
+|Get-NotebookContent|Get-NotebookContents reads the contents of a Jupyter Notebooks
+|Invoke-PowerShellNotebook|Invoke-PowerShellNotebook executes all the PowerShell code blocks in a PowerShell Notebook.
+|New-PSNotebook|Creates a new PowerShell Notebook that can be returned as text or saves as a `ipynb` file.
+|New-PSNotebookRunspace|New-PSNotebookRunspace instantiates the PSNotebookRunspace
 
 # A PowerShell Notebook with Cells
 

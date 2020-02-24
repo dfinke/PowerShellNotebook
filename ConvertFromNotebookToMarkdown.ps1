@@ -1,4 +1,8 @@
 function ConvertFrom-NotebookToMarkdown {
+    <#
+        .SYNOPSIS
+        Take and exiting PowerShell Notebook and convert it to markdown
+    #>
     param(
         [Parameter(Mandatory)]
         $NotebookName,

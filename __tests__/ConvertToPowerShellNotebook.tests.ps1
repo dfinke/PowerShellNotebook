@@ -5,7 +5,6 @@ Describe "Test ConvertTo-PowerShellNoteBook" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo.txt"
         $fullName = "TestDrive:\testConverted.ipnyb"
 
-
         ConvertTo-PowerShellNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
         { Test-Pat $fullName } | Should Be $true
 

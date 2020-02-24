@@ -1,6 +1,7 @@
 ﻿function Convert-MarkdownToNoteBook {
     <#
         .SYNOPSIS
+        Convert a markdown file to an interactive PowerShell Notebook
 
         .Description
 
