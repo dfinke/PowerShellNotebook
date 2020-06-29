@@ -16,9 +16,30 @@ function Export-NotebookToPowerShellScript {
     if (Test-Path $FullName) {
         Write-Progress -Activity "Exporting PowerShell Notebook" -Status $FullName
         $outFile = (Split-Path -Leaf $FullName) -replace ".ipynb", ".ps1"
-        (Get-NotebookContent $FullName -JustCode).Source | Set-Content ($outPath + $outFile)
+        $fullOutFileName = $outPath + $outFile
+
+        $heading = @"
+<#
+    Created from: $($FullName)
+
+    Created by: Export-NotebookToPowerShellScript
+    Created on: $(Get-Date)    
+#>
+
+"@ 
+        $heading | Set-Content $fullOutFileName
+
+        $result = foreach ($sourceBlock in (Get-NotebookContent $FullName -JustCode).Source) {
+            $sourceBlock
+            ""
+        }
+
+        $result | Add-Content  $fullOutFileName
+        # (Get-NotebookContent $FullName -JustCode).Source | Add-Content  $fullOutFileName
+
         Write-Verbose "$($outFile) created"
-    } else{
+    }
+    else {
         Write-Warning "File: $($FullName) not found"
     }
 }

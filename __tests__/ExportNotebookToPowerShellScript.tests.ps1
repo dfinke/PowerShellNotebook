@@ -10,10 +10,11 @@ Describe "Test Export-NotebookToPowerShellScript" {
 
         $actual = Get-Content $targetPS
 
-        $actual.Count | should be 3
-        $actual[0] | should be 'foreach ($item in 1..10) {'
-        $actual[1] | should be '    $item'
-        $actual[2] | should be '}'
+        $actual.Count | should be 11
+
+        $actual[7] | should be 'foreach ($item in 1..10) {'
+        $actual[8] | should be '    $item'
+        $actual[9] | should be '}'
 
         Remove-Item $targetPS -ErrorAction SilentlyContinue
     }

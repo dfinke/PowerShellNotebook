@@ -11,9 +11,16 @@ Describe "Test Export-NotebookToPowerShellScript" {
 
         $contents = Get-Content $ps1File
         
-        $contents[0] | Should -BeExactly '$PSVersionTable'
-        $contents[1] | Should -BeExactly '1..10 | % {'
-        $contents[2] | Should -BeExactly '    $_ * 2'
-        $contents[3] | Should -BeExactly '}'
+        $contents[0] | Should -BeExactly '<#'
+        $contents[1].StartsWith('    Created from:') | Should -Be $true        
+        $contents[3].StartsWith('    Created by:') | Should -Be $true        
+        $contents[4].StartsWith('    Created on:') | Should -Be $true
+        $contents[5] | Should -BeExactly '#>'
+
+        $contents[7] | Should -BeExactly '$PSVersionTable'
+        $contents[8] | Should -BeExactly ''
+        $contents[9] | Should -BeExactly '1..10 | % {'
+        $contents[10] | Should -BeExactly '    $_ * 2'
+        $contents[11] | Should -BeExactly '}'
     }
 }
