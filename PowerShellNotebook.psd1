@@ -4,7 +4,7 @@
     RootModule        = 'PowerShellNotebook.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '2.1.0'
+    ModuleVersion     = '2.2.0'
 
     # ID used to uniquely identify this module
     GUID              = '2ab0cb25-b339-4726-8a2a-349ca1114bd4'
@@ -16,7 +16,7 @@
     CompanyName       = 'Doug Finke'
 
     # Copyright statement for this module
-    Copyright         = 'c 2019 All rights reserved.'
+    Copyright         = 'c 2020 All rights reserved.'
 
     # Description of the functionality provided by this module
     Description       = @'
