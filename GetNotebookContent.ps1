@@ -33,7 +33,14 @@ fsharp.ipynb code {printfn "hello world"}
     )
 
     Process {
-        $r = Get-Content $NoteBookFullName | ConvertFrom-Json
+
+        if ([System.Uri]::IsWellFormedUriString($NoteBookFullName, [System.UriKind]::Absolute)) {
+            $r = Invoke-RestMethod $NoteBookFullName 
+        }
+        elseif (Test-Path $NoteBookFullName -ErrorAction SilentlyContinue) {
+            $r = Get-Content $NoteBookFullName | ConvertFrom-Json
+        }
+
 
         if ($JustCode) { $cellType = "code" }
         if ($JustMarkdown) { $cellType = "markdown" }

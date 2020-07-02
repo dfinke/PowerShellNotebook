@@ -23,4 +23,37 @@ Describe "Test Export-NotebookToPowerShellScript" {
         $contents[10] | Should -BeExactly '    $_ * 2'
         $contents[11] | Should -BeExactly '}'
     }
-}
+
+    It "Should export the pynb to ps1" {
+        $ipynbFileName = "$PSScriptRoot\..\MultiLineSourceNotebooks\MultiLineSourceAsArray.ipynb"
+        Export-NotebookToPowerShellScript -FullName $ipynbFileName
+        $ps1File = "./MultiLineSourceAsArray.ps1"
+    
+        Test-Path $ps1File | should be $true
+    
+        $actual = Get-Content $ps1File
+    
+        $actual.Count | should be 11
+    
+        $actual[7] | should be 'foreach ($item in 1..10) {'
+        $actual[8] | should be '    $item'
+        $actual[9] | should be '}'
+    
+        Remove-Item $ps1File -ErrorAction SilentlyContinue
+    }
+
+    It "Should export the pynb from a URL to ps1" {
+        $url = "https://raw.githubusercontent.com/dfinke/PowerShellNotebook/AddJupyterNotebookMetaInfo/samplenotebook/powershell.ipynb"
+
+        Export-NotebookToPowerShellScript -FullName $url
+
+        $ps1File = "./powershell.ps1"
+        Test-Path $ps1File | should be $true
+
+        $contents = Get-Content $ps1File
+
+        $contents[7] | Should -BeExactly 'Write-Host "hello world"'
+
+        Remove-Item $ps1File -ErrorAction SilentlyContinue
+    }
+}    

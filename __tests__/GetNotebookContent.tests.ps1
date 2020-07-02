@@ -62,4 +62,7 @@ Describe "Test PS Notebook Content" {
 "
     }
 
+    It "Should read ipynb from url" {
+        $actual = Get-NotebookContent -NoteBookFullName "https://raw.githubusercontent.com/dfinke/PowerShellNotebook/AddJupyterNotebookMetaInfo/samplenotebook/powershell.ipynb"
+    }
 }
