@@ -7,7 +7,7 @@ function ConvertTo-SQLNoteBook {
         $InputFileName,
         $OutputNotebookName
     )
-
+<#
     New-SQLNotebook -NoteBookName $OutputNotebookName {
         $content =  Get-Content $InputFileName | Out-String
         $insideBlockComment = $false
@@ -44,5 +44,50 @@ function ConvertTo-SQLNoteBook {
                 }
             }
         }
+    }
+#>
+    New-SQLNotebook -NoteBookName $OutputNotebookName {
+        $s = Get-Content -Raw ( Resolve-Path $InputFileName )
+        #$s.GetType()
+
+        <# Doug's code for extracting the comment blocks. #>
+        $locations=@()
+
+        $pos=$s.IndexOf("/*")
+
+        while ($pos -ge 0) {
+            $locations+=[pscustomobject]@{startPos=$pos;endPos=$null}
+            $pos=$s.IndexOf("/*", $pos+2)
+        }
+
+        $count=0
+        $pos=$s.IndexOf("*/")
+        while ($pos -ge 0) {
+            $locations[$count].endPos=$pos
+            $pos=$s.IndexOf("*/", $pos+1)
+            $count++
+        }
+
+        <# My basic attempt #>
+
+        $PreviousLocation = $null
+        <# The line below cpits out a code block, in the event the file stars with code. #>
+        Add-NotebookCode ($s.Substring(0, ($locations[0].startPos)))
+        foreach($location in $locations)
+        {
+            $start=$location.startPos
+            $length=$location.endPos-$location.startPos+2
+            <# The line below spits out the comment blocks #>
+            Add-NotebookMarkdown $s.Substring($start+2, $length-4)
+            <# The line below spits out the code blocks #>
+            Add-NotebookCode ($s.Substring($PreviousLocation.endPos, ($location.startPos - $PreviousLocation.endPos)))
+            $PreviousLocation=$location
+        }
+
+        Add-NotebookCode ($s.Substring($location.endPos+2, ($s.Length-$location.endPos-2)))
+        <# The line above grabs the last code block from the .SQL file. #>
+
+        <# When you need to debug, the list of comment-block locations is in the variable below #>
+        $locations
     }
 }
