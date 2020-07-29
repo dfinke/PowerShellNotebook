@@ -255,3 +255,119 @@ function New-PSNotebook {
     }
 
 }
+function New-SQLNotebook {
+    <#
+        .SYNOPSIS
+        Creates a new PowerShell Notebook that can be returned as text or saves as a `ipynb` file.
+
+        .Description
+        New-PSNotebook takes a script block in which these two functions can be be use to contstruct a PowerShell Notebook `Add-NotebookMarkdown`, `Add-NotebookCode`.
+        Additionally, you can use the `-IncludeCodeResults` switch to execute the PowerSHell code and include the results in the notebook.
+
+        .Example
+        # creates a new notebook, and saves it as TestNotebook.ipynb
+
+        New-PSNotebook -NoteBookName .\TestNotebook {
+            Add-NotebookMarkdown -markdown "# This is a H1 tag"
+            Add-NotebookCode -code 'Hello World'
+        }
+
+        .Example
+        # creates a new notebook, executes the PowerShell then includes it the block, and saves it as TestNotebook.ipynb
+
+        New-PSNotebook -NoteBookName .\TestNotebook -IncludeCodeResults {
+            Add-NotebookMarkdown -markdown "# This is a H1 tag"
+            Add-NotebookCode -code 'Hello World'
+        }
+
+        .Example
+        # creates a new notebook, and returns it as text
+
+        New-PSNotebook -AsText {
+            Add-NotebookMarkdown -markdown "# This is a H1 tag"
+            Add-NotebookCode -code 'Hello World'
+        }
+
+        {
+            "metadata": {
+                "kernelspec": {
+                    "name": "powershell",
+                    "display_name": "PowerShell"
+                },
+                "language_info": {
+                    "name": "powershell",
+                    "codemirror_mode": "shell",
+                    "mimetype": "text/x-sh",
+                    "file_extension": ".ps1"
+                }
+            },
+            "nbformat_minor": 2,
+            "nbformat": 4,
+            "cells": [{
+                "cell_type": "markdown",
+                "source": "# This is a H1 tag"
+            }, {
+                "cell_type": "code",
+                "source": "Hello World",
+                "metadata": {
+                    "azdata_cell_guid": "a7b91b6c-f57f-4d57-8cc4-7773d7f22756"
+                },
+                "outputs": [{
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": ""
+                }]
+            }]
+        }
+    #>
+    param(
+        [Scriptblock]$sb,
+        $NoteBookName,
+        [Switch]$AsText,
+        [Switch]$IncludeCodeResults
+    )
+
+    $script:codeBlocks = @()
+    if ($IncludeCodeResults) {
+        $Script:IncludeCodeResults = $IncludeCodeResults
+        $Script:PSNotebookRunspace = New-PSNotebookRunspace
+    }
+
+    &$sb
+
+    $result = @"
+{
+    "metadata": {
+        "kernelspec": {
+            "name": "sql",
+            "display_name": "SQL"
+        },
+        "language_info": {
+            "name": "sql",
+            "codemirror_mode": "shell",
+            "mimetype": "text/x-sh",
+            "file_extension": ".sql"
+        }
+    },
+    "nbformat_minor": 2,
+    "nbformat": 4,
+    "cells": [
+        $($script:codeBlocks -join ',')
+    ]
+}
+"@
+
+    $Script:IncludeCodeResults = $false
+    if ($Script:PSNotebookRunspace) {
+        $Script:PSNotebookRunspace.Close()
+        $Script:PSNotebookRunspace = $null
+    }
+
+    if ($AsText) {
+        return $result
+    }
+    else {
+        $result | Set-Content -Encoding UTF8 -Path $NoteBookName
+    }
+
+}
