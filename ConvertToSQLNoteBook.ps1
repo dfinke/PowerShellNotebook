@@ -80,16 +80,21 @@ function ConvertTo-SQLNoteBook {
 
             <# The line below spits out the code blocks #>
             $codeBlockLength = ($location.startPos - $PreviousLocation.endPos-2)
-            write-verbose "len - $codeBlockLength" -verbose
+            write-verbose "len - $codeBlockLength" -ver
             if($codeBlockLength -gt 0){
-                $codeBlock = $s.Substring($PreviousLocation.endPos+2, $codeBlockLength).Trim()
+                # If file starts with comment
+                if($s.Substring($PreviousLocation.endPos, 2) -eq "*/"){
+                    $codeBlock = $s.Substring($PreviousLocation.endPos+2, $codeBlockLength).Trim()
+                }else{
+                    $codeBlock = $s.Substring($PreviousLocation.endPos, $codeBlockLength).Trim()
+                }
                 write-verbose "Acode  : $($codeBlock)" -verbose
                 if($codeBlock.length -gt 0) {
                     Add-NotebookCode -code (-join $codeBlock)
                 }
             }
             <# The line below spits out the comment blocks #>
-            $markDown = $s.Substring($start+2, $length-2) -replace ("\n", "   `r`n")
+            $markDown = $s.Substring($start+2, $length-2) -replace ("\n", "   `n  ")
             if($markDown.Trim().length -gt 0){
                 write-verbose "markdown : $markDown" -verbose
                 Add-NotebookMarkdown -markdown (-join $markDown)
