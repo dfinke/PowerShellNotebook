@@ -72,19 +72,37 @@ function ConvertTo-SQLNoteBook {
 
         $PreviousLocation = $null
         <# The line below cpits out a code block, in the event the file stars with code. #>
-        Add-NotebookCode ($s.Substring(0, ($locations[0].startPos)))
-        foreach($location in $locations)
-        {
+        #Add-NotebookCode ($s.Substring(0, ($locations[0].startPos)))
+
+        foreach($location in $locations) {
             $start=$location.startPos
-            $length=$location.endPos-$location.startPos+2
-            <# The line below spits out the comment blocks #>
-            Add-NotebookMarkdown $s.Substring($start+2, $length-4)
+            $length=$location.endPos-$location.startPos
+
             <# The line below spits out the code blocks #>
-            Add-NotebookCode ($s.Substring($PreviousLocation.endPos, ($location.startPos - $PreviousLocation.endPos)))
-            $PreviousLocation=$location
+            $codeBlockLength = ($location.startPos - $PreviousLocation.endPos-2)
+            write-verbose "len - $codeBlockLength" -verbose
+            if($codeBlockLength -gt 0){
+                $codeBlock = $s.Substring($PreviousLocation.endPos+2, $codeBlockLength).Trim()
+                write-verbose "Acode  : $($codeBlock)" -verbose
+                if($codeBlock.length -gt 0) {
+                    Add-NotebookCode -code (-join $codeBlock)
+                }
+            }
+            <# The line below spits out the comment blocks #>
+            $markDown = $s.Substring($start+2, $length-2) -replace ("\n", "   `r`n")
+            if($markDown.Trim().length -gt 0){
+                write-verbose "markdown : $markDown" -verbose
+                Add-NotebookMarkdown -markdown (-join $markDown)
+            }
+
+            $PreviousLocation = $location
         }
 
-        Add-NotebookCode ($s.Substring($location.endPos+2, ($s.Length-$location.endPos-2)))
+        $lastCodeBlock = $s.Substring($location.endPos+2, ($s.Length-$location.endPos)-2)
+        if($lastCodeBlock.Trim().length -gt 0){
+            write-verbose "Bcode  : $lastCodeBlock" -verbose
+            Add-NotebookCode -code (-join $lastCodeBlock.Trim())
+        }
         <# The line above grabs the last code block from the .SQL file. #>
 
         <# When you need to debug, the list of comment-block locations is in the variable below #>
