@@ -1,7 +1,8 @@
-Import-Module -Name SqlServer
-Add-Type -LiteralPath "C:\Program Files (x86)\Microsoft SQL Server\140\DAC\bin\Microsoft.SqlServer.TransactSql.ScriptDom.dll"
-[Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser($false);
-
+function loadScriptDomModules{
+    Import-Module -Name SqlServer
+    Add-Type -LiteralPath "C:\Program Files (x86)\Microsoft SQL Server\140\DAC\bin\Microsoft.SqlServer.TransactSql.ScriptDom.dll"
+    [Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser($false);
+}
 
 # Quick Helper-function to turn the file into a script fragment, using scriptdom.
 function Get-ScriptComments($ScriptPath){
@@ -21,6 +22,8 @@ function ConvertTo-SQLNoteBook {
         $InputFileName,
         $OutputNotebookName
     )
+
+    loadScriptDomModules
 
     New-SQLNotebook -NoteBookName $OutputNotebookName {
         $s = Get-Content -Raw ( Resolve-Path $InputFileName )
@@ -46,7 +49,6 @@ function ConvertTo-SQLNoteBook {
 
             $StartCode= $StartText + $LengthText
         }
-
         # Left over code after last comment block
         $LengthCode = $s.Length - $StartCode
         $LastCodeBlock = $s.Substring($StartCode, $LengthCode)
@@ -54,6 +56,5 @@ function ConvertTo-SQLNoteBook {
         if($LastCodeBlock.Trim().length -gt 0){
             Add-NotebookCode -code (-join $LastCodeBlock)
         }
-
     }
 }
