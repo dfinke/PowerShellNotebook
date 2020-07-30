@@ -1,11 +1,11 @@
 function loadScriptDomModules{
     Import-Module -Name SqlServer
     Add-Type -LiteralPath "C:\Program Files (x86)\Microsoft SQL Server\140\DAC\bin\Microsoft.SqlServer.TransactSql.ScriptDom.dll"
-    [Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser($false);
 }
 
 # Quick Helper-function to turn the file into a script fragment, using scriptdom.
 function Get-ScriptComments($ScriptPath){
+    [Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser($false);
     $Reader = New-Object -TypeName System.IO.StreamReader -ArgumentList $ScriptPath
     $Errors = $null
     $ScriptFrag = $parser.Parse($Reader, [ref]$Errors)
