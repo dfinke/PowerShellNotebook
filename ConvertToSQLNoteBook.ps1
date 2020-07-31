@@ -1,11 +1,13 @@
 function loadScriptDomModules{
+    #try {Import-Module SqlServer -ErrorAction Stop} catch {Install-Module -Name SqlServer -Scope CurrentUser} finally {Import-Module SqlServer}
     Import-Module -Name SqlServer
-    Add-Type -LiteralPath "C:\Program Files (x86)\Microsoft SQL Server\140\DAC\bin\Microsoft.SqlServer.TransactSql.ScriptDom.dll"
+    $ScriptDom = Join-Path -Path (Get-Module -Name SqlServer).ModuleBase -ChildPath 'Microsoft.SqlServer.TransactSql.ScriptDom.dll'
+    if((Test-Path $ScriptDom) -eq $true ) {Add-Type -LiteralPath $ScriptDom}
 }
 
 # Quick Helper-function to turn the file into a script fragment, using scriptdom.
 function Get-ScriptComments($ScriptPath){
-    [Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql140Parser($false);
+    [Microsoft.SqlServer.TransactSql.ScriptDom.TSql150Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql150Parser($false);
     $Reader = New-Object -TypeName System.IO.StreamReader -ArgumentList $ScriptPath
     $Errors = $null
     $ScriptFrag = $parser.Parse($Reader, [ref]$Errors)
@@ -16,7 +18,7 @@ function Get-ScriptComments($ScriptPath){
 function ConvertTo-SQLNoteBook {
     <#
         .Example
-        ConvertTo-PowerShellNoteBook -InputFileName c:\Temp\demo.txt -OutputNotebookName c:\Temp\demo.ipynb
+        ConvertTo-SQLNoteBook -InputFileName 'C:\temp\AdventureWorksMultiStatementSBatch.sql' -OutputNotebookName 'C:\temp\AdventureWorksMultiStatementSBatch.ipynb'
     #>
     param(
         $InputFileName,
