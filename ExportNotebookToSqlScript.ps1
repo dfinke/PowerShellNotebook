@@ -1,18 +1,32 @@
 function Export-NotebookToSqlScript {
     <#
         .SYNOPSIS
-        Exports all code blocks from a PowerShell Notebook to a PowerShell script
+        Exports all code blocks from a SQL Notebook to a SQL script
 
         .DESCRIPTION
         Exports from either a local notebook or one on the internet
 
         .Example
         Export-NotebookToSqlScript .\BPCheck.ipynb
-        Get-Content .\TestSQL.ps1
+        Get-Content .\BPCheck.SQL
+
+        Converts a local copy of the BPCheck.ipynb Jupyter Notebook into a .SQL file, and gets the content of the 
+        resulting .SQL file.
 
         .Example
         Export-NotebookToSqlScript "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
         Get-Content .\BPCheck.sql
+
+        Downloads the latest version of the BPCheck Jupyter Notebook from the TigerToolbox repository, converts it 
+        into a .SQL file (named BPCheck.SQL), and gets the content.
+
+        .Example
+        Export-NotebookToSqlScript "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
+        Open-EditorFile .\BPCheck.sql
+
+        Downloads the latest version of the BPCheck Jupyter Notebook from the TigerToolbox repository, converts it 
+        into a .SQL file (named BPCheck.SQL), and when run from the PowerShell Integrated Console (in either VS Code or 
+        Azure Data Studio), opens it as a new Notebook window.
         #>
     [CmdletBinding()]
     param(
