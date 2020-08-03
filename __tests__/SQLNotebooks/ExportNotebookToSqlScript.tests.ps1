@@ -47,7 +47,7 @@ Describe "Test Export-NotebookToSqlScript" {
 
         Export-NotebookToSqlScript -FullName $url
 
-        $SQLFile = "TestDrive:\BPCheck.SQL"
+        $SQLFile = "./BPCheck.SQL"
         Test-Path $SQLFile | should be $true
 
         $contents = Get-Content $SQLFile
