@@ -24,24 +24,6 @@ Describe "Test Export-NotebookToSqlScript" {
         $contents[19] | Should -BeExactly 'SELECT SYSDATETIME()'
     }
 
-    #It "Should export the ipynb to SQL" {
-    #    $ipynbFileName = "$PSScriptRoot\..\MultiLineSourceNotebooks\MultiLineSourceAsArray.ipynb"
-    #    Export-NotebookToSqlScript -FullName $ipynbFileName
-    #    $SQLFile = "./MultiLineSourceAsArray.SQL"
-    #
-    #    Test-Path $SQLFile | should be $true
-    #
-    #    $actual = Get-Content $SQLFile
-    #
-    #    $actual.Count | should be 11
-    #
-    #    $actual[7] | should be 'foreach ($item in 1..10) {'
-    #    $actual[8] | should be '    $item'
-    #    $actual[9] | should be '}'
-    #
-    #    Remove-Item $SQLFile -ErrorAction SilentlyContinue
-    #}
-
     It "Should export the ipynb from a URL to SQL" {
         $url = "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
 
