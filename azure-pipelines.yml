@@ -20,7 +20,7 @@ jobs:
       vmImage: 'windows-latest'
 
     steps:
-    - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
+    - powershell: 'Install-Module -Name Pester -Force -MaximumVersion 4.99.99 -SkipPublisherCheck'
       displayName: 'Update Pester'
     # - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
     #   displayName: 'Install ImportExcel'
@@ -53,7 +53,7 @@ jobs:
       vmImage: 'windows-latest'
 
     steps:
-    - pwsh: 'Install-Module -Name Pester -Force'
+    - pwsh: 'Install-Module -Name Pester -Force -MaximumVersion 4.99.99 -SkipPublisherCheck'
       displayName: 'Update Pester'
     # - pwsh: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
     #   displayName: 'Install ImportExcel'
@@ -73,7 +73,7 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
-    - powershell: 'Install-Module -Name Pester -Force'
+    - powershell: 'Install-Module -Name Pester -Force -MaximumVersion 4.99.99 -SkipPublisherCheck'
       displayName: 'Update Pester'
     # - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
     #   displayName: 'Install ImportExcel'
@@ -95,7 +95,7 @@ jobs:
     steps:
     - script: brew install mono-libgdiplus
       displayName: 'Install mono-libgdiplus'
-    - powershell: 'Install-Module -Name Pester -Force'
+    - powershell: 'Install-Module -Name Pester -Force -MaximumVersion 4.99.99 -SkipPublisherCheck'
       displayName: 'Update Pester'
     # - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
     #   displayName: 'Install ImportExcel'
