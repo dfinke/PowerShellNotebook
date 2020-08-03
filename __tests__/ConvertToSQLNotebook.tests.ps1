@@ -1,4 +1,4 @@
-Import-Module $PSScriptRoot\..\SQLNotebook.psm1 -Force
+Import-Module $PSScriptRoot\..\PowerShellNotebook.psm1 -Force
 
 Describe "Test ConvertTo-SQLNoteBook" {
     It "Should convert the file to an ipynb" {
