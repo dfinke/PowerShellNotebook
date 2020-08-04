@@ -22,6 +22,8 @@ Describe "Test Export-NotebookToSqlScript" {
         $contents[9] | Should -BeExactly 'SELECT *'
         $contents[10] | Should -BeExactly '  FROM sys.databases'
         $contents[19] | Should -BeExactly 'SELECT SYSDATETIME()'
+
+        Remove-Item $SQLFile -ErrorAction SilentlyContinue
     }
 
     It "Should export the ipynb from a URL to SQL" {
