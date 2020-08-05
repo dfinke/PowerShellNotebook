@@ -30,7 +30,9 @@ jobs:
       displayName: 'Install ImportExcel'
     # - powershell: 'gmo -list pester'
     #   displayName: 'gmo pester'
-    - powershell : 'Invoke-Pester'
+    - powershell : | 
+        $r = Invoke-Pester -PassThru
+        if($r.FailedCount -gt 0){throw "tests failed"}
       displayName: 'Run tests'
     # - powershell: './CI/CI.ps1 -Test'
     #   displayName: 'Install and Test'
