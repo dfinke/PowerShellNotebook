@@ -22,7 +22,7 @@ jobs:
     steps:
     # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
     # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'    
-    - powershell: 'Uninstall-Module Pester --MinimumVersion 5.0.0 -Force'    
+    - powershell: 'Uninstall-Module Pester -MinimumVersion 5.0.0 -Force'    
       displayName: 'Remove Pester v5'
     - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1'    
       displayName: 'Update Pester'
