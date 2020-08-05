@@ -21,19 +21,23 @@ jobs:
 
     steps:
     # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
-    # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'    
-    - powershell: 'Uninstall-Module Pester -MinimumVersion 5.0.0 -Force'    
-      displayName: 'Remove Pester v5'
-    - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1'    
-      displayName: 'Install Pester 4.10'
-    - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
-      displayName: 'Install ImportExcel'
+    # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'
+    # - powershell: 'Uninstall-Module Pester -MinimumVersion 5.0.0 -Force'
+    #   displayName: 'Remove Pester v5'
+    # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1'
+    #   displayName: 'Install Pester 4.10'
+    # - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
+    #   displayName: 'Install ImportExcel'
     # - powershell: 'gmo -list pester'
     #   displayName: 'gmo pester'
     - powershell : | 
+        Uninstall-Module Pester -MinimumVersion 5.0.0 -Force
+        Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1
+        Install-Module -Name ImportExcel -Force -SkipPublisherCheck
+        
         $r = Invoke-Pester -PassThru
         if($r.FailedCount -gt 0){throw "tests failed"}
-      displayName: 'Run tests'
+      displayName: 'Remove/Install Modules - Run tests'
     # - powershell: './CI/CI.ps1 -Test'
     #   displayName: 'Install and Test'
 
