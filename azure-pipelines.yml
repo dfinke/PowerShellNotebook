@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   branches:
     include:
@@ -20,16 +15,6 @@ jobs:
       vmImage: 'windows-latest'
 
     steps:
-    # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
-    # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'
-    # - powershell: 'Uninstall-Module Pester -MinimumVersion 5.0.0 -Force'
-    #   displayName: 'Remove Pester v5'
-    # - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1'
-    #   displayName: 'Install Pester 4.10'
-    # - powershell: 'Install-Module -Name ImportExcel -Force -SkipPublisherCheck'
-    #   displayName: 'Install ImportExcel'
-    # - powershell: 'gmo -list pester'
-    #   displayName: 'gmo pester'
     - powershell : | 
         Uninstall-Module Pester -MinimumVersion 5.0.0 -Force
         Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1
