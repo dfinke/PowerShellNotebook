@@ -1,6 +1,10 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test ConvertFrom-NoteBookToMarkdown" {
+    It "Should be true" {
+        $false | Should -Be $true
+    }
+
     It "Should convert to markdown" {
         $targetFile = "$PSScriptRoot\GoodNotebooks\SimpleNotebookToTestConvertToMarkdown.ipynb"
 
