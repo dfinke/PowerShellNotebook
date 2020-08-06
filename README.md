@@ -14,6 +14,7 @@ In a nutshell.
 1. In [Azure Data Studio](aka.ms/GetAzureDataStudio) PowerShell console, run `Convert-MarkdownToNoteBook .\demo.md -watch`
     - When you save the file, `Convert-MarkdownToNoteBook` detects and auto converts it to a `PowerShell Notebook`
 1. The converted Interactive PowerShell Notebook. *Note*: `Convert-MarkdownToNoteBook` also runs the code from the markdown file and includes the results.
+1.  Thanks to [Aaron Nelson](https://twitter.com/SQLvariant) and friends. Easily turn your SQL scripts into an interactive Jupyter Notebook with `ConvertTo-SqlNoteBook`. Plus, you can go the other way and turn an interactive Jupyter Notebook that has SQL in it, to a pure SQL script with `Export-NotebookToSqlScript`. 
 
 # Convert a Markdown File to a PowerShell Notebook
 
