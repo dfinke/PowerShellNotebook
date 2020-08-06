@@ -92,12 +92,13 @@ if (-not $VersionFilePath) {
         }
     }
 
-    '[Info] Testing On:'
-    Get-EnvironmentInfo
-    '[Progress] Installing Module.'
-    . .\CI\Install.ps1
-    '[Progress] Invoking Pester.'
-    Invoke-Pester -OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
+    # '[Info] Testing On:'
+    # Get-EnvironmentInfo
+    # '[Progress] Installing Module.'
+    # . .\CI\Install.ps1
+    # '[Progress] Invoking Pester.'
+    # Invoke-Pester -OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
+    Get-Module -ListAvailable Pester
 }
 if ($Finalize) {
     '[Progress] Finalizing.'
