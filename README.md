@@ -11,7 +11,7 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 In a nutshell.
 
 1. Author your markdown with `Chapter Start and End`, then use fence blocks ``` to indic
-1. In Azure Data Studio PowerShell console, run `Convert-MarkdownToNoteBook .\demo.md -watch`
+1. In [Azure Data Studio](aka.ms/GetAzureDataStudio) PowerShell console, run `Convert-MarkdownToNoteBook .\demo.md -watch`
     - When you save the file, `Convert-MarkdownToNoteBook` detects and auto converts it to a `PowerShell Notebook`
 1. The converted Interactive PowerShell Notebook. *Note*: `Convert-MarkdownToNoteBook` also runs the code from the markdown file and includes the results.
 
@@ -56,12 +56,15 @@ This will include the `1+1` in the interactive notebook, but will **not** evalua
 |Add-NotebookMarkdown|Add-NotebookMarkdown is intended to be used in a New-PSNotebook scriptblock
 |ConvertFrom-NotebookToMarkdown|Take and exiting PowerShell Notebook and convert it to markdown|
 |Convert-MarkdownToNoteBook|Convert a markdown file to an interactive PowerShell Notebook|
+|ConvertTo-SqlNoteBook|Converts a .SQL file to a Notebook file|
 |Export-NotebookToPowerShellScript|Exports all code blocks from a PowerShell Notebook to a PowerShell script
+|Export-NotebookToSqlScript|Exports all text & code blocks from a SQL Notebook to a .SQL file|
 |Get-Notebook|Get-Notebook reads the metadata of a single (or folder of) Jupyter Notebooks
 |Get-NotebookContent|Get-NotebookContents reads the contents of a Jupyter Notebooks
 |Invoke-PowerShellNotebook|Invoke-PowerShellNotebook executes all the PowerShell code blocks in a PowerShell Notebook.
 |New-PSNotebook|Creates a new PowerShell Notebook that can be returned as text or saves as a `ipynb` file.
 |New-PSNotebookRunspace|New-PSNotebookRunspace instantiates the PSNotebookRunspace
+|New-SqlNotebook|Creates a new SQL Notebook that is saved as an `.ipynb` file|
 
 # A PowerShell Notebook with Cells
 
@@ -139,3 +142,28 @@ SayHello World
 #### Here it is in Azure Data Studio
 
 ![](./media/ConvertedFromDemoText.png)
+
+# SQL Notebooks
+
+This module includes three functions for converting or creating SQL Notebooks which are compliant with the format used in Azure Data Studio.
+
+For file conversion scenarios the `ConvertTo-SqlNoteBook` & `Export-NotebookToSqlScript` commands are available.
+
+1. `ConvertTo-SqlNoteBook` Will convert a .SQL file to a Notebook file (.ipynb)
+2. `Export-NotebookToSqlScript` Will export all text & code blocks from a SQL Notebook to a .SQL file
+3. The `New-SqlNotebook` Can creates a new SQL Notebook, and content can be added to that new SQL Notebook using the `Add-NotebookMarkdown` & `Add-NotebookCode` commands
+
+## Examples
+
+The example below downloads the latest version of the BPCheck Jupyter Notebook from the TigerToolbox repository, converts it into a .SQL file (named BPCheck.SQL), and gets the content.
+
+```powershell
+Export-NotebookToSqlScript "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
+Get-Content .\BPCheck.sql
+```
+
+The example below converts the `AdventureWorksMultiStatementSBatch.sql` file into a SQL Notebook.
+
+```powershell
+ConvertTo-SQLNoteBook -InputFileName 'C:\temp\AdventureWorksMultiStatementSBatch.sql' -OutputNotebookName 'C:\temp\AdventureWorksMultiStatementSBatch.ipynb'
+```

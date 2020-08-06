@@ -6,3 +6,5 @@
 . $PSScriptRoot\GetNotebookContent.ps1
 . $PSScriptRoot\InvokePowerShellNotebook.ps1
 . $PSScriptRoot\PowerShellNotebookDSL.ps1
+. $PSScriptRoot\ConvertToSQLNoteBook.ps1
+. $PSScriptRoot\ExportNotebookToSqlScript.ps1
