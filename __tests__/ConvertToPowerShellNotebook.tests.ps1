@@ -27,4 +27,29 @@ Describe "Test ConvertTo-PowerShellNoteBook" {
         $actual[2].Source | Should BeExactly '# Create a function'
         $actual[3].Source | Should BeExactly '# Use the function'
     }
+
+    It "Should convert the file to an ipynb" {
+        $demoTextFile = "$PSScriptRoot\DemoFiles\GetParsedSqlOffsets.ps1"
+        $fullName = "TestDrive:\GetParsedSqlOffsets.ipnyb"
+
+        ConvertTo-PowerShellNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
+        { Test-Path $fullName } | Should Be $true
+
+        $actual = Get-NotebookContent -NoteBookFullName $fullName
+        $actual.Count | Should Be 13
+
+        $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
+
+        $actual.Count | Should Be 7
+        $actual[0].Source | Should BeExactly 'function Get-ParsedSqlOffsets{
+    [CmdletBinding()]
+    param(
+        $ScriptPath
+    )'
+
+        $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
+
+        $actual.Count | Should Be 6
+        $actual[2].Source  | Should BeExactly '<#################################################################################################>'
+    }
 }
