@@ -13,11 +13,18 @@ function Export-NotebookToPowerShellScript {
         .Example
         Export-NotebookToPowerShellScript "https://raw.githubusercontent.com/dfinke/PowerShellNotebook/AddJupyterNotebookMetaInfo/samplenotebook/powershell.ipynb"
         Get-Content .\powershell.ps1
+        
+        .Example
+        Export-NotebookToPowerShellScript .\TestPS.ipynb -IncludeTextCells $true
+        Get-Content .\TestPS.ps1
+
+        Include exporting the the Text cells from the .IPYNB file to the .PS1 file.
         #>
     [CmdletBinding()]
     param(
         $FullName,
-        $outPath = "./"
+        $outPath = "./",
+        $IncludeTextCells=$false
     )
     Write-Progress -Activity "Exporting PowerShell Notebook" -Status $FullName
     
@@ -42,8 +49,16 @@ function Export-NotebookToPowerShellScript {
 "@ 
 
     $heading | Set-Content $fullOutFileName    
-    $result = foreach ($sourceBlock in (Get-NotebookContent $FullName -JustCode).Source) {
-        $sourceBlock
+    if($IncludeTextCells -eq $false)
+        {$sourceBlocks = Get-NotebookContent $FullName -JustCode}
+    else{$sourceBlocks = Get-NotebookContent $FullName}
+
+    $result = foreach ($sourceBlock in $sourceBlocks) {
+        
+        switch ($sourceBlock.Type) {
+            'code'     {($sourceBlock.Source)}
+            'markdown' {"<# "+($sourceBlock.Source)+" #>"}
+        }
         ""
     }
 
