@@ -11,8 +11,8 @@ function ConvertTo-PowerShellNoteBook {
     Parsing section.
     #################################################################################################>
     
-    try{$CommentRanges = [System.Management.Automation.PSParser]::Tokenize((Get-Content $InputFileName), [ref]$null).Where({$_.Type -eq 'Comment'})
-    | SELECT -Property Start, Length, Type, Content }
+    try{$CommentRanges = [System.Management.Automation.PSParser]::Tokenize((Get-Content $InputFileName), [ref]$null).Where({$_.Type -eq 'Comment'}) |
+    Select-Object -Property Start, Length, Type, Content }
     Catch{"This is not a valid PowerShell file"}
     
     $s = Get-Content -Raw ( Resolve-Path $InputFileName )
@@ -67,7 +67,7 @@ function ConvertTo-PowerShellNoteBook {
     
     New-PSNotebook -NoteBookName $OutputNotebookName {
     
-        foreach($Block in $AllBlocks | SORT Start ) {
+        foreach($Block in $AllBlocks | Sort-Object Start ) {
     
             
             switch ($Block.Type) {
