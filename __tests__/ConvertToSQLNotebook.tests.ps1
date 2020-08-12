@@ -3,7 +3,7 @@ Import-Module $PSScriptRoot\..\PowerShellNotebook.psm1 -Force
 Describe "Test ConvertTo-SQLNoteBook" {
     It "Should convert the file to an ipynb with a single code cell" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo.sql"
-        $fullName = "C:\temp\sqlTestConverted.ipynb"
+        $fullName = "TestDrive:\sqlTestConverted.ipynb"
 
         try{
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
