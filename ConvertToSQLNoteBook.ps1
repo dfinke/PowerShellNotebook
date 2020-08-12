@@ -6,13 +6,131 @@ function loadScriptDomModules{
 }
 
 # Quick Helper-function to turn the file into a script fragment, using scriptdom.
-function Get-ScriptComments($ScriptPath){
-    [Microsoft.SqlServer.TransactSql.ScriptDom.TSql150Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql150Parser($false);
+function Get-ParsedSql($ScriptPath){
+
+    loadScriptDomModules
+
+    [Microsoft.SqlServer.TransactSql.ScriptDom.TSql150Parser] $parser = new-object Microsoft.SqlServer.TransactSql.ScriptDom.TSql150Parser($false)
     $Reader = New-Object -TypeName System.IO.StreamReader -ArgumentList $ScriptPath
     $Errors = $null
     $ScriptFrag = $parser.Parse($Reader, [ref]$Errors)
-    # Look for Drop Statements
-    ($ScriptFrag.ScriptTokenStream).where({$_.TokenType -eq 'MultilineComment'})
+    return $ScriptFrag
+}
+
+function Get-ParsedSqlOffsets{
+    [CmdletBinding()]
+    param(
+        $ScriptPath,
+        $IncludeGaps=$true
+    )
+
+<#################################################################################################
+Checking for Batch length
+#################################################################################################>
+$s = Get-Content -Raw ( Resolve-Path $ScriptPath )
+$ParsedSql = Get-ParsedSql $ScriptPath
+$SqlBatches = @()
+$SqlBatch = @()
+$id=1
+foreach($Batch in $ParsedSql.Batches) {
+    $SqlBatch=[pscustomobject][Ordered]@{
+    StartOffset = $Batch.StartOffset;
+    StopOffset  = $Batch.StartOffset+$Batch.FragmentLength;
+    Length      = $Batch.FragmentLength;
+    StartColumn = $Batch.StartColumn;
+    BatchId     = $id;
+    BlockType   = 'Code';
+    Text        = $s.Substring($Batch.StartOffset, $Batch.FragmentLength)
+    }
+    $SqlBatches+=$SqlBatch
+    $id++
+}
+
+$ScriptFrags = (Get-ParsedSql -ScriptPath $ScriptPath).ScriptTokenStream.where({$_.TokenType -eq 'MultilineComment'})
+$Comments = @()
+$Comment = @()
+foreach($Frag in $ScriptFrags ) {
+    $Comment=[pscustomobject][Ordered]@{
+    StartOffset = $Frag.Offset;
+    StopOffset = $Frag.Offset+$Frag.Text.Length;
+    Length = $Frag.Text.Length;
+    StartColumn = $Frag.Column;
+    CommentLocation = $null;
+    BlockType = 'Comment';
+    Text = $Frag.Text
+    }
+
+    foreach($SqlBatch in $SqlBatches){
+
+    if($Comment.StartOffset -ge $SqlBatch.StartOffset -and $Comment.StartOffset -le $SqlBatch.StopOffset)
+    {$Comment.CommentLocation = "Within SQL Batch $($SqlBatch.BatchId)"}
+    else {if($Comment.CommentLocation -notlike '*Within*'){$Comment.CommentLocation = "Outside"}}
+    }
+    $Comments+=$Comment
+}
+
+<#################################################################################################
+This is the basic product of Mulit-line Coments that are outside of Batches.
+#################################################################################################>
+$NotebookBlocks = $SqlBatches + ($Comments | WHERE { $_.CommentLocation -eq 'Outside' })
+if($IncludeGaps -eq $false){
+return $NotebookBlocks | SORT StartOffset
+}
+else {
+    if($NotebookBlocks.Count -eq 1 -and $NotebookBlocks.StopOffset -eq $s.Length){
+    return $NotebookBlocks | SORT StartOffset}
+    else {
+    
+    <#################################################################################################
+    This What we do with the offset results to identify Gaps.
+    #################################################################################################>
+        $SqlBlocks = $NotebookBlocks | SORT StartOffset
+
+        $BlocksWitGaps = @()
+        $Previous = $null
+        foreach($SqlBlock in $SqlBlocks ) {
+            $BlockOffsets=[ordered]@{
+            StartOffset = $SqlBlock.StartOffset;
+            StopOffset = $SqlBlock.StopOffset;
+            Length = $SqlBlock.Length;
+            GapLength = [int] $SqlBlock.StartOffset-$Previous.StopOffset;
+            PreviousStartOffset = $Previous.StartOffset;
+            PreviousStopOffset = $Previous.StopOffset;
+            CommentLocation = $SqlBlock.CommentLocation;
+            BlockType = $SqlBlock.BlockType;
+            GapText = IF($SqlBlock.StartOffset-$Previous.StopOffset -gt 1){[string] $s.Substring($Previous.StopOffset, ($SqlBlock.StartOffset-$Previous.StopOffset))}else {[string] ''};
+            Text = $SqlBlock.Text
+            }
+
+            $Previous=$BlockOffsets
+            $BlocksWitGaps+=[pscustomobject] $BlockOffsets
+        }
+
+        <#################################################################################################
+        This is an extra step to combine Gaps with Batches & Comments in a single structure.
+        #################################################################################################>
+        $AllBlocks = @()
+        $GapOffsets = @()
+        $AllBlocks = $SqlBlocks
+        $Previous = $null
+        foreach($GapBlock in $BlocksWitGaps ) {
+            $GapOffsets=[ordered]@{
+            StartOffset = $GapBlock.PreviousStopOffset;
+            StopOffset = $GapBlock.StartOffset;
+            Length = $GapBlock.GapLength;
+            StartColumn = $null;
+            CommentLocation = 'Between';
+            BlockType = 'Gap';
+            Text = $GapBlock.GapText
+            }
+
+            $Previous=$GapOffsets
+            $AllBlocks+=if($GapOffsets.Length -gt 2){[pscustomobject] $GapOffsets}
+        }
+        #$AllBlocks | SORT StartOffset | ft -AutoSize -Wrap
+        return $AllBlocks
+        }
+    }
 }
 
 function ConvertTo-SQLNoteBook {
@@ -25,38 +143,36 @@ function ConvertTo-SQLNoteBook {
         $OutputNotebookName
     )
 
-    loadScriptDomModules
-
     New-SQLNotebook -NoteBookName $OutputNotebookName {
         $s = Get-Content -Raw ( Resolve-Path $InputFileName )
-        $ScriptFrags = Get-ScriptComments -ScriptPath $InputFileName
+        $AllNoteBlocks = Get-ParsedSqlOffsets -ScriptPath $InputFileName
 
-        $StartCode=0
-        foreach($Comment in $ScriptFrags ) {
-            $LengthCode = $Comment.Offset - $StartCode
-            $CodeBlock = $s.Substring($StartCode, $LengthCode)
-            Write-Verbose "CODE - $($CodeBlock)" -Verbose
-            if($CodeBlock.Trim().length -gt 0){
-                Add-NotebookCode -code (-join $CodeBlock)
+        foreach($Block in $AllNoteBlocks | SORT StartOffset ) {
+
+        
+            switch ($Block.BlockType) {
+                'Code'  {$CodeBlock = $s.Substring($Block.StartOffset, $Block.Length)
+                            Write-Verbose "CODE - $($CodeBlock)"
+    
+                            if($CodeBlock.Trim().length -gt 0){
+                                Add-NotebookCode -code (-join $CodeBlock)
+                            }
+                        }
+                'Comment' {$TextBlock = $s.Substring($Block.StartOffset+2, $Block.Length-4) -replace ("\r\n", "   `n  ")
+                            Write-Verbose "COMMENT - $($TextBlock)"
+    
+                            if($TextBlock.Trim().length -gt 0){
+                                Add-NotebookMarkdown -markdown (-join $TextBlock)
+                            }
+                        }
+                'Gap'   {$GapBlock = ($s.Substring($Block.StartOffset, $Block.Length) -replace ("\n", "   `n  ")).TrimStart().TrimEnd()
+                            Write-Verbose "COMMENT - $($GapBlock)"
+    
+                            if($GapBlock.Trim().length -gt 0){
+                                Add-NotebookMarkdown -markdown (-join $GapBlock)
+                            }
+                        }
             }
-
-            $StartText= $Comment.Offset
-            $LengthText= $Comment.Text.Length
-            $TextBlock = $s.Substring($StartText+2, $LengthText-4) -replace ("\n", "   `n  ")
-            Write-Verbose "COMMENT - $($TextBlock)" -Verbose
-
-            if($TextBlock.Trim().length -gt 0){
-                Add-NotebookMarkdown -markdown (-join $TextBlock)
-            }
-
-            $StartCode= $StartText + $LengthText
-        }
-        # Left over code after last comment block
-        $LengthCode = $s.Length - $StartCode
-        $LastCodeBlock = $s.Substring($StartCode, $LengthCode)
-        Write-Verbose "CODE - $($LastCodeBlock)" -Verbose
-        if($LastCodeBlock.Trim().length -gt 0){
-            Add-NotebookCode -code (-join $LastCodeBlock)
         }
     }
 }
