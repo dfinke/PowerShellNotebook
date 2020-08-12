@@ -18,7 +18,6 @@ Describe "Test ConvertTo-SQLNoteBook" {
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
 
-            $actual.Count | Should Be 1
             write-verbose "tests $($actual[0].Source)" -Verbose
             $actual[0].Source | Should -BeLike '*table3*'
         }
