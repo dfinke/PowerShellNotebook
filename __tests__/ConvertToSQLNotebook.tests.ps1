@@ -9,12 +9,16 @@ Describe "Test ConvertTo-SQLNoteBook" {
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
             { Test-Path $fullName } | Should Be $true
 
+            $actual = Get-NotebookContent -NoteBookFullName $fullName
+            $actual.Source.Count | Should Be 1
+
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
 
             $actual.Count | Should Be 0
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
 
+            $actual.Count | Should Be 1
             write-verbose "tests $($actual[0].Source)" -Verbose
             $actual[0].Source | Should -BeLike '*table3*'
         }
