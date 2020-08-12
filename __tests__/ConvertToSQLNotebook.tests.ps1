@@ -12,15 +12,15 @@ Describe "Test ConvertTo-SQLNoteBook" {
             $actual = Get-NotebookContent -NoteBookFullName $fullName
             $actual.Count | Should Be 1
 
+            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
+
+            $actual.Count | Should Be 0
+
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
 
             $actual.Count | Should Be 1
             write-verbose "tests $($actual[0].Source)" -Verbose
             $actual[0].Source | Should -BeLike '*table3*'
-
-            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
-
-            $actual.Count | Should Be 0
         }
         catch [System.Management.Automation.RuntimeException]{
             Write-Verbose "Runtime exception encountered" -Verbose
