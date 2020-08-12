@@ -9,9 +9,6 @@ Describe "Test ConvertTo-SQLNoteBook" {
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
             { Test-Path $fullName } | Should Be $true
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName
-            $actual.Count | Should Be 1
-
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
 
             $actual.Count | Should Be 0
