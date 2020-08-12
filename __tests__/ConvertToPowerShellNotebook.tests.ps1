@@ -3,7 +3,7 @@ Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 Describe "Test ConvertTo-PowerShellNoteBook" {
     It "Should convert the file to an ipynb" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo.txt"
-        $fullName = "TestDrive:\testConverted.ipnyb"
+        $fullName = "TestDrive:\testConverted.ipynb"
 
         ConvertTo-PowerShellNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
         { Test-Pat $fullName } | Should Be $true
@@ -30,7 +30,7 @@ Describe "Test ConvertTo-PowerShellNoteBook" {
 
     It "Should convert the file to an ipynb" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\GetParsedSqlOffsets.ps1"
-        $fullName = "TestDrive:\GetParsedSqlOffsets.ipnyb"
+        $fullName = "TestDrive:\GetParsedSqlOffsets.ipynb"
 
         ConvertTo-PowerShellNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
         { Test-Path $fullName } | Should Be $true
