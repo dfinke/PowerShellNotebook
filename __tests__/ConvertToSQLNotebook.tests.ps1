@@ -28,6 +28,7 @@ SELECT * FROM table2 WHERE id = 1
 SELECT * FROM table3 where ID = 7
 /* Test3 */
 SELECT * FROM table4 where ID = 8'
+            $actual.Count | Should -Be 1
         }
         catch [System.Management.Automation.RuntimeException]{
             Write-Verbose "Runtime exception encountered" -Verbose
