@@ -146,10 +146,10 @@ else {
 
                 $Previous=$GapOffsets
                 $AllBlocks+=if($GapOffsets.Length -gt 2){[pscustomobject] $GapOffsets}
+                }
             }
             #$AllBlocks | SORT StartOffset | ft -AutoSize -Wrap
             return $AllBlocks
-            }
         }
     }
 }
