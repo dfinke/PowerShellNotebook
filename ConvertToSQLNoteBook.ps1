@@ -21,7 +21,8 @@ function Get-ParsedSqlOffsets{
     [CmdletBinding()]
     param(
         $ScriptPath,
-        $IncludeGaps=$true
+        $IncludeGaps=$true,
+        [switch]$ExtractCommentsInsideBatches
     )
 
 <#################################################################################################
@@ -47,32 +48,42 @@ foreach($Batch in $ParsedSql.Batches) {
 }
 
 $ScriptFrags = (Get-ParsedSql -ScriptPath $ScriptPath).ScriptTokenStream.where({$_.TokenType -eq 'MultilineComment'})
-$Comments = @()
-$Comment = @()
-foreach($Frag in $ScriptFrags ) {
-    $Comment=[pscustomobject][Ordered]@{
-    StartOffset = $Frag.Offset;
-    StopOffset = $Frag.Offset+$Frag.Text.Length;
-    Length = $Frag.Text.Length;
-    StartColumn = $Frag.Column;
-    CommentLocation = $null;
-    BlockType = 'Comment';
-    Text = $Frag.Text
-    }
+#If there are no comments to extract, we will skip the next section of code.
+if($ScriptFrags){
+    $Comments = @()
+    $Comment = @()
+    foreach($Frag in $ScriptFrags ) {
+        $Comment=[pscustomobject][Ordered]@{
+        StartOffset = $Frag.Offset;
+        StopOffset = $Frag.Offset+$Frag.Text.Length;
+        Length = $Frag.Text.Length;
+        StartColumn = $Frag.Column;
+        CommentLocation = $null;
+        BlockType = 'Comment';
+        Text = $Frag.Text
+        }
 
-    foreach($SqlBatch in $SqlBatches){
+        foreach($SqlBatch in $SqlBatches){
 
-    if($Comment.StartOffset -ge $SqlBatch.StartOffset -and $Comment.StartOffset -le $SqlBatch.StopOffset)
-    {$Comment.CommentLocation = "Within SQL Batch $($SqlBatch.BatchId)"}
-    else {if($Comment.CommentLocation -notlike '*Within*'){$Comment.CommentLocation = "Outside"}}
+        if($Comment.StartOffset -ge $SqlBatch.StartOffset -and $Comment.StartOffset -le $SqlBatch.StopOffset)
+        {$Comment.CommentLocation = "Within SQL Batch $($SqlBatch.BatchId)"}
+        else {if($Comment.CommentLocation -notlike '*Within*'){$Comment.CommentLocation = "Outside"}}
+        }
+        $Comments+=$Comment
     }
-    $Comments+=$Comment
 }
-
 <#################################################################################################
 This is the basic product of Mulit-line Coments that are outside of Batches.
+Can you detect parameters in a test?
 #################################################################################################>
-$NotebookBlocks = $SqlBatches + ($Comments | WHERE { $_.CommentLocation -eq 'Outside' })
+if($ExtractCommentsInsideBatches){
+    $ExtractAllComments = $Comments | WHERE { $_.CommentLocation -eq 'Outside' }
+}
+else {
+    $ExtractAllComments = $Comments
+}
+$NotebookBlocks = $SqlBatches + $ExtractAllComments
+
 if($IncludeGaps -eq $false){
 return $NotebookBlocks | SORT StartOffset
 }
@@ -87,7 +98,7 @@ else {
         $SqlBlocks = $NotebookBlocks | SORT StartOffset
 
         $BlocksWitGaps = @()
-        $Previous = $null
+        $Previous = @{StartOffset=0;StopOffset=0}
         foreach($SqlBlock in $SqlBlocks ) {
             $BlockOffsets=[ordered]@{
             StartOffset = $SqlBlock.StartOffset;
@@ -111,24 +122,34 @@ else {
         #################################################################################################>
         $AllBlocks = @()
         $GapOffsets = @()
-        $AllBlocks = $SqlBlocks
-        $Previous = $null
-        foreach($GapBlock in $BlocksWitGaps ) {
-            $GapOffsets=[ordered]@{
-            StartOffset = $GapBlock.PreviousStopOffset;
-            StopOffset = $GapBlock.StartOffset;
-            Length = $GapBlock.GapLength;
+        $Previous = @{StartOffset=0;StopOffset=0}
+        if($BlocksWitGaps.Count -eq 1){$AllBlocks = @($SqlBlocks;[pscustomobject][Ordered]@{
+            StartOffset=0; 
+            StopOffset = $BlocksWitGaps.GapLength;
+            Length = $BlocksWitGaps.GapLength;
             StartColumn = $null;
-            CommentLocation = 'Between';
+            BatchId=0;
             BlockType = 'Gap';
-            Text = $GapBlock.GapText
-            }
+            Text = $BlocksWitGaps.GapText})}
+        else{
+            $AllBlocks = $SqlBlocks
+            foreach($GapBlock in $BlocksWitGaps ) {
+                $GapOffsets=[ordered]@{
+                StartOffset = $GapBlock.PreviousStopOffset;
+                StopOffset = $GapBlock.StartOffset;
+                Length = $GapBlock.GapLength;
+                StartColumn = $null;
+                CommentLocation = 'Between';
+                BlockType = 'Gap';
+                Text = $GapBlock.GapText
+                }
 
-            $Previous=$GapOffsets
-            $AllBlocks+=if($GapOffsets.Length -gt 2){[pscustomobject] $GapOffsets}
-        }
-        #$AllBlocks | SORT StartOffset | ft -AutoSize -Wrap
-        return $AllBlocks
+                $Previous=$GapOffsets
+                $AllBlocks+=if($GapOffsets.Length -gt 2){[pscustomobject] $GapOffsets}
+            }
+            #$AllBlocks | SORT StartOffset | ft -AutoSize -Wrap
+            return $AllBlocks
+            }
         }
     }
 }
