@@ -15,6 +15,9 @@ Describe "Test ConvertTo-SQLNoteBook" {
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
 
+            $actual.Count | Should Be 1
+            write-verbose "COUNT: $($actual.Count)" -Verbose
+
             write-verbose "tests $($actual[0].Source)" -Verbose
             $actual[0].Source | Should -BeLike '*table3*'
             $actual[0].Source | Should -BeExactly 'select DateDiff(MI,StartDate,EndDate) AS Timetaken,* FROM table1
