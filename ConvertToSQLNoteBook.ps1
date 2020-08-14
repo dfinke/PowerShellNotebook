@@ -77,10 +77,10 @@ This is the basic product of Mulit-line Coments that are outside of Batches.
 Can you detect parameters in a test?
 #################################################################################################>
 if($ExtractCommentsInsideBatches){
-    $ExtractAllComments = $Comments | WHERE { $_.CommentLocation -eq 'Outside' }
+    $ExtractAllComments = $Comments
 }
 else {
-    $ExtractAllComments = $Comments
+    $ExtractAllComments = $Comments | WHERE { $_.CommentLocation -eq 'Outside' }
 }
 $NotebookBlocks = $SqlBatches + $ExtractAllComments
 
