@@ -9,11 +9,17 @@ Describe "Test ConvertTo-SQLNoteBook" {
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
             { Test-Path $fullName } | Should Be $true
 
+            $actual = Get-NotebookContent -NoteBookFullName $fullName
+
+            @($actual).Count | Should -Be 1
+
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
 
-            $actual.Count | Should Be 0
+            $actual.Count | Should -Be 0
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
+
+            @($actual).Count | Should -Be 1
 
             write-verbose "tests $($actual[0].Source)" -Verbose
             $actual[0].Source | Should -BeLike '*table3*'
@@ -41,21 +47,21 @@ SELECT * FROM table4 where ID = 8'
 
         try{
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
-            { Test-Path $fullName } | Should Be $true
+            { Test-Path $fullName } | Should -Be $true
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName
-            $actual.Count | Should Be 9
+            $actual.Count | Should -Be 9
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
 
-            $actual.Count | Should Be 3
+            $actual.Count | Should -Be 3
             write-verbose "tests $($actual[0].Source)" -Verbose
             $actual[0].Source | Should -BeLike '*table1*'
             $actual[1].Source | Should -BeLike '*table3*'
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
 
-            $actual.Count | Should Be 6
+            $actual.Count | Should -Be 6
             $actual[0].Source.Trim() | Should BeExactly 'GO'
             $actual[1].Source.Trim() | Should BeExactly 'Test1'
             $actual[2].Source.Trim() | Should -BeLike '*Multiline test*'
