@@ -12,15 +12,14 @@ Describe "Test Get-ParsedSqlOffsets" {
 
             @($Offsets).Count | Should -Be 1
 
-            $Offsets = (Get-ParsedSqlOffsets -ScriptPath $demoTextFile).where({$_.BlockType -ne 'Code'})
+            $Offsets = Get-ParsedSqlOffsets -ScriptPath $demoTextFile | Where-Object {$_.BlockType -ne 'Code'}
 
             $Offsets.Count | Should -Be 0
 
-            $Offsets = (Get-ParsedSqlOffsets -ScriptPath $demoTextFile).where({$_.BlockType -eq 'Code'})
+            $Offsets = Get-ParsedSqlOffsets -ScriptPath $demoTextFile | Where-Object {$_.BlockType -eq 'Code'}
 
             @($Offsets).Count | Should -Be 1
 
-            write-verbose "tests $($Offsets[0].Source)" -Verbose
             $Offsets[0].Text | Should -BeExactly 'select DateDiff(MI,StartDate,EndDate) AS Timetaken,* FROM table1
 SELECT * FROM table2 WHERE id = 1
 /* Test1 */
@@ -68,7 +67,7 @@ SELECT * FROM table4 where ID = 8'
             throw
         }
     }
-    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 6 text cells" {
+    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 5 text cells" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\AdventureWorksMultiStatementSBatch_NoGO2.sql"
         $fullName = "TestDrive:\AdventureWorksMultiStatementSBatch_NoGO2.csv"
 
