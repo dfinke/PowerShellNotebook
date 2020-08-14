@@ -80,7 +80,7 @@ if($ExtractCommentsInsideBatches){
     $ExtractAllComments = $Comments
 }
 else {
-    $ExtractAllComments = $Comments | WHERE { $_.CommentLocation -eq 'Outside' }
+    $ExtractAllComments = $Comments | Where-Object { $_.CommentLocation -eq 'Outside' }
 }
 $NotebookBlocks = $SqlBatches + $ExtractAllComments
 
