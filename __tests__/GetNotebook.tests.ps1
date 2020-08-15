@@ -1,4 +1,4 @@
-Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
+#Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test PS Notebooks" {
 
