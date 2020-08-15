@@ -32,8 +32,8 @@ jobs:
       vmImage: 'windows-latest'
     steps:
     - pwsh: |    
-        gmo -list pester
-        Uninstall-Module pester -Verbose
+        gmo -list Pester
+        Uninstall-Module Pester -Verbose
 
         # $r=gmo -list pester|select -First 1
         # $r
@@ -65,8 +65,8 @@ jobs:
       vmImage: 'ubuntu-latest'
     steps:
     - pwsh: |    
-        gmo -list pester
-        Uninstall-Module pester -Verbose
+        gmo -list Pester
+        Uninstall-Module Pester -Verbose
 
         # $r=gmo -list pester|select -First 1
         # $r
@@ -94,8 +94,8 @@ jobs:
       vmImage: 'macOS-latest'
     steps:
     - pwsh: |    
-        gmo -list pester
-        Uninstall-Module pester -Verbose
+        gmo -list Pester
+        Uninstall-Module Pester -Verbose
 
         # $r=gmo -list pester|select -First 1
         # $r
