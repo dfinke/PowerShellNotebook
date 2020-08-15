@@ -33,12 +33,13 @@ jobs:
     steps:
     - pwsh: |    
         gmo -list Pester
-        Uninstall-Module Pester -Verbose
+        #Uninstall-Module Pester -Verbose
+        Uninstall-Module Pester -RequiredVersion 5.0.2 -Force
 
         # $r=gmo -list pester|select -First 1
         # $r
         # if($r.Version -ge [version]'5.0') {
-        #   Uninstall-Module Pester -MinimumVersion ($r.Version.tostring()) -Force
+        #   Uninstall-Module Pester -MinimumVersion 5.0.2 -Force
         # }    
         # Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1
         # Install-Module -Name ImportExcel -Force -SkipPublisherCheck
