@@ -37,9 +37,9 @@ jobs:
         # if($r.Version -ge [version]'5.0') {
         #   Uninstall-Module Pester -MinimumVersion ($r.Version.tostring()) -Force
         # }
-        
-        Uninstall-Module Pester
-        Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1
+        gmo -list pester
+        Uninstall-Module pester -Verbose
+        # Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1
         # Install-Module -Name ImportExcel -Force -SkipPublisherCheck
         # Install-Module -Name SqlServer -Force -SkipPublisherCheck
         
