@@ -32,12 +32,12 @@ jobs:
       vmImage: 'windows-latest'
     steps:
     - pwsh: | 
-        $r=gmo -list pester|select -First 1
-        if($r.Version -gt [version]'5.0.0') {
-          Uninstall-Module Pester -MinimumVersion 5.0.0 -Force
-        }
+        # $r=gmo -list pester|select -First 1
+        # if($r.Version -gt [version]'5.0.0') {
+        #   Uninstall-Module Pester -MinimumVersion 5.0.0 -Force
+        # }
         
-        Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1
+        # Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.10.1
         Install-Module -Name ImportExcel -Force -SkipPublisherCheck
         Install-Module -Name SqlServer -Force -SkipPublisherCheck
         
