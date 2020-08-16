@@ -23,11 +23,11 @@ jobs:
     - powershell: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'NUnit'
-        testResultsFiles: '**/TestResults*.xml'
-        failTaskOnFailedTests: true
+    # - task: PublishTestResults@2
+    #   inputs:
+    #     testResultsFormat: 'NUnit'
+    #     testResultsFiles: '**/TestResults*.xml'
+    #     failTaskOnFailedTests: true
 
     # - powershell: './CI/CI.ps1 -Artifact'
     #   displayName: 'Prepare Artifact'
