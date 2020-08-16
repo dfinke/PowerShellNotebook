@@ -92,12 +92,15 @@ if ($Test) {
     Install-Module SqlServer -Force
 
     '[Progress] Pester Version.'
-    Get-Module -ListAvailable Pester | Select-Object -Last 1
+    $pesterInfo = Get-Module -ListAvailable Pester | Select-Object -First 1
+    if ($pesterInfo.Version -le "5.0") {
+        Install-Module Pester -Force
+    }
 
     '[Progress] Invoking Pester.'
     #Invoke-Pester #-OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
     $r = Invoke-Pester -PassThru
-    if($r.FailedCount -gt 0) {
+    if ($r.FailedCount -gt 0) {
         Throw "Tests failed"
     }
 }
