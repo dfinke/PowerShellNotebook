@@ -1,20 +1,20 @@
-Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
+#Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test Invoke PS Notebook" {
 
     It "Should have New-PSNotebook" {
         $actual = Get-Command New-PSNotebook -ErrorAction SilentlyContinue
-        $actual | Should Not Be $Null
+        $actual | Should -Not -Be  $Null
     }
 
     It "Should have Add-NotebookCode" {
         $actual = Get-Command Add-NotebookCode -ErrorAction SilentlyContinue
-        $actual | Should Not Be $Null
+        $actual | Should -Not -Be  $Null
     }
 
     It "Should have Add-NotebookMarkdown" {
         $actual = Get-Command Add-NotebookMarkdown -ErrorAction SilentlyContinue
-        $actual | Should Not Be $Null
+        $actual | Should -Not -Be  $Null
     }
 
     It "Should generate correct PowerShell notebook format" {
@@ -31,11 +31,11 @@ Describe "Test Invoke PS Notebook" {
         }
 
         $actual = $actualJson | ConvertFrom-Json
-        $actual.cells.count | Should Be 3
+        $actual.cells.count | Should -Be 3
 
-        $actual.cells[0].source | Should BeExactly "8+12"
-        $actual.cells[1].source | Should BeExactly "8+3"
-        $actual.cells[2].source | Should BeExactly "## Math
+        $actual.cells[0].source | Should -BeExactly "8+12"
+        $actual.cells[1].source | Should -BeExactly "8+3"
+        $actual.cells[2].source | Should -BeExactly "## Math
 
 - show addition
 - show other
@@ -50,7 +50,7 @@ Describe "Test Invoke PS Notebook" {
         }
 
         $r = Test-Path $fullName
-        $r | should be $true
+        $r | Should -Be $true
     }
 
     It "Should have correct top level metadata" {
@@ -77,18 +77,18 @@ Describe "Test Invoke PS Notebook" {
                 }
         #>
 
-        $actual.metadata | Should Not Be $null
-        $actual.metadata.kernelspec.name | Should BeExactly 'powershell'
-        $actual.metadata.kernelspec.display_name | Should BeExactly 'PowerShell'
+        $actual.metadata | Should -Not -Be  $null
+        $actual.metadata.kernelspec.name | Should -BeExactly 'powershell'
+        $actual.metadata.kernelspec.display_name | Should -BeExactly 'PowerShell'
 
-        $actual.metadata.language_info.name | Should BeExactly 'powershell'
-        $actual.metadata.language_info.codemirror_mode | Should BeExactly 'shell'
-        $actual.metadata.language_info.mimetype | Should BeExactly 'text/x-sh'
-        $actual.metadata.language_info.file_extension | Should BeExactly '.ps1'
+        $actual.metadata.language_info.name | Should -BeExactly 'powershell'
+        $actual.metadata.language_info.codemirror_mode | Should -BeExactly 'shell'
+        $actual.metadata.language_info.mimetype | Should -BeExactly 'text/x-sh'
+        $actual.metadata.language_info.file_extension | Should -BeExactly '.ps1'
 
-        $actual.nbformat_minor | Should Be 2
-        $actual.nbformat | Should Be 4
-        $actual.cells.Count | Should Be 0
+        $actual.nbformat_minor | Should -Be 2
+        $actual.nbformat | Should -Be 4
+        $actual.cells.Count | Should -Be 0
     }
 
     It "Should have correct markdown metadata" {
@@ -119,9 +119,9 @@ Describe "Test Invoke PS Notebook" {
 
         $actual = ConvertFrom-Json $nb
 
-        $actual.cells.Count | should be 1
-        $actual.cells[0].cell_type | should BeExactly 'markdown'
-        $actual.cells[0].metadata.GetType().name | should BeExactly "PSCustomObject"
-        $actual.cells[0].source | should BeExactly '# Hello World'
+        $actual.cells.Count | Should -Be 1
+        $actual.cells[0].cell_type | Should -BeExactly 'markdown'
+        $actual.cells[0].metadata.GetType().name | Should -BeExactly "PSCustomObject"
+        $actual.cells[0].source | Should -BeExactly '# Hello World'
     }
 }

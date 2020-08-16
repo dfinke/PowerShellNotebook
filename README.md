@@ -4,7 +4,16 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 
 ## Continuous Integration Status
 
-[![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
+
+<!-- [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master) -->
+
+| Environment                   ||
+|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows                       | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=Windows)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master)       |
+| Windows (Core)                | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=WindowsPSCore)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master) |
+| Ubuntu                        | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=Ubuntu)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master)        |
+| macOS                         | [![Build Status](https://dev.azure.com/ili101/Module.Template/_apis/build/status/ili101.Module.Template?branchName=master&jobName=macOS)](https://dev.azure.com/ili101/Module.Template/_build/latest?definitionId=1&branchName=master)         |
+
 
 # Check out the [Video Here](http://bit.ly/2SylBm4)
 
@@ -66,6 +75,7 @@ This will include the `1+1` in the interactive notebook, but will **not** evalua
 |New-PSNotebook|Creates a new PowerShell Notebook that can be returned as text or saves as a `ipynb` file.
 |New-PSNotebookRunspace|New-PSNotebookRunspace instantiates the PSNotebookRunspace
 |New-SqlNotebook|Creates a new SQL Notebook that is saved as an `.ipynb` file|
+
 
 # A PowerShell Notebook with Cells
 

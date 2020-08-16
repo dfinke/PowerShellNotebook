@@ -23,7 +23,7 @@ if ($Initialize) {
 }
 if ($Test) {
     function Get-EnvironmentInfo {
-        if ([environment]::OSVersion.Platform -like "win*") {
+        if ($null -eq $IsWindows -or $IsWindows) {
             # Get Windows Version
             try {
                 $WinRelease, $WinVer = Get-ItemPropertyValue "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" ReleaseId, CurrentMajorVersionNumber, CurrentMinorVersionNumber, CurrentBuildNumber, UBR
@@ -32,18 +32,8 @@ if ($Test) {
             catch {
                 $WindowsVersion = [System.Environment]::OSVersion.Version
             }
-#TODO FIXME BUG this gets the latest version of the .NET Framework on the machine (ok for powershell.exe), not the version of .NET CORE in use by PWSH.EXE
-<#
-$VersionFilePath =     (Get-Process -Id $PID | Select-Object -ExpandProperty Modules |
-                     Where-Object -Property modulename -eq "clrjit.dll").FileName
-if (-not $VersionFilePath) {
-    $VersionFilePath = [System.Reflection.Assembly]::LoadWithPartialName("System.Core").location
- }
- (Get-ItemProperty -Path $VersionFilePath).VersionInfo |
-                    Select-Object -Property @{n="Version"; e={$_.ProductName + " " + $_.FileVersion}}, ProductName, FileVersionRaw, FileName
-#>
 
-        # Get .Net Version
+            # Get .Net Version
             # https://stackoverflow.com/questions/3487265/powershell-script-to-return-versions-of-net-framework-on-a-machine
             $Lookup = @{
                 378389 = [version]'4.5'
@@ -92,14 +82,40 @@ if (-not $VersionFilePath) {
         }
     }
 
-    # '[Info] Testing On:'
-    # Get-EnvironmentInfo
-    # '[Progress] Installing Module.'
-    # . .\CI\Install.ps1
-    # '[Progress] Invoking Pester.'
-    # Invoke-Pester -OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
-    Get-Module -ListAvailable Pester
+    '[Info] Testing On:'
+    Get-EnvironmentInfo
+
+    '[Progress] Install ImportExcel'
+    Install-Module ImportExcel -Force
+    
+    '[Progress] Install SqlServer'
+    Install-Module SqlServer -Force
+
+    '[Progress] Pester Version.'
+    $pesterInfo = Get-Module -ListAvailable Pester | Select-Object -First 1
+    if ($pesterInfo.Version -le "5.0") {
+        Install-Module Pester -Force
+    }
+
+    Get-Module -ListAvailable Pester | Select-Object -First 1
+
+    '[Progress] Invoking Pester.'    
+    $pesterResults = Invoke-Pester -PassThru
+    if ($pesterResults.FailedCount -gt 0) {
+        
+        '[Progress] Pester Results Failed'
+        $pesterResults.Failed | Out-String
+        
+        '[Progress] Pester Results FailedBlocks'
+        $pesterResults.FailedBlocks | Out-String
+        
+        '[Progress] Pester Results FailedContainers'
+        $pesterResults.FailedContainers | Out-String
+
+        Throw "Tests failed"
+    }
 }
+
 if ($Finalize) {
     '[Progress] Finalizing.'
     $Failure = $false

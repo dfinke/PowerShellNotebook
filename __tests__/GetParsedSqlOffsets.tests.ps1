@@ -8,7 +8,7 @@ Describe "Test Get-ParsedSqlOffsets" {
         try{
             $Offsets = Get-ParsedSqlOffsets -ScriptPath $demoTextFile
             $Offsets | ConvertTo-Csv -NoTypeInformation > $fullName
-            { Test-Path $fullName } | Should Be $true
+            { Test-Path $fullName } | Should -Be $true
 
             @($Offsets).Count | Should -Be 1
 

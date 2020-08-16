@@ -1,20 +1,20 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
-$expectedPSNBFilename = "$PSScriptRoot\samplemarkdown\demo.ipynb"
+$script:expectedPSNBFilename = "$PSScriptRoot\samplemarkdown\demo.ipynb"
 
 Describe "Test Convert-MarkdownToPowerShellNoteBook" {
     BeforeEach {
-        Remove-Item $expectedPSNBFilename -ErrorAction SilentlyContinue
+        Remove-Item $script:expectedPSNBFilename -ErrorAction SilentlyContinue
     }
 
     AfterAll {
-        Remove-Item $expectedPSNBFilename -ErrorAction SilentlyContinue
+        Remove-Item $script:expectedPSNBFilename -ErrorAction SilentlyContinue
     }
 
     It "Should create a PSNotebookRunspace " {
         $actual = New-PSNotebookRunspace
 
-        $actual | should not be $null
-        $actual.GetType().Name | should be 'PSNotebookRunspace'
+        $actual | Should -Not -Be  $null
+        $actual.GetType().Name | Should -Be 'PSNotebookRunspace'
     }
 
     It "Should return this after Invoke" {
@@ -22,35 +22,35 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
 
         $actual = $obj.Invoke("1+1")
 
-        $actual | should be 2
+        $actual | Should -Be 2
     }
 
     It "Should create a notebook file" {
         $sourceMD = "$PSScriptRoot\samplemarkdown\demo.md"
         Convert-MarkdownToNoteBook -filename $sourceMD
-        (Test-Path $expectedPSNBFilename) | should be $true
+        (Test-Path $script:expectedPSNBFilename) | Should -Be $true
     }
 
     It "Check the PS NB content" {
         $sourceMD = "$PSScriptRoot\samplemarkdown\demo.md"
         Convert-MarkdownToNoteBook -filename $sourceMD
-        (Test-Path $expectedPSNBFilename) | should be $true
+        (Test-Path $script:expectedPSNBFilename) | Should -Be $true
 
-        $psnb = Get-Content $expectedPSNBFilename | ConvertFrom-Json
+        $psnb = Get-Content $script:expectedPSNBFilename | ConvertFrom-Json
 
-        $psnb.cells.count | should be 4
+        $psnb.cells.count | Should -Be 4
 
-        $psnb.cells[0].cell_type | should be markdown
-        $psnb.cells[0].source | should beexactly '# Chapter 1'
+        $psnb.cells[0].cell_type | Should -Be markdown
+        $psnb.cells[0].source | Should -Beexactly '# Chapter 1'
 
-        $psnb.cells[1].cell_type | should be markdown
-        $psnb.cells[1].source.trim() | should beexactly 'This is `addition`'
+        $psnb.cells[1].cell_type | Should -Be markdown
+        $psnb.cells[1].source.trim() | Should -Beexactly 'This is `addition`'
 
-        $psnb.cells[2].cell_type | should be code
-        $psnb.cells[2].source.trim() | should beexactly "5 + 7"
-        $psnb.cells[2].outputs.text.trim() | should beexactly "12"
+        $psnb.cells[2].cell_type | Should -Be code
+        $psnb.cells[2].source.trim() | Should -Beexactly "5 + 7"
+        $psnb.cells[2].outputs.text.trim() | Should -Beexactly "12"
 
-        $psnb.cells[3].cell_type | should be markdown
+        $psnb.cells[3].cell_type | Should -Be markdown
     }
 
     It "Check the PowerShell fence block NB content" {
@@ -59,23 +59,23 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
 
         Convert-MarkdownToNoteBook -filename $sourceMD
 
-        (Test-Path $nbFile) | should be $true
+        (Test-Path $nbFile) | Should -Be $true
 
         $psnb = Get-Content $nbFile | ConvertFrom-Json
 
-        $psnb.cells.count | should be 4
+        $psnb.cells.count | Should -Be 4
 
-        $psnb.cells[0].cell_type | should be markdown
-        $psnb.cells[0].source | should beexactly '# Chapter 1'
+        $psnb.cells[0].cell_type | Should -Be markdown
+        $psnb.cells[0].source | Should -Beexactly '# Chapter 1'
 
-        $psnb.cells[1].cell_type | should be markdown
-        $psnb.cells[1].source.trim() | should beexactly 'This is `addition`'
+        $psnb.cells[1].cell_type | Should -Be markdown
+        $psnb.cells[1].source.trim() | Should -Beexactly 'This is `addition`'
 
-        $psnb.cells[2].cell_type | should be code
-        $psnb.cells[2].source.trim() | should beexactly "40 + 2"
-        $psnb.cells[2].outputs.text.trim() | should beexactly "42"
+        $psnb.cells[2].cell_type | Should -Be code
+        $psnb.cells[2].source.trim() | Should -Beexactly "40 + 2"
+        $psnb.cells[2].outputs.text.trim() | Should -Beexactly "42"
 
-        $psnb.cells[3].cell_type | should be markdown
+        $psnb.cells[3].cell_type | Should -Be markdown
         Remove-Item $nbFile -ErrorAction SilentlyContinue
     }
 
@@ -84,16 +84,16 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
         Convert-MarkdownToNoteBook -filename $sourceMD
         $expectedOutFileName = "$PSScriptRoot\samplemarkdown\excludeResults.ipynb"
 
-        (Test-Path $expectedOutFileName) | should be $true
+        (Test-Path $expectedOutFileName) | Should -Be $true
 
         $psnb = Get-Content $expectedOutFileName | ConvertFrom-Json
 
         $codeBlocks = $psnb.cells | Where-Object { $_.cell_type -eq 'code' }
-        $codeBlocks.count | should be 3
+        $codeBlocks.count | Should -Be 3
 
-        $codeBlocks[0].outputs.text.length | should be 0
-        $codeBlocks[1].outputs.text.length | should be 0
-        $codeBlocks[2].outputs.text.length | should be 3
+        $codeBlocks[0].outputs.text.length | Should -Be 0
+        $codeBlocks[1].outputs.text.length | Should -Be 0
+        $codeBlocks[2].outputs.text.length | Should -Be 3
 
         Remove-Item $expectedOutFileName -Force -ErrorAction SilentlyContinue
     }
@@ -105,19 +105,19 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
 
         $expectedOutFileName = "$PSScriptRoot\MultipleChapters\MultipleChapters.ipynb"
 
-        (Test-Path $expectedOutFileName) | should be $true
+        (Test-Path $expectedOutFileName) | Should -Be $true
 
         $psnb = Get-Content $expectedOutFileName | ConvertFrom-Json
 
         $markdownBlocks = $psnb.cells | Where-Object { $_.cell_type -eq 'markdown' }
-        $markdownBlocks.count | should be 5
+        $markdownBlocks.count | Should -Be 5
 
-        $markdownBlocks[0].source | should be "# Chapter 1"
-        $markdownBlocks[2].source | should be "# SUMMARY`r`n"
-        $markdownBlocks[3].source | should be "# Chapter 2"
+        $markdownBlocks[0].source | Should -Be "# Chapter 1"
+        $markdownBlocks[2].source | Should -Be "# SUMMARY`r`n"
+        $markdownBlocks[3].source | Should -Be "# Chapter 2"
 
         $result = $markdownBlocks[4].source -notmatch "^# SUMMARY"
-        $result | should be $true
+        $result | Should -Be $true
 
         Remove-Item $expectedOutFileName -Force -ErrorAction SilentlyContinue
     }
