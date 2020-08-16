@@ -55,7 +55,7 @@ Describe "Test Invoke PS Notebook" {
         Remove-Item $actual #-ErrorAction SilentlyContinue
     }
 
-    It "Should export to an Excel file to cwd from the testPSExcel.ipynb" {
+    It "Should export to an Excel file to cwd from the testPSExcel.ipynb" -Skip {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
         # $actual | Should -Be "$PSScriptRoot\testPSExcel.xlsx"
         $actualExcelFileName = Split-Path $actual -Leaf
