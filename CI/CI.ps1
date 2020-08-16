@@ -86,7 +86,7 @@ if ($Test) {
     Get-EnvironmentInfo
 
     '[Progress] Pester Version.'
-    Get-Module -ListAvailable Pester
+    Get-Module -ListAvailable Pester | Select-Object -Last 1
 
     '[Progress] Invoking Pester.'
     Invoke-Pester #-OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
