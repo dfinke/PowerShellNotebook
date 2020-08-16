@@ -85,6 +85,12 @@ if ($Test) {
     '[Info] Testing On:'
     Get-EnvironmentInfo
 
+    '[Progress] Install ImportExcel'
+    Install-Module ImportExcel -Force
+    
+    '[Progress] Install SqlServer'
+    Install-Module SqlServer -Force
+
     '[Progress] Pester Version.'
     Get-Module -ListAvailable Pester | Select-Object -Last 1
 
