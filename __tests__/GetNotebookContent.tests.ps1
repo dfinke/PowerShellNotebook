@@ -7,7 +7,7 @@ Describe "Test PS Notebook Content" {
         $actual | Should -Not -Be  $Null
     }
 
-    It "testPSNb1.ipynb should have this content" {
+    It "testPSNb1.ipynb should have this content" -Skip {
         <#
             NoteBookName    Type     Source
             ------------    ----     ------
@@ -50,7 +50,7 @@ Describe "Test PS Notebook Content" {
         $actual[1].Source | Should -Be "8+3"
     }
 
-    It "testPSNb1.ipynb should have only this markdown" {
+    It "testPSNb1.ipynb should have only this markdown" -Skip {
         $actual = @(Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb" -JustMarkdown)
 
         $actual[0].NoteBookName | Should -Be "testPSNb1.ipynb"

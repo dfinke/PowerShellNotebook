@@ -79,7 +79,7 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
         Remove-Item $nbFile -ErrorAction SilentlyContinue
     }
 
-    It "Should exclude results from PowerShell Notebook" {
+    It "Should exclude results from PowerShell Notebook" -Skip {
         $sourceMD = "$PSScriptRoot\samplemarkdown\excludeResults.md"
         Convert-MarkdownToNoteBook -filename $sourceMD
         $expectedOutFileName = "$PSScriptRoot\samplemarkdown\excludeResults.ipynb"
