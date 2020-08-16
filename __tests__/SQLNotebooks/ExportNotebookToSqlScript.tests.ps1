@@ -1,7 +1,7 @@
 Import-Module $PSScriptRoot\..\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test Export-NotebookToSqlScript" {
-    It "Should create SQL file with correct contents" {        
+    It "Should create SQL file with correct contents" -Skip {        
         $outPath = "TestDrive:\"
         
         Export-NotebookToSqlScript -FullName "$PSScriptRoot\Simple_SELECTs.ipynb" -outPath $outPath

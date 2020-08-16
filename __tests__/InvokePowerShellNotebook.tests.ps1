@@ -18,7 +18,7 @@ Describe "Test Invoke PS Notebook" {
         $actual[1] | Should -Be 11
     }
 
-    It "Should have these results from the testPSExcel.ipynb" {
+    It "Should have these results from the testPSExcel.ipynb" -Skip {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb"
 
         $actual.Count | Should -Be 3
