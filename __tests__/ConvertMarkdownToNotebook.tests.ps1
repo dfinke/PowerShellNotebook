@@ -1,13 +1,13 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
-$expectedPSNBFilename = "$PSScriptRoot\samplemarkdown\demo.ipynb"
+$script:expectedPSNBFilename = "$PSScriptRoot\samplemarkdown\demo.ipynb"
 
 Describe "Test Convert-MarkdownToPowerShellNoteBook" {
     BeforeEach {
-        Remove-Item $expectedPSNBFilename -ErrorAction SilentlyContinue
+        Remove-Item $script:expectedPSNBFilename -ErrorAction SilentlyContinue
     }
 
     AfterAll {
-        Remove-Item $expectedPSNBFilename -ErrorAction SilentlyContinue
+        Remove-Item $script:expectedPSNBFilename -ErrorAction SilentlyContinue
     }
 
     It "Should create a PSNotebookRunspace " {
@@ -28,15 +28,15 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
     It "Should create a notebook file" {
         $sourceMD = "$PSScriptRoot\samplemarkdown\demo.md"
         Convert-MarkdownToNoteBook -filename $sourceMD
-        (Test-Path $expectedPSNBFilename) | Should -Be $true
+        (Test-Path $script:expectedPSNBFilename) | Should -Be $true
     }
 
     It "Check the PS NB content" {
         $sourceMD = "$PSScriptRoot\samplemarkdown\demo.md"
         Convert-MarkdownToNoteBook -filename $sourceMD
-        (Test-Path $expectedPSNBFilename) | Should -Be $true
+        (Test-Path $script:expectedPSNBFilename) | Should -Be $true
 
-        $psnb = Get-Content $expectedPSNBFilename | ConvertFrom-Json
+        $psnb = Get-Content $script:expectedPSNBFilename | ConvertFrom-Json
 
         $psnb.cells.count | Should -Be 4
 
