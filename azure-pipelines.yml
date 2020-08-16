@@ -20,8 +20,6 @@ jobs:
       vmImage: 'windows-latest'
 
     steps:
-    - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'
-      displayName: 'Update Pester'
     - powershell: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
@@ -49,8 +47,6 @@ jobs:
       vmImage: 'windows-latest'
 
     steps:
-    - pwsh: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'
-      displayName: 'Update Pester'
     - pwsh: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
@@ -65,8 +61,6 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
-    - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'
-      displayName: 'Update Pester'
     - powershell: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
@@ -81,8 +75,6 @@ jobs:
       vmImage: 'macOS-latest'
 
     steps:
-    - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'
-      displayName: 'Update Pester'
     - powershell: './CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
