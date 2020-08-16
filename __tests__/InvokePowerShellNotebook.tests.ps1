@@ -39,7 +39,7 @@ Describe "Test Invoke PS Notebook" {
         $actual[2].Count | Should -Be 10
     }
 
-    It "Should create and Excel file" {
+    It "Should create and Excel file" -Skip {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
 
         $actualPath = Split-Path $actual
