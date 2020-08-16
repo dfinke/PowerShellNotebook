@@ -99,10 +99,19 @@ if ($Test) {
 
     Get-Module -ListAvailable Pester | Select-Object -First 1
 
-    '[Progress] Invoking Pester.'
-    #Invoke-Pester #-OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
-    $r = Invoke-Pester -PassThru
-    if ($r.FailedCount -gt 0) {
+    '[Progress] Invoking Pester.'    
+    $pesterResults = Invoke-Pester -PassThru
+    if ($pesterResults.FailedCount -gt 0) {
+        
+        '[Progress] Pester Results Failed'
+        $pesterResults.Failed | Out-String
+        
+        '[Progress] Pester Results FailedBlocks'
+        $pesterResults.FailedBlocks | Out-String
+        
+        '[Progress] Pester Results FailedContainers'
+        $pesterResults.FailedContainers | Out-String
+
         Throw "Tests failed"
     }
 }
