@@ -6,13 +6,13 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" {
 
         $actual = ConvertFrom-NoteBookToMarkdown -NotebookName $targetFile -AsText
 
-        $actual.Count | should be 3
+        $actual.Count | Should -Be 3
 
-        $actual[0].trim() | should beexactly '# Test for converting a PS Notebook to Markdown'
-        $actual[2].trim() | should beexactly '## End of PS Notebook'
+        $actual[0].trim() | Should -Beexactly '# Test for converting a PS Notebook to Markdown'
+        $actual[2].trim() | Should -Beexactly '## End of PS Notebook'
 
-        ($actual[1]).StartsWith('```powershell') | should be $true
-        ($actual[1]).Trim().EndsWith('```') | should be $true
+        ($actual[1]).StartsWith('```powershell') | Should -Be $true
+        ($actual[1]).Trim().EndsWith('```') | Should -Be $true
     }
 
     It "Should convert to markdown in a file" {
@@ -22,7 +22,7 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" {
 
         $actual = ConvertFrom-NoteBookToMarkdown -NotebookName $targetFile
 
-        $actual | should beexactly $expected
+        $actual | Should -Beexactly $expected
 
         Remove-Item $expected -ErrorAction SilentlyContinue
     }

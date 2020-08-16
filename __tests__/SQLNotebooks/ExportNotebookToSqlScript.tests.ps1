@@ -32,7 +32,7 @@ Describe "Test Export-NotebookToSqlScript" {
         Export-NotebookToSqlScript -FullName $url
 
         $SQLFile = "./BPCheck.SQL"
-        Test-Path $SQLFile | should be $true
+        Test-Path $SQLFile | Should -Be $true
 
         $contents = Get-Content $SQLFile
 

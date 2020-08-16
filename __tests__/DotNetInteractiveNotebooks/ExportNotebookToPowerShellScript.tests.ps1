@@ -29,15 +29,15 @@ Describe "Test Export-NotebookToPowerShellScript" {
         Export-NotebookToPowerShellScript -FullName $ipynbFileName
         $ps1File = "./MultiLineSourceAsArray.ps1"
     
-        Test-Path $ps1File | should be $true
+        Test-Path $ps1File | Should -Be $true
     
         $actual = Get-Content $ps1File
     
-        $actual.Count | should be 11
+        $actual.Count | Should -Be 11
     
-        $actual[7] | should be 'foreach ($item in 1..10) {'
-        $actual[8] | should be '    $item'
-        $actual[9] | should be '}'
+        $actual[7] | Should -Be 'foreach ($item in 1..10) {'
+        $actual[8] | Should -Be '    $item'
+        $actual[9] | Should -Be '}'
     
         Remove-Item $ps1File -ErrorAction SilentlyContinue
     }
@@ -48,7 +48,7 @@ Describe "Test Export-NotebookToPowerShellScript" {
         Export-NotebookToPowerShellScript -FullName $url
 
         $ps1File = "./powershell.ps1"
-        Test-Path $ps1File | should be $true
+        Test-Path $ps1File | Should -Be $true
 
         $contents = Get-Content $ps1File
 

@@ -5,16 +5,16 @@ Describe "PSNotebookRunspace tests" {
         $psrs = New-PSNotebookRunspace
     }
 
-    It "Should not be null" {
-        $psrs | Should Not Be $null
+    It "Should -Not -Be  null" {
+        $psrs | Should -Not -Be  $null
     }
 
-    It "Should be 42" {
+    It "Should -Be 42" {
         $code = '10+32'
         $actual = $psrs.Invoke($code)
         $expected = 42
 
-        $actual | Should Be $expected
+        $actual | Should -Be $expected
     }
 
     It "Should also be 42" {
@@ -24,7 +24,7 @@ Describe "PSNotebookRunspace tests" {
         $actual = $psrs.Invoke('$total')
         $expected = 42
 
-        $actual | Should Be $expected
+        $actual | Should -Be $expected
     }
 
     It "Should create the correct book and results" {

@@ -7,7 +7,7 @@ Describe "Test ConvertTo-SQLNoteBook" {
 
         try{
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
-            { Test-Path $fullName } | Should Be $true
+            { Test-Path $fullName } | Should -Be $true
 
             $actual = Get-NotebookContent -NoteBookFullName $fullName
 
@@ -62,12 +62,12 @@ SELECT * FROM table4 where ID = 8'
             $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
 
             $actual.Count | Should -Be 6
-            $actual[0].Source.Trim() | Should BeExactly 'GO'
-            $actual[1].Source.Trim() | Should BeExactly 'Test1'
+            $actual[0].Source.Trim() | Should -BeExactly 'GO'
+            $actual[1].Source.Trim() | Should -BeExactly 'Test1'
             $actual[2].Source.Trim() | Should -BeLike '*Multiline test*'
-            $actual[3].Source.Trim() | Should BeExactly 'Test2'
-            $actual[4].Source.Trim() | Should BeExactly 'GO'
-            $actual[5].Source.Trim() | Should BeExactly 'Test3'
+            $actual[3].Source.Trim() | Should -BeExactly 'Test2'
+            $actual[4].Source.Trim() | Should -BeExactly 'GO'
+            $actual[5].Source.Trim() | Should -BeExactly 'Test3'
         }
         catch [System.Management.Automation.RuntimeException]{
             Write-Verbose "Runtime exception encountered" -Verbose

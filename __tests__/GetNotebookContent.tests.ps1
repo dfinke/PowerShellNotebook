@@ -4,7 +4,7 @@ Describe "Test PS Notebook Content" {
 
     It "Should have Get-NotebookContent" {
         $actual = Get-Command Get-NotebookContent -ErrorAction SilentlyContinue
-        $actual | Should Not Be $Null
+        $actual | Should -Not -Be  $Null
     }
 
     It "testPSNb1.ipynb should have this content" {
@@ -18,19 +18,19 @@ Describe "Test PS Notebook Content" {
 
         $actual = Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb"
 
-        $actual.Count | Should Be 3
+        $actual.Count | Should -Be 3
 
-        $actual[0].NoteBookName | Should Be "testPSNb1.ipynb"
-        $actual[0].Type | Should Be "code"
-        $actual[0].Source | Should Be "8+12"
+        $actual[0].NoteBookName | Should -Be "testPSNb1.ipynb"
+        $actual[0].Type | Should -Be "code"
+        $actual[0].Source | Should -Be "8+12"
 
-        $actual[1].NoteBookName | Should Be "testPSNb1.ipynb"
-        $actual[1].Type | Should Be "code"
-        $actual[1].Source | Should Be "8+3"
+        $actual[1].NoteBookName | Should -Be "testPSNb1.ipynb"
+        $actual[1].Type | Should -Be "code"
+        $actual[1].Source | Should -Be "8+3"
 
-        $actual[2].NoteBookName | Should Be "testPSNb1.ipynb"
-        $actual[2].Type | Should Be "markdown"
-        $actual[2].Source | Should Be "## Math
+        $actual[2].NoteBookName | Should -Be "testPSNb1.ipynb"
+        $actual[2].Type | Should -Be "markdown"
+        $actual[2].Source | Should -Be "## Math
 
 - show addition
 - show other
@@ -40,22 +40,22 @@ Describe "Test PS Notebook Content" {
     It "testPSNb1.ipynb should have only this code" {
         $actual = Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb" -JustCode
 
-        $actual.Count | Should Be 2
-        $actual[0].NoteBookName | Should Be "testPSNb1.ipynb"
-        $actual[0].Type | Should Be "code"
-        $actual[0].Source | Should Be "8+12"
+        $actual.Count | Should -Be 2
+        $actual[0].NoteBookName | Should -Be "testPSNb1.ipynb"
+        $actual[0].Type | Should -Be "code"
+        $actual[0].Source | Should -Be "8+12"
 
-        $actual[1].NoteBookName | Should Be "testPSNb1.ipynb"
-        $actual[1].Type | Should Be "code"
-        $actual[1].Source | Should Be "8+3"
+        $actual[1].NoteBookName | Should -Be "testPSNb1.ipynb"
+        $actual[1].Type | Should -Be "code"
+        $actual[1].Source | Should -Be "8+3"
     }
 
     It "testPSNb1.ipynb should have only this markdown" {
         $actual = @(Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb" -JustMarkdown)
 
-        $actual[0].NoteBookName | Should Be "testPSNb1.ipynb"
-        $actual[0].Type | Should Be "markdown"
-        $actual[0].Source | Should Be "## Math
+        $actual[0].NoteBookName | Should -Be "testPSNb1.ipynb"
+        $actual[0].Type | Should -Be "markdown"
+        $actual[0].Source | Should -Be "## Math
 
 - show addition
 - show other
