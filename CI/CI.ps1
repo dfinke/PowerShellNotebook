@@ -97,6 +97,8 @@ if ($Test) {
         Install-Module Pester -Force
     }
 
+    Get-Module -ListAvailable Pester | Select-Object -First 1
+
     '[Progress] Invoking Pester.'
     #Invoke-Pester #-OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
     $r = Invoke-Pester -PassThru
