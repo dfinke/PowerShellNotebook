@@ -89,7 +89,7 @@ if ($Test) {
     Get-Module -ListAvailable Pester
 
     '[Progress] Invoking Pester.'
-    Invoke-Pester -OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
+    Invoke-Pester #-OutputFile ('TestResultsPS{0}.xml' -f $PSVersionTable.PSVersion)
 }
 
 if ($Finalize) {
