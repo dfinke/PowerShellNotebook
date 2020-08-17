@@ -7,7 +7,7 @@ Describe "Test PS Notebook Content" {
         $actual | Should -Not -Be  $Null
     }
 
-    It "testPSNb1.ipynb should have this content" -Skip {
+    It "testPSNb1.ipynb should have this content" {
         <#
             NoteBookName    Type     Source
             ------------    ----     ------
@@ -30,11 +30,14 @@ Describe "Test PS Notebook Content" {
 
         $actual[2].NoteBookName | Should -Be "testPSNb1.ipynb"
         $actual[2].Type | Should -Be "markdown"
-        $actual[2].Source | Should -Be "## Math
 
-- show addition
-- show other
-"
+        $nl = [System.Environment]::NewLine
+        $parts = $actual[2].Source.split($nl)
+        $parts.Count | Should -Be 9
+        
+        $parts -ccontains '## Math' | Should -Be $true
+        $parts -ccontains '- show addition' | Should -Be $true
+        $parts -ccontains '- show other' | Should -Be $true
     }
 
     It "testPSNb1.ipynb should have only this code" {
@@ -50,16 +53,17 @@ Describe "Test PS Notebook Content" {
         $actual[1].Source | Should -Be "8+3"
     }
 
-    It "testPSNb1.ipynb should have only this markdown" -Skip {
+    It "testPSNb1.ipynb should have only this markdown" {
         $actual = @(Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb" -JustMarkdown)
 
         $actual[0].NoteBookName | Should -Be "testPSNb1.ipynb"
         $actual[0].Type | Should -Be "markdown"
-        $actual[0].Source | Should -Be "## Math
-
-- show addition
-- show other
-"
+        $nl = [System.Environment]::NewLine
+        $parts = $actual[0].Source.split($nl)
+                
+        $parts -ccontains '## Math' | Should -Be $true
+        $parts -ccontains '- show addition' | Should -Be $true
+        $parts -ccontains '- show other' | Should -Be $true
     }
 
     It "Should read ipynb from url" {
