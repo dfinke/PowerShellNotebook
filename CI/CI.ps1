@@ -100,7 +100,7 @@ if ($Test) {
     Get-Module -ListAvailable Pester | Select-Object -First 1
 
     '[Progress] Invoking Pester.'    
-    $pesterResults = Invoke-Pester -PassThru
+    $pesterResults = Invoke-Pester -PassThru -Show All
     if ($pesterResults.FailedCount -gt 0) {
         
         '[Progress] Pester Results Failed'
