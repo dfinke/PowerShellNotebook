@@ -79,7 +79,7 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
         Remove-Item $nbFile -ErrorAction SilentlyContinue
     }
 
-    It "Should exclude results from PowerShell Notebook" -Skip {
+    It "Should exclude results from PowerShell Notebook" {
         $sourceMD = "$PSScriptRoot\samplemarkdown\excludeResults.md"
         Convert-MarkdownToNoteBook -filename $sourceMD
         $expectedOutFileName = "$PSScriptRoot\samplemarkdown\excludeResults.ipynb"
@@ -93,7 +93,13 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" {
 
         $codeBlocks[0].outputs.text.length | Should -Be 0
         $codeBlocks[1].outputs.text.length | Should -Be 0
-        $codeBlocks[2].outputs.text.length | Should -Be 3
+
+        if ($PSVersionTable.Platform -eq 'Unix') {
+            $codeBlocks[2].outputs.text.length | Should -Be 2
+        }
+        else {
+            $codeBlocks[2].outputs.text.length | Should -Be 3
+        }
 
         Remove-Item $expectedOutFileName -Force -ErrorAction SilentlyContinue
     }
