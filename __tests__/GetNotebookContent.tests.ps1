@@ -31,13 +31,9 @@ Describe "Test PS Notebook Content" {
         $actual[2].NoteBookName | Should -Be "testPSNb1.ipynb"
         $actual[2].Type | Should -Be "markdown"
 
-        $nl = [System.Environment]::NewLine
-        $parts = $actual[2].Source.split($nl)
-        $parts.Count | Should -Be 9
-        
-        $parts -ccontains '## Math' | Should -Be $true
-        $parts -ccontains '- show addition' | Should -Be $true
-        $parts -ccontains '- show other' | Should -Be $true
+        $actual[2].Source.IndexOf('## Math') -ge 0 | Should -Be $true
+        $actual[2].Source.IndexOf('- show addition') -ge 0 | Should -Be $true
+        $actual[2].Source.IndexOf('- show other') -ge 0 | Should -Be $true
     }
 
     It "testPSNb1.ipynb should have only this code" {
@@ -58,15 +54,15 @@ Describe "Test PS Notebook Content" {
 
         $actual[0].NoteBookName | Should -Be "testPSNb1.ipynb"
         $actual[0].Type | Should -Be "markdown"
-        $nl = [System.Environment]::NewLine
-        $parts = $actual[0].Source.split($nl)
-                
-        $parts -ccontains '## Math' | Should -Be $true
-        $parts -ccontains '- show addition' | Should -Be $true
-        $parts -ccontains '- show other' | Should -Be $true
+ 
+        $actual[0].Source.IndexOf('## Math') -ge 0 | Should -Be $true
+        $actual[0].Source.IndexOf('- show addition') -ge 0 | Should -Be $true
+        $actual[0].Source.IndexOf('- show other') -ge 0 | Should -Be $true
     }
 
     It "Should read ipynb from url" {
         $actual = Get-NotebookContent -NoteBookFullName "https://raw.githubusercontent.com/dfinke/PowerShellNotebook/AddJupyterNotebookMetaInfo/samplenotebook/powershell.ipynb"
+
+        $actual | Should -Not -Be $null
     }
 }
