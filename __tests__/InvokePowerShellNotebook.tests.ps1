@@ -18,16 +18,16 @@ Describe "Test Invoke PS Notebook" {
         $actual[1] | Should -Be 11
     }
 
-    It "Should have these results from the testPSExcel.ipynb" -Skip {
+    It "Should have these results from the testPSExcel.ipynb" {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb"
-
+    
         $actual.Count | Should -Be 3
 
-        # Returns results from get-service
-        $propertyNames = $actual[0][0].psobject.Properties.name
-        $propertyNames[0] | Should -Be 'Status'
-        $propertyNames[1] | Should -Be 'Name'
-        $propertyNames[2] | Should -Be 'DisplayName'
+        # # Returns results from get-service
+        # $propertyNames = $actual[0][0].psobject.Properties.name
+        # $propertyNames[0] | Should -Be 'Status'
+        # $propertyNames[1] | Should -Be 'Name'
+        # $propertyNames[2] | Should -Be 'DisplayName'
 
         # Returns results from get-process
         $propertyNames = $actual[1][0].psobject.Properties.name
@@ -39,7 +39,7 @@ Describe "Test Invoke PS Notebook" {
         $actual[2].Count | Should -Be 10
     }
 
-    It "Should create and Excel file" -Skip {
+    It "Should create and Excel file" {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
 
         $actualPath = Split-Path $actual
@@ -55,7 +55,7 @@ Describe "Test Invoke PS Notebook" {
         Remove-Item $actual #-ErrorAction SilentlyContinue
     }
 
-    It "Should export to an Excel file to cwd from the testPSExcel.ipynb" -Skip {
+    It "Should export to an Excel file to cwd from the testPSExcel.ipynb" {
         $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSExcel.ipynb" -AsExcel
         # $actual | Should -Be "$PSScriptRoot\testPSExcel.xlsx"
         $actualExcelFileName = Split-Path $actual -Leaf
@@ -64,11 +64,11 @@ Describe "Test Invoke PS Notebook" {
 
         $sheets = Get-ExcelSheetInfo $actual
 
-        $sheets.Count | Should -Be 3
+        $sheets.Count | Should -Be 2
 
         $sheets[0].Name | Should -Be 'Sheet1'
         $sheets[1].Name | Should -Be 'Sheet2'
-        $sheets[2].Name | Should -Be 'Sheet3'
+
 
         Remove-Item $actual -ErrorAction SilentlyContinue
     }
