@@ -1,7 +1,7 @@
 Import-Module $PSScriptRoot\..\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test Export-NotebookToSqlScript" {
-    It "Should create SQL file with correct contents" {        
+    It "Should create SQL file with correct contents" -Skip {        
         $outPath = "TestDrive:\"
         $SQLFile = Join-Path -Path $outPath -ChildPath "sys_databases.SQL"
         #$SQLFile = "./sys_databases.SQL"
