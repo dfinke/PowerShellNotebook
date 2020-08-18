@@ -1,7 +1,7 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psm1 -Force
 
 Describe "Test Get-ParsedSqlOffsets" {
-    It "Should retrieve the Batch, Comment, and Gap offsets with a single code cell" -Skip {
+    It "Should retrieve the Batch, Comment, and Gap offsets with a single code cell" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo.sql"
         $fullName = "TestDrive:\demosql.csv"
 
@@ -39,7 +39,7 @@ SELECT * FROM table4 where ID = 8'
         }
     }
 
-    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 6 text cells" -Skip {
+    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 6 text cells" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo_w3GOs.sql"
         $fullName = "TestDrive:\sqlTestConverted_demo_w3GOs.csv"
 
@@ -69,7 +69,7 @@ SELECT * FROM table4 where ID = 8'
         }
     }
 
-    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 5 text cells" -Skip {
+    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 5 text cells" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\AdventureWorksMultiStatementSBatch_NoGO2.sql"
         $fullName = "TestDrive:\AdventureWorksMultiStatementSBatch_NoGO2.csv"
 
