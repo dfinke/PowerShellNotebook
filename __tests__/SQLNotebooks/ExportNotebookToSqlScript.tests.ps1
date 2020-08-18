@@ -2,17 +2,18 @@ Import-Module $PSScriptRoot\..\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test Export-NotebookToSqlScript" {
     It "Should create SQL file with correct contents" {        
-        $outPath = "TestDrive:/"
-        $SQLFile = Join-Path -Path $outPath -ChildPath "Simple_SELECTs.SQL"
+        $outPath = $PSScriptRoot
+        $SQLFile = Join-Path -Path $outPath -ChildPath "sys_databases.SQL"
+        $SQLNotebook = "$PSScriptRoot\sys_databases.ipynb"
         
         Write-Verbose "$($outPath)" -Verbose
-        Write-Verbose "$($PSScriptRoot)/Simple_SELECTs.ipynb" -Verbose
+        Write-Verbose "$($PSScriptRoot)/sys_databases.ipynb" -Verbose
         
-        Test-Path "$PSScriptRoot\Simple_SELECTs.ipynb" | Should -Be $true
+        #Test-Path $SQLNotebook | Should -Be $true
 
-        Export-NotebookToSqlScript -FullName "$PSScriptRoot\Simple_SELECTs.ipynb" -outPath $outPath
+        Export-NotebookToSqlScript -FullName $SQLNotebook -outPath $outPath -Verbose
 
-        Write-Verbose "$($SQLFile)" -Verbose
+        Write-Verbose "Path of .SQL file is: $($SQLFile)" -Verbose
         
         Test-Path $SQLFile | Should -Be $true
 
