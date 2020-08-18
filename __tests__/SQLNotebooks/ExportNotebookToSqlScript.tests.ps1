@@ -18,21 +18,21 @@ Describe "Test Export-NotebookToSqlScript" {
         
         Test-Path $SQLFile | Should -Be $true
 
-        # $contents = Get-Content $SQLFile
+        $contents = Get-Content $SQLFile
         
-        # $contents[0] | Should -BeExactly '/*'
-        # $contents[1].StartsWith('    Created from:') | Should -Be $true        
-        # $contents[3].StartsWith('    Created by:') | Should -Be $true        
-        # $contents[4].StartsWith('    Created on:') | Should -Be $true
-        # $contents[5] | Should -BeExactly '*/'
+        $contents[0] | Should -BeExactly '/*'
+        $contents[1].StartsWith('    Created from:') | Should -Be $true        
+        $contents[3].StartsWith('    Created by:') | Should -Be $true        
+        $contents[4].StartsWith('    Created on:') | Should -Be $true
+        $contents[5] | Should -BeExactly '*/'
 
-        # $contents[7] | Should -BeExactly '/*  First, find out how many databases are on this instance.  */'
-        # $contents[8] | Should -BeExactly ''
-        # $contents[9] | Should -BeExactly 'SELECT *'
-        # $contents[10] | Should -BeExactly '  FROM sys.databases'
-        # $contents[19] | Should -BeExactly 'SELECT SYSDATETIME()'
+        $contents[7] | Should -BeExactly '/*  First, find out how many databases are on this instance.  */'
+        $contents[8] | Should -BeExactly ''
+        $contents[9] | Should -BeExactly 'SELECT *'
+        $contents[10] | Should -BeExactly '  FROM sys.databases'
+        $contents[19] | Should -BeExactly 'SELECT SYSDATETIME()'
 
-        #Remove-Item $SQLFile -ErrorAction SilentlyContinue
+        Remove-Item $SQLFile -ErrorAction SilentlyContinue
     }
 
     It "Should export the ipynb from a URL to SQL" {
