@@ -18,7 +18,7 @@ Describe "Test Get-ParsedSqlOffsets" {
     }
 
     It "Should retrieve the Batch, Comment, and Gap offsets with a single code cell" {
-        $demoTextFile = "$PSScriptRoot\DemoFiles\demo.sql"
+        $demoTextFile = "$PSScriptRoot/DemoFiles/demo.sql"
         $fullName = "TestDrive:\demosql.csv"
 
         try{
