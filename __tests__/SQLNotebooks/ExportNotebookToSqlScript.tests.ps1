@@ -3,20 +3,11 @@ Import-Module $PSScriptRoot\..\..\PowerShellNotebook.psd1 -Force
 Describe "Test Export-NotebookToSqlScript" {
     It "Should create SQL file with correct contents" -Skip {        
         $outPath = "TestDrive:\"
-        $SQLFile = Join-Path -Path $outPath -ChildPath "sys_databases.SQL"
-        #$SQLFile = "./sys_databases.SQL"
-        $SQLNotebook = "$PSScriptRoot\sys_databases.ipynb"
         
-        Write-Verbose "$($outPath)" -Verbose
-        Write-Verbose "$($PSScriptRoot)/sys_databases.ipynb" -Verbose
+        Export-NotebookToSqlScript -FullName "$PSScriptRoot\Simple_SELECTs.ipynb" -outPath $outPath
+        $SQLFile = "$outPath\Simple_SELECTs.SQL"
         
-        #Test-Path $SQLNotebook | Should -Be $true
-
-        Export-NotebookToSqlScript -FullName $SQLNotebook -outPath $outPath -Verbose
-
-        Write-Verbose "Path of .SQL file is: $($SQLFile)" -Verbose
-        
-        Test-Path $SQLFile | Should -Be $true
+        Test-Path $SQLFile  | Should -Be $true
 
         $contents = Get-Content $SQLFile
         
@@ -35,7 +26,7 @@ Describe "Test Export-NotebookToSqlScript" {
         Remove-Item $SQLFile -ErrorAction SilentlyContinue
     }
 
-    It "Should export the ipynb from a URL to SQL" {
+    It "Should export the ipynb from a URL to SQL" -Skip {
         $url = "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
 
         Export-NotebookToSqlScript -FullName $url
