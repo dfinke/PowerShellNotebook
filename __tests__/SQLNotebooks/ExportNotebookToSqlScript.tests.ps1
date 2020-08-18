@@ -27,11 +27,12 @@ Describe "Test Export-NotebookToSqlScript" {
     }
 
     It "Should export the ipynb from a URL to SQL" {
+        $outPath = "TestDrive:\"
         $url = "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
 
         Export-NotebookToSqlScript -FullName $url
 
-        $SQLFile = "./BPCheck.SQL"
+        $SQLFile = "$($PSScriptRoot)/BPCheck.SQL"
         Test-Path $SQLFile | Should -Be $true
 
         $contents = Get-Content $SQLFile
