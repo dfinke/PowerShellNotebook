@@ -42,8 +42,8 @@ function Export-NotebookToSqlScript {
         $outFile = (Split-Path -Leaf $FullName)
     }
     
-    $outFile = Join-Path -Path $outPath -ChildPath ($outFile -replace ".ipynb", ".sql")
-    $fullOutFileName = $outFile
+    $outFile = $outFile -replace ".ipynb", ".sql"
+    $fullOutFileName = $outPath + $outFile
 
     $heading = @"
 /*
@@ -68,5 +68,5 @@ function Export-NotebookToSqlScript {
 
     $result | Add-Content  $fullOutFileName
 
-    Write-Verbose "$($outFile) created $($fullOutFileName)"
+    Write-Verbose "$($outFile) created"
 }
