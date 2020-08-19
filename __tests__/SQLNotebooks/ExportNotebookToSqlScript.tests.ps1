@@ -26,13 +26,13 @@ Describe "Test Export-NotebookToSqlScript" {
         Remove-Item $SQLFile -ErrorAction SilentlyContinue
     }
 
-    It "Should export the ipynb from a URL to SQL" {
+    It "Should export the ipynb from a URL to SQL" -Skip {
         $outPath = "TestDrive:\"
         $url = "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
 
         Export-NotebookToSqlScript -FullName $url
 
-        $SQLFile = "$($PSScriptRoot)/BPCheck.SQL"
+        $SQLFile = "./BPCheck.SQL"
         Test-Path $SQLFile | Should -Be $true
 
         $contents = Get-Content $SQLFile
