@@ -1,8 +1,8 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psm1 -Force
 
 Describe "Test ConvertTo-SQLNoteBook" {
-    It "Should convert the file to an ipynb with a single code cell" -Skip {
-        $demoTextFile = "$PSScriptRoot\DemoFiles\demo.sql"
+    It "Should convert the file to an ipynb with a single code cell" {
+        $demoTextFile = "$PSScriptRoot/DemoFiles/demo.sql"
         $fullName = "TestDrive:\sqlTestConverted.ipynb"
 
         try{
@@ -42,8 +42,8 @@ SELECT * FROM table4 where ID = 8'
         }
     }
 
-    It "Should convert the file to an ipynb with 3 code and 6 text cells" -Skip {
-        $demoTextFile = "$PSScriptRoot\DemoFiles\demo_w3GOs.sql"
+    It "Should convert the file to an ipynb with 3 code and 6 text cells" {
+        $demoTextFile = "$PSScriptRoot/DemoFiles/demo_w3GOs.sql"
         $fullName = "TestDrive:\sqlTestConverted_demo_w3GOs.ipynb"
 
         try{
@@ -77,8 +77,8 @@ SELECT * FROM table4 where ID = 8'
         }
     }
 
-    It "Should convert the file to an ipynb with 3 code and 6 text cells" -Skip {
-        $demoTextFile = "$PSScriptRoot\DemoFiles\AdventureWorksMultiStatementSBatch_NoGO2.sql"
+    It "Should convert the file to an ipynb with 3 code and 6 text cells" {
+        $demoTextFile = "$PSScriptRoot/DemoFiles/AdventureWorksMultiStatementSBatch_NoGO2.sql"
         $fullName = "TestDrive:\AdventureWorksMultiStatementSBatch_NoGO2.ipynb"
 
         try{

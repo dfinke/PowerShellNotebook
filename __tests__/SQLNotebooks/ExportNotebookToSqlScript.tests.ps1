@@ -27,6 +27,7 @@ Describe "Test Export-NotebookToSqlScript" {
     }
 
     It "Should export the ipynb from a URL to SQL" -Skip {
+        $outPath = "TestDrive:\"
         $url = "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
 
         Export-NotebookToSqlScript -FullName $url

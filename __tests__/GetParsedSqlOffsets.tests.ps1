@@ -1,11 +1,34 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psm1 -Force
 
 Describe "Test Get-ParsedSqlOffsets" {
-    It "Should retrieve the Batch, Comment, and Gap offsets with a single code cell" -Skip {
+    It "Should make sure demo.sql is in the \DemoFiles folder" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo.sql"
         $fullName = "TestDrive:\demosql.csv"
 
+        Write-Verbose "$(Get-ChildItem "$PSScriptRoot\DemoFiles\")" -Verbose
+
         try{
+            { Test-Path $demoTextFile } | Should -Be $true
+
+            $demoTextFile = "$PSScriptRoot\DemoFiles\demo_w3GOs.sql"
+            { Test-Path $demoTextFile } | Should -Be $true
+            
+            $demoTextFile = "$PSScriptRoot\DemoFiles\AdventureWorksMultiStatementSBatch_NoGO2.sql"
+            { Test-Path $demoTextFile } | Should -Be $true
+        }
+        catch [System.Management.Automation.RuntimeException]{
+            Write-Verbose "Runtime exception encountered" -Verbose
+            Write-Verbose $_ -Verbose
+            throw
+        }
+    }
+
+    It "Should retrieve the Batch, Comment, and Gap offsets with a single code cell" {
+        $demoTextFile = "$PSScriptRoot/DemoFiles/demo.sql"
+        $fullName = "TestDrive:\demosql.csv"
+
+        try{
+            { Test-Path $demoTextFile } | Should -Be $true
             $Offsets = Get-ParsedSqlOffsets -ScriptPath $demoTextFile
             $Offsets | ConvertTo-Csv -NoTypeInformation > $fullName
             { Test-Path $fullName } | Should -Be $true
@@ -39,8 +62,8 @@ SELECT * FROM table4 where ID = 8'
         }
     }
 
-    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 6 text cells" -Skip {
-        $demoTextFile = "$PSScriptRoot\DemoFiles\demo_w3GOs.sql"
+    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 6 text cells" {
+        $demoTextFile = "$PSScriptRoot/DemoFiles/demo_w3GOs.sql"
         $fullName = "TestDrive:\sqlTestConverted_demo_w3GOs.csv"
 
         try{
@@ -69,8 +92,8 @@ SELECT * FROM table4 where ID = 8'
         }
     }
 
-    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 5 text cells" -Skip {
-        $demoTextFile = "$PSScriptRoot\DemoFiles\AdventureWorksMultiStatementSBatch_NoGO2.sql"
+    It "Should retrieve the Batch, Comment, and Gap offsets with 3 code and 5 text cells" {
+        $demoTextFile = "$PSScriptRoot/DemoFiles/AdventureWorksMultiStatementSBatch_NoGO2.sql"
         $fullName = "TestDrive:\AdventureWorksMultiStatementSBatch_NoGO2.csv"
 
         try{

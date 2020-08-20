@@ -85,17 +85,17 @@ else {
 $NotebookBlocks = $SqlBatches + $ExtractAllComments
 
 if($IncludeGaps -eq $false){
-return $NotebookBlocks | SORT StartOffset
+return $NotebookBlocks | Sort-Object StartOffset
 }
 else {
     if($NotebookBlocks.Count -eq 1 -and $NotebookBlocks.StopOffset -eq $s.Length){
-    return $NotebookBlocks | SORT StartOffset}
+    return $NotebookBlocks | Sort-Object StartOffset}
     else {
     
     <#################################################################################################
     This What we do with the offset results to identify Gaps.
     #################################################################################################>
-        $SqlBlocks = $NotebookBlocks | SORT StartOffset
+        $SqlBlocks = $NotebookBlocks | Sort-Object StartOffset
 
         $BlocksWitGaps = @()
         $Previous = @{StartOffset=0;StopOffset=0}
@@ -148,7 +148,7 @@ else {
                 $AllBlocks+=if($GapOffsets.Length -gt 2){[pscustomobject] $GapOffsets}
                 }
             }
-            #$AllBlocks | SORT StartOffset | ft -AutoSize -Wrap
+            #$AllBlocks | Sort-Object StartOffset | ft -AutoSize -Wrap
             return $AllBlocks
         }
     }
@@ -168,7 +168,7 @@ function ConvertTo-SQLNoteBook {
         $s = Get-Content -Raw ( Resolve-Path $InputFileName )
         $AllNoteBlocks = Get-ParsedSqlOffsets -ScriptPath $InputFileName
 
-        foreach($Block in $AllNoteBlocks | SORT StartOffset ) {
+        foreach($Block in $AllNoteBlocks | Sort-Object StartOffset ) {
 
         
             switch ($Block.BlockType) {
