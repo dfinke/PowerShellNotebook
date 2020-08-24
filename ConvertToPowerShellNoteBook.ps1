@@ -41,12 +41,23 @@ function ConvertTo-PowerShellNoteBook {
     $Previous = $null
     $AllBlocks = $CommentRanges
     <# Catch anything missed from the tail of the file, add it to $AllBlocks #>
-    if(($CommentBlock.Start+$CommentBlock.Length) -lt $s.Length){$AllBlocks+=[pscustomobject][ordered]@{
-        Start = ($CommentBlock.Start+$CommentBlock.Length);
-        Length = $s.Length-($CommentBlock.Start+$CommentBlock.Length);
-        Type = 'Gap';
-        Content = $s.Substring(($CommentBlock.Start+$CommentBlock.Length), ($s.Length-($CommentBlock.Start+$CommentBlock.Length))).trimstart()}
-    }
+        if($BlocksWitGaps.Count -eq 1){
+            <# This step handles ading the psobjects together if $CommentBlock isn't an array. #>
+            $AllBlocks = @($CommentBlock;[pscustomobject][Ordered]@{
+            Start = ($CommentBlock.Start+$CommentBlock.Length);
+            Length = $s.Length-($CommentBlock.Start+$CommentBlock.Length);
+            Type = 'Gap';
+            Content = $s.Substring(($CommentBlock.Start+$CommentBlock.Length), ($s.Length-($CommentBlock.Start+$CommentBlock.Length))).trimstart()})
+        }
+        else {
+            if(($CommentBlock.Start+$CommentBlock.Length) -lt $s.Length){
+                $AllBlocks+=[pscustomobject][ordered]@{
+                Start = ($CommentBlock.Start+$CommentBlock.Length);
+                Length = $s.Length-($CommentBlock.Start+$CommentBlock.Length);
+                Type = 'Gap';
+                Content = $s.Substring(($CommentBlock.Start+$CommentBlock.Length), ($s.Length-($CommentBlock.Start+$CommentBlock.Length))).trimstart()}
+            }
+        }
     
     foreach($GapBlock in $BlocksWitGaps ) {
         $GapOffsets=[ordered]@{
