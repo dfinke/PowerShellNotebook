@@ -31,7 +31,8 @@ function Export-NotebookToSqlScript {
     [CmdletBinding()]
     param(
         $FullName,
-        $outPath = "./"
+        $outPath = "./",
+        $IncludeTextCells=$false
     )
     Write-Progress -Activity "Exporting SQL Notebook" -Status $FullName
     
@@ -56,13 +57,16 @@ function Export-NotebookToSqlScript {
 "@ 
 
     $heading | Set-Content $fullOutFileName    
-    $result = foreach ($sourceBlock in Get-NotebookContent $FullName) 
+    if($IncludeTextCells -eq $false)
+        {$sourceBlocks = Get-NotebookContent $FullName -JustCode}
+    else{$sourceBlocks = Get-NotebookContent $FullName}
+
+    $result = foreach ($sourceBlock in $sourceBlocks) 
     {
         switch ($sourceBlock.Type) {
             'code'     {($sourceBlock.Source)}
             'markdown' {"/* "+($sourceBlock.Source)+" */"}
         }
-        
         ""
     }
 
