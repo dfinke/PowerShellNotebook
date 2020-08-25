@@ -26,8 +26,7 @@ Describe "Test Export-NotebookToSqlScript" {
         Remove-Item $SQLFile -ErrorAction SilentlyContinue
     }
 
-    It "Should export the ipynb from a URL to SQL" -Skip {
-        $outPath = "TestDrive:\"
+    It "Should export the ipynb from a URL to SQL" {
         $url = "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
 
         Export-NotebookToSqlScript -FullName $url
