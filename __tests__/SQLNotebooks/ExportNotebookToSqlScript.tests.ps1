@@ -33,10 +33,10 @@ Describe "Test Export-NotebookToSqlScript" {
 
         Export-NotebookToSqlScript -FullName $url
 
-        $SQLFile = "./Simple_SELECTs.SQL"
+        $SQLFile = "./simple_selects.SQL"
         #Test-Path $SQLFile | Should -Be $true
 
-        #$contents = Get-Content $SQLFile
+        $contents = Get-Content $SQLFile
 
         #$contents[7] | Should -BeExactly '/* BP Check READ ME - http://aka.ms/BPCheck;'
         }
