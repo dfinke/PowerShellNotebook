@@ -33,8 +33,9 @@ Describe "Test Export-NotebookToSqlScript" {
 
         Export-NotebookToSqlScript -FullName $url
 
-        $SQLFile = "./simple_selects.SQL"
+        $SQLFile = "./Simple_SELECTs.sql"
         #Test-Path $SQLFile | Should -Be $true
+        Test-Path $SQLFile -Verbose
 
         $contents = Get-Content $SQLFile
 
