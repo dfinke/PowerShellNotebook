@@ -29,14 +29,14 @@ Describe "Test Export-NotebookToSqlScript" {
     It "Should export the ipynb from a URL to SQL" {
         $url = "https://raw.githubusercontent.com/microsoft/tigertoolbox/master/BPCheck/BPCheck.ipynb"
 
-        Export-NotebookToSqlScript -FullName $url
+        Export-NotebookToPowerShellScript -FullName $url
 
-        $SQLFile = "./BPCheck.SQL"
+        $SQLFile = "./BPCheck.ps1"
         Test-Path $SQLFile | Should -Be $true
 
         $contents = Get-Content $SQLFile
 
-        $contents[7] | Should -BeExactly '/* BP Check READ ME - http://aka.ms/BPCheck;'
+        #$contents[7] | Should -BeExactly '/* BP Check READ ME - http://aka.ms/BPCheck;'
 
         Remove-Item $SQLFile -ErrorAction SilentlyContinue
     }
