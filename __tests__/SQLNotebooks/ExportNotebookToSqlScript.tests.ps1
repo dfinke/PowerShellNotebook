@@ -29,6 +29,8 @@ Describe "Test Export-NotebookToSqlScript" {
     It "Should export the ipynb from a URL to SQL" {
         $url = "https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/SQLNotebooks/Simple_SELECTs.ipynb"
 
+        try{
+
         Export-NotebookToSqlScript -FullName $url
 
         $SQLFile = "./Simple_SELECTs.SQL"
@@ -37,7 +39,13 @@ Describe "Test Export-NotebookToSqlScript" {
         $contents = Get-Content $SQLFile
 
         #$contents[7] | Should -BeExactly '/* BP Check READ ME - http://aka.ms/BPCheck;'
+        }
+        catch [System.Management.Automation.RuntimeException]{
+            Write-Verbose "Runtime exception encountered" -Verbose
+            Write-Verbose $_ -Verbose
+            throw
+        }
 
-        Remove-Item $SQLFile -ErrorAction SilentlyContinue
+        #Remove-Item $SQLFile -ErrorAction SilentlyContinue
     }
 }    
