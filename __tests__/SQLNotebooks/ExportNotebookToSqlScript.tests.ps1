@@ -4,8 +4,8 @@ Describe "Test Export-NotebookToSqlScript" {
     It "Should create SQL file with correct contents" {        
         $outPath = "TestDrive:\"
         
-        Export-NotebookToSqlScript -FullName "./Simple_SELECTs.ipynb" -outPath $outPath
-        $SQLFile = "$outPath\Simple_SELECTs.sql"
+        Export-NotebookToSqlScript -FullName "./Simple_SELECTs.ipynb" -outPath $outPath -IncludeTextCells $true
+        $SQLFile = "$outPath/Simple_SELECTs.sql"
         
         Test-Path $SQLFile  | Should -Be $true
 
