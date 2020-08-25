@@ -32,7 +32,7 @@ function Export-NotebookToSqlScript {
     param(
         $FullName,
         $outPath = "./",
-        $IncludeTextCells=$false
+        $IncludeTextCells=$true
     )
     Write-Progress -Activity "Exporting SQL Notebook" -Status $FullName
     
