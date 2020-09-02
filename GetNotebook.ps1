@@ -25,8 +25,8 @@ python.ipynb          python3                  1              0 C:\Users\Douglas
 SingleCodeBlock.ipynb powershell               1              0 C:\Users\Douglas\Documents\GitHub\MyPrivateGit\Power
 
         .Example
-        dir -Filter *.ipynb -Recurse | 
-Get-Notebook -Path $_.FullName | 
+        dir -Filter *.ipynb -Recurse | foreach {
+Get-Notebook -Path $_.FullName } | 
 group KernelName
 
 Count Name                      Group
