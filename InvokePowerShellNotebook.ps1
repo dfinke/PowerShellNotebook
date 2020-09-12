@@ -27,27 +27,26 @@ West   melon 76
                 throw "$OutFile already exists"
             }
 
+            $PSNotebookRunspace = New-PSNotebookRunspace
+
             $null = Copy-Item $NoteBookFullName $OutFile
             $notebookJson = Get-Content $OutFile | ConvertFrom-Json
 
             $codeCells = $notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' }
-            
-            # {
-            #     "name": "stdout",
-            #     "text": "1\n2\n3\n4\n5\n",
-            #     "output_type": "stream"
-            # }
 
             foreach ($codeCell in $codeCells) {
                 $codeCell.outputs = @()
                 $codeCell.outputs += [ordered]@{
                     name        = "stdout"
-                    text        = ($codeCell.source | Invoke-Expression) -join "`n"
+                    text        = $PSNotebookRunspace.Invoke($codeCell.source) -join "`n"
                     output_type = "stream"
                 }
             }
             
-            $notebookJson | ConvertTo-Json -Depth 4 | Set-Content $OutFile -Encoding UTF8            
+            $PSNotebookRunspace.Close()
+            $notebookJson |
+            ConvertTo-Json -Depth 4 |
+            Set-Content $OutFile -Encoding UTF8            
         }
         else {
 

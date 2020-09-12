@@ -129,7 +129,33 @@ Describe "Test Invoke PS Notebook" -Tag 'Invoke-PowerShellNotebook' {
         $codeCells.outputs.name | Should -BeExactly "stdout"
         $codeCells.outputs.output_type | Should -BeExactly "stream"
 
-        $text = "1`n2`n3`n4`n5" | ConvertTo-Json | Convertfrom-Json
+        $text = "1`r`n2`r`n3`r`n4`r`n5`r`n" | ConvertTo-Json | Convertfrom-Json
         $codeCells.outputs.text | Should -BeExactly $text
+    }
+
+    It "Should work with variables across cells" {
+        $srcNoteBook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\VariablesAcrossCells.ipynb"
+        $fullName = "TestDrive:\NewVariablesAcrossCells.ipynb"
+
+        Invoke-PowerShellNotebook -NoteBookFullName $srcNoteBook -Outfile $fullName
+        Test-Path $fullName | Should -Be $true
+
+        $notebookJson = Get-Content $fullName | ConvertFrom-Json
+        
+        $codeCells = @($notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' })
+
+        $codeCells.Count | Should -Be 2
+
+        $targetCell = $codeCells[0]
+        $targetCell.cell_type | Should -BeExactly "code"
+        $targetCell.outputs.name | Should -BeExactly "stdout"
+        $targetCell.outputs.output_type | Should -BeExactly "stream"
+        $targetCell.outputs.text | Should -BeNullOrEmpty
+
+        $targetCell = $codeCells[1]
+        $targetCell.cell_type | Should -BeExactly "code"
+        $targetCell.outputs.name | Should -BeExactly "stdout"
+        $targetCell.outputs.output_type | Should -BeExactly "stream"
+        $targetCell.outputs.text | Should -Be 6
     }
 }
