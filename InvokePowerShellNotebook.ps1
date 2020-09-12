@@ -15,53 +15,84 @@ West   melon 76
     param(
         [Parameter(ValueFromPipelineByPropertyName)]
         $NoteBookFullName,
+        $OutFile,
         [Switch]$AsExcel,
         [Switch]$Show
     )
 
     Process {
-        $codeBlocks = @(Get-NotebookContent $NoteBookFullName -JustCode)
-        $codeBlockCount = $codeBlocks.Count
-        $SheetCount = 0
+        
+        if ($OutFile) {
+            if (Test-Path $OutFile) {
+                throw "$OutFile already exists"
+            }
 
-        for ($idx = 0; $idx -lt $codeBlockCount; $idx++) {
+            $PSNotebookRunspace = New-PSNotebookRunspace
 
-            $targetCode = $codeblocks[$idx].source
+            $null = Copy-Item $NoteBookFullName $OutFile
+            $notebookJson = Get-Content $OutFile | ConvertFrom-Json
 
-            Write-Progress -Activity "Executing PowerShell code block - [$(Get-Date)]" -Status (-join $targetCode) -PercentComplete (($idx + 1) / $codeBlockCount * 100)
+            $codeCells = $notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' }
 
-            if ($AsExcel) {
-                if (!(Get-Module -ListAvailable ImportExcel -ErrorAction SilentlyContinue)) {
-                    throw "This feature requires the ImportExcel PowerShell module. Use 'Install-Module -Name ImportExcel' to get it from the PS Gallery."
+            foreach ($codeCell in $codeCells) {
+                $codeCell.outputs = @()
+                $codeCell.outputs += [ordered]@{
+                    name        = "stdout"
+                    text        = $PSNotebookRunspace.Invoke($codeCell.source) -join "`n"
+                    output_type = "stream"
                 }
+            }
+            
+            $PSNotebookRunspace.Close()
+            $notebookJson |
+            ConvertTo-Json -Depth 4 |
+            Set-Content $OutFile -Encoding UTF8            
+        }
+        else {
 
-                if ($idx -eq 0) {
-                    $notebookFileName = Split-Path $NoteBookFullName -Leaf
-                    $xlFileName = $notebookFileName -replace ".ipynb", ".xlsx"
+            $codeBlocks = @(Get-NotebookContent $NoteBookFullName -JustCode)
+            $codeBlockCount = $codeBlocks.Count
+            $SheetCount = 0
 
-                    $xlfile = "{0}\{1}" -f $pwd.Path, $xlFileName
-                    Remove-Item $xlfile -ErrorAction SilentlyContinue
-                }
+            for ($idx = 0; $idx -lt $codeBlockCount; $idx++) {
 
-                foreach ($dataSet in , @($targetCode | Invoke-Expression)) {
-                    if ($dataSet) {
-                        $SheetCount++
-                        $uniqueName = "Sheet$($SheetCount)"
-                        Export-Excel -InputObject $dataSet -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
+                $targetCode = $codeblocks[$idx].source
+
+                Write-Progress -Activity "Executing PowerShell code block - [$(Get-Date)]" -Status (-join $targetCode) -PercentComplete (($idx + 1) / $codeBlockCount * 100)
+
+                if ($AsExcel) {
+                    if (!(Get-Module -ListAvailable ImportExcel -ErrorAction SilentlyContinue)) {
+                        throw "This feature requires the ImportExcel PowerShell module. Use 'Install-Module -Name ImportExcel' to get it from the PS Gallery."
+                    }
+
+                    if ($idx -eq 0) {
+                        $notebookFileName = Split-Path $NoteBookFullName -Leaf
+                        $xlFileName = $notebookFileName -replace ".ipynb", ".xlsx"
+
+                        $xlfile = "{0}\{1}" -f $pwd.Path, $xlFileName
+                        Remove-Item $xlfile -ErrorAction SilentlyContinue
+                    }
+
+                    foreach ($dataSet in , @($targetCode | Invoke-Expression)) {
+                        if ($dataSet) {
+                            $SheetCount++
+                            $uniqueName = "Sheet$($SheetCount)"
+                            Export-Excel -InputObject $dataSet -Path $xlfile -WorksheetName $uniqueName -AutoSize -TableName $uniqueName
+                        }
                     }
                 }
+                else {
+                    , @($targetCode | Invoke-Expression)
+                }
             }
-            else {
-                , @($targetCode | Invoke-Expression)
-            }
-        }
 
-        if ($AsExcel) {
-            if ($Show) {
-                Invoke-Item $xlfile
-            }
-            else {
-                $xlfile
+            if ($AsExcel) {
+                if ($Show) {
+                    Invoke-Item $xlfile
+                }
+                else {
+                    $xlfile
+                }
             }
         }
     }
