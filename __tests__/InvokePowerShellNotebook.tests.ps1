@@ -107,9 +107,29 @@ Describe "Test Invoke PS Notebook" -Tag 'Invoke-PowerShellNotebook' {
 
     It "Should create the new -Outfile" {
         $srcNoteBook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\testFile1.ipynb"
-        $fullName = "TestDrive:\alreadyExists.ipynb"
-        
+        $fullName = "TestDrive:\newNotebook.ipynb"
+
         Invoke-PowerShellNotebook -NoteBookFullName $srcNoteBook -Outfile $fullName 
         Test-Path $fullName | Should -Be $true
+        Remove-Item $fullName -ErrorAction SilentlyContinue        
+    }
+
+    It "Should create the new -Outfile with correct content" {
+        $srcNoteBook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\testFile1.ipynb"
+        $fullName = "TestDrive:\newNotebook.ipynb"
+
+        Invoke-PowerShellNotebook -NoteBookFullName $srcNoteBook -Outfile $fullName
+
+        $notebookJson = Get-Content $fullName | ConvertFrom-Json
+        
+        $codeCells = @($notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' })
+
+        $codeCells.Count | Should -Be 1
+        $codeCells.cell_type | Should -BeExactly "code"
+        $codeCells.outputs.name | Should -BeExactly "stdout"
+        $codeCells.outputs.output_type | Should -BeExactly "stream"
+
+        $text = "1`n2`n3`n4`n5" | ConvertTo-Json | Convertfrom-Json
+        $codeCells.outputs.text | Should -BeExactly $text
     }
 }
