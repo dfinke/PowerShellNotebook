@@ -128,9 +128,8 @@ Describe "Test Invoke PS Notebook" -Tag 'Invoke-PowerShellNotebook' {
         $codeCells.cell_type | Should -BeExactly "code"
         $codeCells.outputs.name | Should -BeExactly "stdout"
         $codeCells.outputs.output_type | Should -BeExactly "stream"
-
-        $text = "1`r`n2`r`n3`r`n4`r`n5`r`n" | ConvertTo-Json | Convertfrom-Json
-        $codeCells.outputs.text | Should -BeExactly $text
+        
+        $codeCells.outputs.text | Should -BeExactly ("Hello World" + [System.Environment]::NewLine)
     }
 
     It "Should work with variables across cells" {
