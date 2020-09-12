@@ -1,6 +1,6 @@
 #Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
-Describe "Test Invoke PS Notebook" {
+Describe "Test Invoke PS Notebook" -Tag 'Invoke-PowerShellNotebook' {
 
     It "Should have Invoke-PowerShellNotebook" {
         $actual = Get-Command Invoke-PowerShellNotebook -ErrorAction SilentlyContinue
@@ -95,10 +95,21 @@ Describe "Test Invoke PS Notebook" {
         $actual[0][9] | Should -Be 10
     }
 
-    It "Should read and execute a code block stored as an array" {
-        $actual = @(Invoke-PowerShellNotebook "$PSScriptRoot\MultiLineSourceNotebooks\MultiLineSourceAsArray.ipynb")
+    It "Should throw if -Outfile specifies a file that already exists" {
+        $srcNoteBook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\testFile1.ipynb"
+        $fullName = "TestDrive:\alreadyExists.ipynb"
+       
+        "" | Set-Content $fullName
+        
+        { Invoke-PowerShellNotebook -NoteBookFullName $srcNoteBook -Outfile $fullName } | Should -Throw "$fullName already exists"
+        Remove-Item $fullName -ErrorAction SilentlyContinue        
+    }
 
-        $actual[0][0] | Should -Be 1
-        $actual[0][9] | Should -Be 10
+    It "Should create the new -Outfile" {
+        $srcNoteBook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\testFile1.ipynb"
+        $fullName = "TestDrive:\alreadyExists.ipynb"
+        
+        Invoke-PowerShellNotebook -NoteBookFullName $srcNoteBook -Outfile $fullName 
+        Test-Path $fullName | Should -Be $true
     }
 }
