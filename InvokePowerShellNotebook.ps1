@@ -35,13 +35,18 @@ West   melon 76
             $codeCells = $notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' }
 
             foreach ($codeCell in $codeCells) {
-                $result = $PSNotebookRunspace.Invoke($codeCell.source) 
-                
-                $text = if ($PSNotebookRunspace.PowerShell.HadErrors) {
-                    $PSNotebookRunspace.PowerShell.Streams.Error | Out-String
+
+                # Clear Errors
+                $PSNotebookRunspace.PowerShell.Streams.Error.Clear()
+                # Clear Commands
+                $PSNotebookRunspace.PowerShell.Commands.Clear()
+
+                $result = $PSNotebookRunspace.Invoke($codeCell.source)
+                if ($PSNotebookRunspace.PowerShell.Streams.Error.Count -gt 0) {
+                    $text = $PSNotebookRunspace.PowerShell.Streams.Error | Out-String                    
                 }
                 else {
-                    $result
+                    $text = $result
                 }
 
                 $codeCell.outputs = @()
