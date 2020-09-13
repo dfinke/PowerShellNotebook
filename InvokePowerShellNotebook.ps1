@@ -38,7 +38,7 @@ West   melon 76
                 $result = $PSNotebookRunspace.Invoke($codeCell.source) 
                 
                 $text = if ($PSNotebookRunspace.PowerShell.HadErrors) {
-                    $PSNotebookRunspace.PowerShell.Streams.Error
+                    $PSNotebookRunspace.PowerShell.Streams.Error | Out-String
                 }
                 else {
                     $result
