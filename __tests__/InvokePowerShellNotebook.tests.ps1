@@ -157,4 +157,50 @@ Describe "Test Invoke PS Notebook" -Tag 'Invoke-PowerShellNotebook' {
         $targetCell.outputs.output_type | Should -BeExactly "stream"
         $targetCell.outputs.text | Should -Be 6
     }
+
+    It "Should handle a cell with errors" {
+        $srcNoteBook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\CellHasAnError.ipynb"
+        $fullName = "TestDrive:\NewCellHasAnError.ipynb"
+
+        Invoke-PowerShellNotebook -NoteBookFullName $srcNoteBook -Outfile $fullName
+ 
+        $notebookJson = Get-Content $fullName | ConvertFrom-Json
+        $codeCells = @($notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' })
+        $codeCells.Count | Should -Be 1
+
+        $targetCell = $codeCells[0]
+        $targetCell.cell_type | Should -BeExactly "code"
+        $targetCell.outputs.name | Should -BeExactly "stdout"
+        $targetCell.outputs.output_type | Should -BeExactly "stream"
+        $targetCell.outputs.text | Should -Not -BeNullOrEmpty
+    }
+
+    It "Should handle a cell with errors and cells that work" {
+        $srcNoteBook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\ComboGoodAndErrorCells.ipynb"
+        $fullName = "TestDrive:\NewComboGoodAndErrorCells.ipynb"
+
+        Invoke-PowerShellNotebook -NoteBookFullName $srcNoteBook -Outfile $fullName
+ 
+        $notebookJson = Get-Content $fullName | ConvertFrom-Json
+        $codeCells = @($notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' })
+        $codeCells.Count | Should -Be 3
+
+        $targetCell = $codeCells[0]
+        $targetCell.cell_type | Should -BeExactly "code"
+        $targetCell.outputs.name | Should -BeExactly "stdout"
+        $targetCell.outputs.output_type | Should -BeExactly "stream"
+        $targetCell.outputs.text | Should -Be 20
+
+        $targetCell = $codeCells[1]
+        $targetCell.cell_type | Should -BeExactly "code"
+        $targetCell.outputs.name | Should -BeExactly "stdout"
+        $targetCell.outputs.output_type | Should -BeExactly "stream"
+        $targetCell.outputs.text | Should -Not -BeNullOrEmpty
+
+        $targetCell = $codeCells[2]
+        $targetCell.cell_type | Should -BeExactly "code"
+        $targetCell.outputs.name | Should -BeExactly "stdout"
+        $targetCell.outputs.output_type | Should -BeExactly "stream"
+        $targetCell.outputs.text | Should -Be 42
+    }
 }

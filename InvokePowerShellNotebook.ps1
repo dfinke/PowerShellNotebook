@@ -35,18 +35,31 @@ West   melon 76
             $codeCells = $notebookJson.cells | Where-Object { $_.'cell_type' -eq 'code' }
 
             foreach ($codeCell in $codeCells) {
+
+                # Clear Errors
+                $PSNotebookRunspace.PowerShell.Streams.Error.Clear()
+                # Clear Commands
+                $PSNotebookRunspace.PowerShell.Commands.Clear()
+
+                $result = $PSNotebookRunspace.Invoke($codeCell.source)
+                if ($PSNotebookRunspace.PowerShell.Streams.Error.Count -gt 0) {
+                    $text = $PSNotebookRunspace.PowerShell.Streams.Error | Out-String                    
+                }
+                else {
+                    $text = $result
+                }
+
                 $codeCell.outputs = @()
                 $codeCell.outputs += [ordered]@{
                     name        = "stdout"
-                    text        = $PSNotebookRunspace.Invoke($codeCell.source) -join "`n"
+                    text        = $text -join "`n"
                     output_type = "stream"
                 }
             }
             
             $PSNotebookRunspace.Close()
-            $notebookJson |
-            ConvertTo-Json -Depth 4 |
-            Set-Content $OutFile -Encoding UTF8            
+            
+            $notebookJson | ConvertTo-Json -Depth 4 | Set-Content $OutFile -Encoding UTF8            
         }
         else {
 
