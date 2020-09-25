@@ -22,7 +22,14 @@ West   melon 76
 
     Process {
         
+        $gistOutput = $false
+
         if ($OutFile) {
+            if ($OutFile.StartsWith("gist://")) {
+                $gistOutput = $true
+                $OutFile = "$env:TEMP\" + $OutFile.Replace("gist://", "")
+            }
+
             if (Test-Path $OutFile) {
                 throw "$OutFile already exists"
             }
@@ -58,8 +65,21 @@ West   melon 76
             }
             
             $PSNotebookRunspace.Close()
-            
-            $notebookJson | ConvertTo-Json -Depth 4 | Set-Content $OutFile -Encoding UTF8            
+
+            # gist://test.ipynb
+            if ($gistOutput) {                
+                $contents = $notebookJson | ConvertTo-Json -Depth 4
+                $targetFileName = Split-Path $OutFile -Leaf
+
+                $result = New-GistNotebook -contents $contents -fileName $targetFileName
+                if($result) {
+                    $result.html_url
+                }
+                Remove-Item $OutFile -ErrorAction SilentlyContinue
+            }
+            else {
+                $notebookJson | ConvertTo-Json -Depth 4 | Set-Content $OutFile -Encoding UTF8
+            }
         }
         else {
 
