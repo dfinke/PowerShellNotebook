@@ -16,6 +16,7 @@ West   melon 76
         [Parameter(ValueFromPipelineByPropertyName)]
         $NoteBookFullName,
         $OutFile,
+        [Hashtable]$Parameters,
         [Switch]$AsExcel,
         [Switch]$Show
     )
@@ -47,20 +48,31 @@ West   melon 76
                 $PSNotebookRunspace.PowerShell.Streams.Error.Clear()
                 # Clear Commands
                 $PSNotebookRunspace.PowerShell.Commands.Clear()
-
-                $result = $PSNotebookRunspace.Invoke($codeCell.source)
-                if ($PSNotebookRunspace.PowerShell.Streams.Error.Count -gt 0) {
-                    $text = $PSNotebookRunspace.PowerShell.Streams.Error | Out-String                    
+                
+                if ($codeCell.metadata.tags -eq 'parameters' -and $parameters) {        
+                    # run the cell tagged as parameters
+                    $null = $PSNotebookRunspace.Invoke($codeCell.source)
+                    foreach ($entry in $parameters.GetEnumerator() ) {
+                        $psCmd = "Set-Variable -Name $($entry.name) -Value $($entry.value)"
+                        $null = $PSNotebookRunspace.Invoke($psCmd)
+                    }        
                 }
                 else {
-                    $text = $result
-                }
 
-                $codeCell.outputs = @()
-                $codeCell.outputs += [ordered]@{
-                    name        = "stdout"
-                    text        = $text -join "`n"
-                    output_type = "stream"
+                    $result = $PSNotebookRunspace.Invoke($codeCell.source)
+                    if ($PSNotebookRunspace.PowerShell.Streams.Error.Count -gt 0) {
+                        $text = $PSNotebookRunspace.PowerShell.Streams.Error | Out-String                    
+                    }
+                    else {
+                        $text = $result
+                    }
+
+                    $codeCell.outputs = @()
+                    $codeCell.outputs += [ordered]@{
+                        name        = "stdout"
+                        text        = $text -join "`n"
+                        output_type = "stream"
+                    }
                 }
             }
             
@@ -72,7 +84,7 @@ West   melon 76
                 $targetFileName = Split-Path $OutFile -Leaf
 
                 $result = New-GistNotebook -contents $contents -fileName $targetFileName
-                if($result) {
+                if ($result) {
                     $result.html_url
                 }
                 Remove-Item $OutFile -ErrorAction SilentlyContinue
