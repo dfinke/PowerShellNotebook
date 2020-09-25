@@ -85,7 +85,7 @@ West   melon 76
 
                 $result = New-GistNotebook -contents $contents -fileName $targetFileName
                 if ($result) {
-                    $result.html_url
+                    Start-Process $result.html_url
                 }
                 Remove-Item $OutFile -ErrorAction SilentlyContinue
             }
