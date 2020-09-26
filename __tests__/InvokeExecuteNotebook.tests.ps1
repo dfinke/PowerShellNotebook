@@ -12,7 +12,16 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
     }
 
     It "tests $Parameters takes a an ordered hashtable" {
-        Invoke-ExecuteNotebook -Parmeters [ordered]@ { a=1 }
+        Invoke-ExecuteNotebook -Parmeters ([ordered]@{ a = 1 })
+    }
+
+    It "Tests just passing in a noteboook " {
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        
+        $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook
+
+        $actual[0].Trim() | Should -BeExactly 'alpha = 1.2, ratio = 3.7, and alpha * ratio = 4.44'
+        $actual[1].Trim() | Should -BeExactly 'a = 1 and twice = 2'
     }
 
     # It "Should have these results from the Invoke-PowerShellNotebook" {

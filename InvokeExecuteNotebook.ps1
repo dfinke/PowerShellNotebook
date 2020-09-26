@@ -4,6 +4,32 @@ function Invoke-ExecuteNotebook {
         $OutputNotebook,
         [hashtable]$Parameters
     )
+
+    if (!$InputNotebook) { return }
+
+    $data = Get-Content $inputNotebook | ConvertFrom-Json
+    [System.Collections.ArrayList]$cells = $data.cells
+    
+    $PSNotebookRunspace = New-PSNotebookRunspace
+    
+    for ($idx = 0; $idx -lt $cells.count; $idx++) {
+        $PSNotebookRunspace.PowerShell.Commands.Clear()
+        $cell = $cells[$idx]
+
+        $result = $PSNotebookRunspace.Invoke($cell.source)
+        
+        if ($cell.outputs -and $cell.outputs.text) {
+            $cell.outputs[0].text = $result
+        }
+    }
+
+    $data.cells = $cells
+    
+    if ($outputNotebook) {
+    }
+    else {
+        $data.cells.outputs.text
+    }    
 }
 
 function New-GistNotebook {
