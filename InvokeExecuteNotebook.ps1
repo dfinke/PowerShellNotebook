@@ -26,6 +26,12 @@ function Invoke-ExecuteNotebook {
     $data.cells = $cells
     
     if ($outputNotebook) {
+        if (Test-Path $OutputNotebook) {
+            throw "already exists"
+        }
+
+        ConvertTo-Json -InputObject $data -Depth 4 |
+        Set-Content $OutputNotebook -Encoding utf8
     }
     else {
         $data.cells.outputs.text
