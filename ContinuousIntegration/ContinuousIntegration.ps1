@@ -1,6 +1,6 @@
 $PSVersionTable
 
-$modules = @("Pester", "ImportExcel")
+$modules = @("Pester", "ImportExcel", "SQLServer", "PSScriptAnalyzer")
 
 foreach ($module in $modules) {
     Write-Host "Installing $module" -ForegroundColor Cyan
