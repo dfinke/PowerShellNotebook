@@ -28,7 +28,7 @@ function Invoke-ExecuteNotebook {
 
             $cells.Insert(($idx + 1), $newParams)
         }
-        
+
         $result = $PSNotebookRunspace.Invoke($cell.source)
         
         if ($cell.outputs -and $cell.outputs.text) {
@@ -38,13 +38,27 @@ function Invoke-ExecuteNotebook {
 
     $data.cells = $cells
     
-    if ($outputNotebook) {
-        if (Test-Path $OutputNotebook) {
-            throw "$OutputNotebook already exists"
-        }
+    if ($OutputNotebook) {
+        if ($outputNotebook.startswith("gist://")) {
 
-        ConvertTo-Json -InputObject $data -Depth 4 |
-        Set-Content $OutputNotebook -Encoding utf8
+            $OutFile = $OutputNotebook.replace("gist://", "")
+            $targetFileName = Split-Path $OutFile -Leaf
+
+            $contents = $data | ConvertTo-Json -Depth 4
+            $result = New-GistNotebook -contents $contents -fileName $targetFileName
+
+            if ($result) {
+                Start-Process $result.html_url
+            }            
+        }
+        else {
+            if (Test-Path $OutputNotebook) {
+                throw "$OutputNotebook already exists"
+            }
+
+            ConvertTo-Json -InputObject $data -Depth 4 |
+            Set-Content $OutputNotebook -Encoding utf8
+        }
     }
     else {
         $data.cells.outputs.text
@@ -59,6 +73,10 @@ function New-GistNotebook {
         $fileName,
         $gistDescription = "PowerShell Notebook"
     )
+
+    if (!(test-path env:github_token)) {
+        throw "env:github_token not set. You need to set it to a GitHub PAT"
+    }
 
     $header = @{"Authorization" = "token $($env:GITHUB_TOKEN)" }
 
