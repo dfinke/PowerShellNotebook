@@ -8,4 +8,6 @@
 . $PSScriptRoot\GetNotebookContent.ps1
 . $PSScriptRoot\InvokeExecuteNotebook.ps1
 . $PSScriptRoot\InvokePowerShellNotebook.ps1
+. $PSScriptRoot\NewCodeCell.ps1
+. $PSScriptRoot\NewGistNotebook.ps1
 . $PSScriptRoot\PowerShellNotebookDSL.ps1
