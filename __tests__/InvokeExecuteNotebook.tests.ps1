@@ -42,6 +42,17 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         
         Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
     }
+    
+    It "Tests create new notebook that already exists" {
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "TestDrive:\newParameters.ipynb"
+        
+        "" > $OutputNotebook
+
+        {Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook} | Should -Throw "TestDrive:\newParameters.ipynb already exists"
+        
+        Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
+    }
 
     # It "Should have these results from the Invoke-PowerShellNotebook" {
     #     $actual = Invoke-PowerShellNotebook "$PSScriptRoot\GoodNotebooks\testPSNb1.ipynb"

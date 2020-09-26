@@ -27,7 +27,7 @@ function Invoke-ExecuteNotebook {
     
     if ($outputNotebook) {
         if (Test-Path $OutputNotebook) {
-            throw "already exists"
+            throw "$OutputNotebook already exists"
         }
 
         ConvertTo-Json -InputObject $data -Depth 4 |
