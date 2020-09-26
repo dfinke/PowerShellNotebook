@@ -3,6 +3,10 @@ on:
     branches:
       - master
 
+  pull_request:    
+    branches:
+      - master
+
 jobs:
   validate:
     runs-on: ${{ matrix.os }}
