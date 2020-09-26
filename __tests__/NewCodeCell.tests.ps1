@@ -21,7 +21,7 @@ $b=3
         $actual.metadata.tags | Should -Be "new parameters"
         $actual.source.count | Should -Be 2
              
-        $actual.source[0] | Should -BeExactly ("`$a=1" + [System.Environment]::NewLine)
+        $actual.source[0].Trim() | Should -BeExactly '$a=1'
         $actual.source[1] | Should -BeExactly '$b=3'
     }
 }
