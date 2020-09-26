@@ -15,7 +15,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         Invoke-ExecuteNotebook -Parmeters ([ordered]@{ a = 1 })
     }
 
-    It "Tests passing in a noteboook and get calculated resultss" {
+    It "Tests passing in a noteboook and get calculated results" {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
         
         $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook
@@ -24,6 +24,22 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual[1].Trim() | Should -BeExactly 'a = 1 and twice = 2'
     }
 
+    It "Tests parameterization" {
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        
+        $params = @{
+            alpha = 4
+            ratio = 4
+            a     = 15
+        }
+
+        $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook -Parameters $params
+
+        $actual[0].Trim() | Should -BeExactly 'alpha = 4, ratio = 4, and alpha * ratio = 16'
+        $actual[1].Trim() | Should -BeExactly 'a = 15 and twice = 30'
+
+    }
+    
     It "Tests create new notebook using OutputNotebook" {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
         $OutputNotebook = "TestDrive:\newParameters.ipynb"
@@ -49,7 +65,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         
         "" > $OutputNotebook
 
-        {Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook} | Should -Throw "TestDrive:\newParameters.ipynb already exists"
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw "TestDrive:\newParameters.ipynb already exists"
         
         Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
     }

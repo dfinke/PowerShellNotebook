@@ -16,6 +16,19 @@ function Invoke-ExecuteNotebook {
         $PSNotebookRunspace.PowerShell.Commands.Clear()
         $cell = $cells[$idx]
 
+        if ($cell.metadata.tags -eq 'parameters' -and $parameters) {
+            $newVars = @("# override parameters")
+            $newVars += $(
+                foreach ($entry in $parameters.GetEnumerator() ) {
+                    "`$$($entry.name) = $($entry.value)"
+                }
+            )
+
+            $newParams = New-CodeCell ($newVars -join "`r`n") | ConvertFrom-Json
+
+            $cells.Insert(($idx + 1), $newParams)
+        }
+        
         $result = $PSNotebookRunspace.Invoke($cell.source)
         
         if ($cell.outputs -and $cell.outputs.text) {
