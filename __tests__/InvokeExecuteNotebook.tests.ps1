@@ -39,7 +39,18 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual[1].Trim() | Should -BeExactly 'a = 15 and twice = 30'
 
     }
-    
+
+    It "Tests parameterization with no cells as parameters" -skip {
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb"        
+        
+        $params = @{msg = "Hello from parameters" }
+
+        $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook -Parameters $params
+
+        $actual[0].Trim() | Should -BeExactly 'Hello from parameters'
+        $actual[1].Trim() | Should -BeExactly "The length of 'Hello from parameters' is 21"
+    }
+
     It "Tests create new notebook using OutputNotebook" {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
         $OutputNotebook = "TestDrive:\newParameters.ipynb"
@@ -68,5 +79,17 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw "TestDrive:\newParameters.ipynb already exists"
         
         Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
+    }
+
+    It "Tests Find-ParameterizedCell" {
+        (Find-ParameterizedCell -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb").Count | Should -Be 0
+        (Find-ParameterizedCell -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb").Count | Should -Be 1
+        (Find-ParameterizedCell -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookMoreThanOneParameterCell.ipynb").Count | Should -Be 2
+    }
+
+    It "Tests Get-ParameterInsertionIndex" {
+        Get-ParameterInsertionIndex -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb" | Should -Be 0
+        Get-ParameterInsertionIndex -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb" | Should -Be 1
+        Get-ParameterInsertionIndex -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookMoreThanOneParameterCell.ipynb" | Should -Be 3
     }
 }

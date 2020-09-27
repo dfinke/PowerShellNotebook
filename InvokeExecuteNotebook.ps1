@@ -1,3 +1,37 @@
+function Find-ParameterizedCell {
+    <#
+        .Synopsis
+        Reads a Jupyter Notebook and returns all cells with a tag -eq to 'parameters'
+        
+    #>
+    param(
+        [Parameter(Mandatory)]
+        $InputNotebook
+    )
+
+    $data = ConvertFrom-Json -InputObject (Get-Content -Raw $InputNotebook)
+
+    for ($idx = 0; $idx -lt $data.cells.Count; $idx++) {
+        $currentCell = $data.cells[$idx]
+        if ($currentCell.metadata.tags -eq 'parameters') {
+            $idx
+        }
+    }
+}
+
+function Get-ParameterInsertionIndex {
+    param(
+        [Parameter(Mandatory)]
+        $InputNotebook
+    )
+
+    $cell = Find-ParameterizedCell $InputNotebook | Select-Object -First 1
+    if ([string]::IsNullOrEmpty($cell)) {
+        return 0
+    }
+    $cell + 1
+}
+
 function Invoke-ExecuteNotebook {
     param(
         $InputNotebook,
@@ -11,23 +45,24 @@ function Invoke-ExecuteNotebook {
     [System.Collections.ArrayList]$cells = $data.cells
     
     $PSNotebookRunspace = New-PSNotebookRunspace
-    
+
+    if ($Parameters) {        
+        $newVars = @("# override parameters")
+        $newVars += $(
+            foreach ($entry in $parameters.GetEnumerator() ) {
+                "`$$($entry.name) = $($entry.value)"
+            }
+        )
+            
+        $newParams = New-CodeCell ($newVars -join "`r`n") | ConvertFrom-Json
+
+        $index = Get-ParameterInsertionIndex -InputNotebook $InputNotebook
+        $cells.Insert($index, $newParams)
+    }
+
     for ($idx = 0; $idx -lt $cells.count; $idx++) {
         $PSNotebookRunspace.PowerShell.Commands.Clear()
         $cell = $cells[$idx]
-
-        if ($cell.metadata.tags -eq 'parameters' -and $parameters) {
-            $newVars = @("# override parameters")
-            $newVars += $(
-                foreach ($entry in $parameters.GetEnumerator() ) {
-                    "`$$($entry.name) = $($entry.value)"
-                }
-            )
-
-            $newParams = New-CodeCell ($newVars -join "`r`n") | ConvertFrom-Json
-
-            $cells.Insert(($idx + 1), $newParams)
-        }
 
         $result = $PSNotebookRunspace.Invoke($cell.source)
         
