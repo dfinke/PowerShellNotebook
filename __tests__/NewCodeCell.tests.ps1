@@ -18,7 +18,7 @@ $b=3
         $actual.cell_type | Should -BeExactly "code"
         $actual.execution_count | Should -Be 0
         $actual.outputs | Should -Be $null
-        $actual.metadata.tags | Should -Be "new parameters"
+        $actual.metadata.tags | Should -Be "injected-parameters"
         $actual.source.count | Should -Be 2
              
         $actual.source[0].Trim() | Should -BeExactly '$a=1'

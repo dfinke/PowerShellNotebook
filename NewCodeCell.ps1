@@ -9,7 +9,7 @@ function New-CodeCell {
     "execution_count": 0,
     "metadata": {
      "tags": [
-      "new parameters"
+      "injected-parameters"
      ]
     },
     "outputs": [],
