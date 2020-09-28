@@ -9,7 +9,13 @@ function Find-ParameterizedCell {
         $InputNotebook
     )
 
-    $data = ConvertFrom-Json -InputObject (Get-Content -Raw $InputNotebook)
+    if ([System.Uri]::IsWellFormedUriString($InputNotebook, [System.UriKind]::Absolute)) {
+        $data = Invoke-RestMethod $InputNotebook
+    }
+    else {
+        $json = Get-Content $InputNotebook 
+        $data = $json | ConvertFrom-Json
+    }    
 
     for ($idx = 0; $idx -lt $data.cells.Count; $idx++) {
         $currentCell = $data.cells[$idx]
@@ -41,7 +47,15 @@ function Invoke-ExecuteNotebook {
 
     if (!$InputNotebook) { return }
 
-    $data = Get-Content $inputNotebook | ConvertFrom-Json
+    if ([System.Uri]::IsWellFormedUriString($InputNotebook, [System.UriKind]::Absolute)) {
+        $data = Invoke-RestMethod $InputNotebook
+    }
+    else {
+        $json = Get-Content $InputNotebook 
+        $data = $json | ConvertFrom-Json
+    }
+    
+
     [System.Collections.ArrayList]$cells = $data.cells
     
     $PSNotebookRunspace = New-PSNotebookRunspace
