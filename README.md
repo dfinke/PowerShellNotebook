@@ -16,6 +16,10 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 
 </br></br>
 
+Short video on [Invoke-ExecuteNotebook](https://youtu.be/3VE27vLtlJY?t=316)
+
+One of the uses of this Powershell tool  is for parameterizing, and executing Jupyter Notebooks, `Invoke-ExecuteNotebook`. This opens up new opportunities for how notebooks can be used. For example you may have a financial report that you want to run with different values on the first or last day of a month using parameters makes this task easier.
+
 # Check out the [Video Here](http://bit.ly/2SylBm4)
 
 In a nutshell.
