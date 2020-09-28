@@ -50,7 +50,13 @@ function Invoke-ExecuteNotebook {
         $newVars = @("# override parameters")
         $newVars += $(
             foreach ($entry in $parameters.GetEnumerator() ) {
-                "`$$($entry.name) = $($entry.value)"
+                $quote = $null
+                $currentValue = $entry.value
+                                
+                if ($currentValue -is [string]) { $quote = "'" }
+                '${0} = {1}{2}{1}' -f $entry.name, $quote, $currentValue
+                
+                # "`$$($entry.name) = $($entry.value)"
             }
         )
             
