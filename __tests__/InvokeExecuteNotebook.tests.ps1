@@ -124,4 +124,12 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
              
         $actual.Trim() | Should -BeExactly $expected
     }
+
+    It "Tests reading from a URL" {
+        $url = 'https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/NotebooksForUseWithInvokeOutfile/testFile1.ipynb'
+ 
+        $actual = Invoke-ExecuteNotebook -InputNotebook $url
+
+        $actual.Trim() | Should -Be "Hello World"
+    }
 }
