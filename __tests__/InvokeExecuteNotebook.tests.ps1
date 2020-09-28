@@ -11,7 +11,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         Invoke-ExecuteNotebook -Parmeters @{b = 2 }
     }
 
-    It 'tests $Parameters takes a an ordered hashtable' {
+    It 'tests $P$arameters takes a an ordered hashtable' {
         Invoke-ExecuteNotebook -Parmeters ([ordered]@{ a = 1 })
     }
 
@@ -103,5 +103,25 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         Get-ParameterInsertionIndex -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb" | Should -Be 0
         Get-ParameterInsertionIndex -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb" | Should -Be 1
         Get-ParameterInsertionIndex -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookMoreThanOneParameterCell.ipynb" | Should -Be 3
+    }
+
+    It "Tests notebook returns the correct data with `outputs` having an empty array" {
+        # This notebook has a cell and the `outputs` property is an empty array
+        # Invoke-ExecuteNotebook will handle that
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\testFile1.ipynb" 
+
+        $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook 
+        $actual.Trim() | Should -BeExactly "Hello World"
+    }
+
+    It "Tests handling a cell with errors" {
+        
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\CellHasAnError.ipynb"
+        
+        $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook
+
+        $expected = "[91mRuntimeException: [91mAttempted to divide by zero.[0m"        
+             
+        $actual.Trim() | Should -BeExactly $expected
     }
 }

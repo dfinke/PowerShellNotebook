@@ -54,9 +54,7 @@ function Invoke-ExecuteNotebook {
                 $currentValue = $entry.value
                                 
                 if ($currentValue -is [string]) { $quote = "'" }
-                '${0} = {1}{2}{1}' -f $entry.name, $quote, $currentValue
-                
-                # "`$$($entry.name) = $($entry.value)"
+                '${0} = {1}{2}{1}' -f $entry.name, $quote, $currentValue                
             }
         )
             
@@ -67,13 +65,30 @@ function Invoke-ExecuteNotebook {
     }
 
     for ($idx = 0; $idx -lt $cells.count; $idx++) {
+        $cell = $cells[$idx]        
+        if ($cell.cell_type -ne 'code') { continue }
+
+        # Clear Errors
+        $PSNotebookRunspace.PowerShell.Streams.Error.Clear()
+
+        # Clear Commands
         $PSNotebookRunspace.PowerShell.Commands.Clear()
-        $cell = $cells[$idx]
 
         $result = $PSNotebookRunspace.Invoke($cell.source)
-        
-        if ($cell.outputs -and $cell.outputs.text) {
-            $cell.outputs[0].text = $result
+        if ($PSNotebookRunspace.PowerShell.Streams.Error.Count -gt 0) {
+            $text = $PSNotebookRunspace.PowerShell.Streams.Error | Out-String                    
+        }
+        else {
+            $text = $result
+        }
+
+        $cell.outputs = @()
+        if ($text) {
+            $cell.outputs += [ordered]@{
+                name        = "stdout"
+                text        = $text
+                output_type = "stream"
+            }
         }
     }
 
