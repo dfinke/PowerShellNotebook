@@ -5,6 +5,8 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 ## Continuous Integration Status
 </br>
 
+![.github/workflows/ci.yml](https://github.com/dfinke/PowerShellNotebook/workflows/.github/workflows/ci.yml/badge.svg)
+
 |Environment||
 |---|---|
 | Windows | [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master&jobName=Windows)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
