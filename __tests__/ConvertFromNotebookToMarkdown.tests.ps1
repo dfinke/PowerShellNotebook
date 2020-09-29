@@ -22,7 +22,7 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" {
 
         $actual = ConvertFrom-NoteBookToMarkdown -NotebookName $targetFile
 
-        $actual | Should -Beexactly $expected
+        $actual | Should -Match "$expected`$"
 
         Remove-Item $expected -ErrorAction SilentlyContinue
     }
