@@ -1,7 +1,7 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test ConvertTo-PowerShellNoteBook" {
-    It "Should convert the file to an ipynb" {
+    It "Should convert the file to an ipynb" -Skip {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo.txt"
         $fullName = "TestDrive:\testConverted.ipynb"
 
@@ -27,7 +27,7 @@ Describe "Test ConvertTo-PowerShellNoteBook" {
         $actual[2].Source | Should -BeExactly '# Create a function'
         $actual[3].Source | Should -BeExactly '# Use the function'
     }
-    It "Should convert the file with a single comment and single line of code to an ipynb" {
+    It "Should convert the file with a single comment and single line of code to an ipynb" -Skip {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo_SingleCommentSingleLineCodeBlock.ps1"
         $fullName = "TestDrive:\testConverted.ipynb"
 
@@ -48,7 +48,7 @@ Describe "Test ConvertTo-PowerShellNoteBook" {
         $actual[0].Source | Should -BeExactly '# Get first 10 process'
     }
 
-    It "Should convert the file to an ipynb" {
+    It "Should convert the file to an ipynb" -Skip {
         $demoTextFile = "$PSScriptRoot\DemoFiles\GetParsedSqlOffsets.ps1"
         $fullName = "TestDrive:\GetParsedSqlOffsets.ipynb"
 

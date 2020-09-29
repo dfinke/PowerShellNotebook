@@ -42,7 +42,7 @@ Describe "Test Invoke PS Notebook" {
 "
     }
 
-    It "Save file" {
+    It "Save file" -Skip {
         $fullName = "TestDrive:\test.ipnyb"
 
         New-PSNotebook -NoteBookName $fullName {
