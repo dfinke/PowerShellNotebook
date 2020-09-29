@@ -1,3 +1,26 @@
+## JO'N Sept 29 2020
+- Get-NotebookContent
+    - parameter changes: gave `JustCode` an alias of `NoMarkdown` and `JustMarkdown` an alias of `NoCode` made them mutually exclusive. Added switch  `IncludeOutput`
+    - `IncludeOutput` tries to return either the _stream_ output from Jupyter or the _data::Text/plain_ output from the vs code extension sensibly, and will also return _data::Text/html_ output / make reasonable sense of mixed outputs.
+- ConvertFrom-NotebookToMarkdown
+    - parameter changes: gave `NoteBookName` an alias of `Path`, added `Destination` - defaulting to current dir,  and switch `IncludeOutput`
+    - `IncludeOutput` is passed to `Get-NotebookContent`. If `Get-NotebookContent `returns output and it is a string we'll output it as preformatted block of markdown. If it is a single block of HTML we'll output that to into the MD.
+    - If `destination` is a directory, use the source filename converted from .ipynb to .md, otherwise treat destination  as a file name. At the end, output the file object, not the name
+- DSL/Add-NotebookCode
+    - Gave function an **experimental** alias of `code`
+    - parameter chanages: `-code` is now mandatory, also support non text-stream output through `-Displaydata`, allow the GUID for Azure data studio to be disabled with `-NoGUID`.
+    - Add support for _magic commands_ - `about` and `time`, remove `pwsh` if present.
+    - Ensure code isn't run if `DisplayData` is provided.
+    - Change process for building the cell to allow `DisplayData` to work, and also to make the `azdata_cell_guid` optional
+- DSL/Add-NotebookMarkdown
+    - Gave function an **experimental** alias of `markdown`
+- DSL New-PSNotebook
+     - Gave function an **experimental** alias of `Notebook`. The aliases allow writing `notebook {code $foo; markdown $bar} file.ipynb`
+     - parameter chanages: added `Runspace` and switch `DotNetInteractive` (alias DNI)
+     - if `Runspace` is passed, add members needed to allow `.Invoke()` to work as it does for a created runspace.
+     - Moved the template for the Azure-data-studio/Windows-PowerShell notebook to the top of the file, and created a template for a .net interactive notebook. Selection is made by presence of the `-DotNetInteractive` switch.
+     - Made `asText` redundant - no output name = "as text" , and add `.ipynb` to file name if it is not present.
+
 ## 09/26/2020
 
 - Added Invoke-ExecuteNotebook lets you:
@@ -16,7 +39,7 @@
 - Invoke-ExecuteNotebook supports reading a notebook from a URL
 
 ```powershell
-Invoke-ExecuteNotebook https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/NotebooksForUseWithInvokeOutfile/parameters.ipynb 
+Invoke-ExecuteNotebook https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/NotebooksForUseWithInvokeOutfile/parameters.ipynb
 ```
 - Plus, after reading it from a url you can save out to a `gist`
 
