@@ -91,7 +91,7 @@ function ConvertTo-PowerShellNoteBook {
                 'Gap'   {$GapBlock = $s.Substring($Block.Start, $Block.Length)
     
                             if($GapBlock.Trim().length -gt 0){
-                                Add-NotebookCode -code (-join $GapBlock.trimstart().trimend()) -replace ("\n", "   `n  ")
+                                (Add-NotebookCode -code (-join $GapBlock.trimstart().trimend())) -replace ("\n", "   `n  ")
                             }
                         }
             }
