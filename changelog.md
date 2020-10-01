@@ -1,3 +1,10 @@
+## 10/01/2020
+
+- Invoke-ExecuteNotebook supports the following for output paths:
+    - Local file system: `c:\temp\test.ipynb`
+    - GitHub gist: `gist://`
+    - Azure Blob Store: `abs://`
+
 ## 09/26/2020
 
 - Added Invoke-ExecuteNotebook lets you:
