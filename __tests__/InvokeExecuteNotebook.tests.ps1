@@ -132,4 +132,52 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
 
         $actual.Trim() | Should -Be "Hello World"
     }
+
+    It "Tests no such host" {
+        $account = "fakeaccount.blob.core.windows.net"
+        $containerName = $null
+        $sasToken = $null
+        $blobName = "run_1"
+        
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "abs://$($account)/$($containerName)/$($blobName)?$($sasToken)" 
+        
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw #"No such host is known."
+    }
+
+    It "Tests bad url" {
+        $account = "fakeaccount.blob.core.windows.net"
+        $containerName = $null
+        $sasToken = $null
+        $blobName = "run_1"
+        
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "bs://$($account)/$($containerName)/$($blobName)?$($sasToken)" 
+        
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw ("Invalid OutputNotebook url '{0}'" -f $OutputNotebook)
+    }
+
+    It "Tests bad url" {        
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "ist://test.ipynb" 
+        
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw ("Invalid OutputNotebook url '{0}'" -f $OutputNotebook)
+    }
+
+    It "Tests Test-Uri" {
+        $names = $(
+            , ($false, "A:")
+            , ($false, "B:")
+            , ($true, 'gist://doug.ipynb')
+            , ($true, 'abs://stgaccttestdcf.blob.core.windows.net/test/run_1?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-11-04T03:47:26Z&st=2020-11-30T19:47:26Z&spr=https&sig=')
+            , ($true, 'bs://stgaccttestdcf.blob.core.windows.net/test/run_1?')
+            , ($false, "$env:temp")
+        )
+
+        foreach ($name in $names) {
+            $test, $fullName = $name
+
+            Test-Uri $fullName | Should -Be $test
+        }
+    }
 }

@@ -109,17 +109,41 @@ function Invoke-ExecuteNotebook {
     $data.cells = $cells
     
     if ($OutputNotebook) {
-        if ($outputNotebook.startswith("gist://")) {
+        $isUri = Test-Uri $OutputNotebook
+        if ($isUri) {
+            if ($OutputNotebook.startswith("gist://")) {
 
-            $OutFile = $OutputNotebook.replace("gist://", "")
-            $targetFileName = Split-Path $OutFile -Leaf
+                $OutFile = $OutputNotebook.replace("gist://", "")
+                $targetFileName = Split-Path $OutFile -Leaf
 
-            $contents = $data | ConvertTo-Json -Depth 4
-            $result = New-GistNotebook -contents $contents -fileName $targetFileName
+                $contents = $data | ConvertTo-Json -Depth 4
+                $result = New-GistNotebook -contents $contents -fileName $targetFileName
 
-            if ($result) {
-                Start-Process $result.html_url
-            }            
+                if ($result) {
+                    Start-Process $result.html_url
+                }            
+            }
+            elseif ($OutputNotebook.startswith("abs://")) {
+                if (Test-AzureBlobStorageUrl $outputNotebook) {
+                
+                    $fullName = [System.IO.Path]::GetRandomFileName()
+                    ConvertTo-Json -InputObject $data -Depth 4 | Set-Content $fullName -Encoding utf8
+
+                    try {
+                        $headers = @{'x-ms-blob-type' = 'BlockBlob' }                
+                        Invoke-RestMethod -Uri ($OutputNotebook.Replace('abs', 'https')) -Method Put -Headers $headers -InFile $fullName    
+                    }
+                    catch {
+                        throw $_.Exception.Message
+                    }
+                    finally {
+                        Remove-Item $fullName -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+            else {
+                throw "Invalid OutputNotebook url '{0}'" -f $OutputNotebook
+            }
         }
         else {
             if (Test-Path $OutputNotebook) {
@@ -133,4 +157,22 @@ function Invoke-ExecuteNotebook {
     else {
         $data.cells.outputs.text
     }    
+}
+
+function Test-AzureBlobStorageUrl {
+    param(
+        $Url
+    )
+
+    $pattern = "abs://(.*)\.blob\.core\.windows\.net\/(.*)\/(.*)\?(.*)$"
+
+    [regex]::Match($Url, $pattern).Success
+}
+
+function Test-Uri {
+    param(
+        $FullName
+    )
+
+    [System.Uri]::IsWellFormedUriString($FullName, [System.UriKind]::Absolute)
 }
