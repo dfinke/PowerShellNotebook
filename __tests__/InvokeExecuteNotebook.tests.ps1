@@ -142,8 +142,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
         $OutputNotebook = "abs://$($account)/$($containerName)/$($blobName)?$($sasToken)" 
         
-        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw "No such host is known."
-        # { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw ("Invalid azure blob url '{0}'" -f $OutputNotebook)        
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw #"No such host is known."
     }
 
     It "Tests bad url" {
