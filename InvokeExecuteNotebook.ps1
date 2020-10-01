@@ -109,37 +109,40 @@ function Invoke-ExecuteNotebook {
     $data.cells = $cells
     
     if ($OutputNotebook) {
-        if ($OutputNotebook.startswith("gist://")) {
+        $isUri = Test-Uri $OutputNotebook
+        if ($isUri) {
+            if ($OutputNotebook.startswith("gist://")) {
 
-            $OutFile = $OutputNotebook.replace("gist://", "")
-            $targetFileName = Split-Path $OutFile -Leaf
+                $OutFile = $OutputNotebook.replace("gist://", "")
+                $targetFileName = Split-Path $OutFile -Leaf
 
-            $contents = $data | ConvertTo-Json -Depth 4
-            $result = New-GistNotebook -contents $contents -fileName $targetFileName
+                $contents = $data | ConvertTo-Json -Depth 4
+                $result = New-GistNotebook -contents $contents -fileName $targetFileName
 
-            if ($result) {
-                Start-Process $result.html_url
-            }            
-        }
-        elseif ($OutputNotebook.startswith("abs://")) {
-            if (Test-AzureBlobStorageUrl $outputNotebook) {
+                if ($result) {
+                    Start-Process $result.html_url
+                }            
+            }
+            elseif ($OutputNotebook.startswith("abs://")) {
+                if (Test-AzureBlobStorageUrl $outputNotebook) {
                 
-                $fullName = "{0}executeNotebookToAzure.ipynb" -f [System.IO.Path]::GetTempPath()
-                ConvertTo-Json -InputObject $data -Depth 4 | Set-Content $fullName -Encoding utf8
+                    $fullName = [System.IO.Path]::GetRandomFileName()
+                    ConvertTo-Json -InputObject $data -Depth 4 | Set-Content $fullName -Encoding utf8
 
-                try {
-                    $headers = @{'x-ms-blob-type' = 'BlockBlob' }                
-                    Invoke-RestMethod -Uri ($OutputNotebook.Replace('abs', 'https')) -Method Put -Headers $headers -InFile $fullName    
-                }
-                catch {
-                    $_.exception
-                }
-                finally {
-                    Remove-Item $fullName -ErrorAction SilentlyContinue
+                    try {
+                        $headers = @{'x-ms-blob-type' = 'BlockBlob' }                
+                        Invoke-RestMethod -Uri ($OutputNotebook.Replace('abs', 'https')) -Method Put -Headers $headers -InFile $fullName    
+                    }
+                    catch {
+                        throw $_.Exception.Message
+                    }
+                    finally {
+                        Remove-Item $fullName -ErrorAction SilentlyContinue
+                    }
                 }
             }
             else {
-                throw "Invalid azure blob url '{0}'" -f $OutputNotebook
+                throw "Invalid OutputNotebook url '{0}'" -f $OutputNotebook
             }
         }
         else {
@@ -157,9 +160,19 @@ function Invoke-ExecuteNotebook {
 }
 
 function Test-AzureBlobStorageUrl {
-    param($url)
+    param(
+        $Url
+    )
 
     $pattern = "abs://(.*)\.blob\.core\.windows\.net\/(.*)\/(.*)\?(.*)$"
 
-    [regex]::Match($url, $pattern).Success
+    [regex]::Match($Url, $pattern).Success
+}
+
+function Test-Uri {
+    param(
+        $FullName
+    )
+
+    [System.Uri]::IsWellFormedUriString($FullName, [System.UriKind]::Absolute)
 }
