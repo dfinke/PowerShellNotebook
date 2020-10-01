@@ -1,3 +1,12 @@
+## JO'N Oct 1 2020
+- Export NotebookToPowerShellScript
+    - Parameter change **BREAKING** Made IncludeTextCells a switch; added switch AsText, renamed Outpath to a more conventional Destination (keeping alias of outpath)
+    - Removed different path split for URLs
+    - Got date to output in local culture , and made the header comment neater.
+    - Assume any type other than code will go in a comment block (i.e. if it isn't markdown, still put it in a comment if it isn't code), and insert a dummy comment between code adjacent codeblocks to prevent them merging
+    - Return the file object created if there is one.
+    - Added support for piping files in.
+    - Fixed all the places I broke the test!
 ## JO'N Sept 29 2020
 - Get-NotebookContent
     - parameter changes: gave `JustCode` an alias of `NoMarkdown` and `JustMarkdown` an alias of `NoCode` made them mutually exclusive. Added switch  `IncludeOutput`
