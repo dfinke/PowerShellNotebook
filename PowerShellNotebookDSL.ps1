@@ -125,8 +125,9 @@ function Add-NotebookCode {
         #!About give OS and PS Versions. and don't run anything else in the cell
         #!Time - if there will be output, start a stopwatch, run the code, add the time to the output.
     #>
-    $code =     $code -replace "(?i)^#!pwsh\s*"
-    if     (    $code -match   "^(?i)#!?\s*exclude\s*results") {
+    $pattern = "^(?i)#!?\s*exclude\s*results"
+    $code    =  $code -replace "(?i)^#!pwsh\s*"
+    if     (    $code -match   $pattern) {
                 $code = $code -replace $pattern, ""
     }
     elseif (    $code -match   "^(?i)#!about" -and $script:IncludeCodeResults ) {
