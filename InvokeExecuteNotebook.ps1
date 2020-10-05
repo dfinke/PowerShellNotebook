@@ -2,7 +2,8 @@ function Find-ParameterizedCell {
     <#
         .Synopsis
         Reads a Jupyter Notebook and returns all cells with a tag -eq to 'parameters'
-        
+        .Example
+        Invoke-ExecuteNotebook -InputNotebook .\test.ipynb "abs://$($account)/$($containerName)/test.ipynb?$($sasToken)"
     #>
     param(
         [Parameter(Mandatory)]
