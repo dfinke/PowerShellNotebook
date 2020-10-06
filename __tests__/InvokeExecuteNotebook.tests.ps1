@@ -146,6 +146,11 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual.Trim() | Should -Be "Hello World"
     }
 
+    It "Tests reading from an invalid URL" {
+        $url = 'https://gist.github.com/dfinke/7e1ed8b698bb5dc4953045e79a05d95d' 
+        {Invoke-ExecuteNotebook -InputNotebook $url} | Should -Throw 'https://gist.github.com/dfinke/7e1ed8b698bb5dc4953045e79a05d95d is not a valid Jupyter Notebook'
+    }
+
     It "Tests no such host" {
         $account = "fakeaccount.blob.core.windows.net"
         $containerName = $null

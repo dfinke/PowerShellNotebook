@@ -50,7 +50,12 @@ function Invoke-ExecuteNotebook {
     if (!$InputNotebook) { return }
 
     if ([System.Uri]::IsWellFormedUriString($InputNotebook, [System.UriKind]::Absolute)) {
-        $data = Invoke-RestMethod $InputNotebook
+        try {
+            $data = Invoke-RestMethod $InputNotebook
+        }
+        catch {
+            throw "$($InputNotebook) is not a valid Jupyter Notebook" 
+        }
     }
     else {
         $json = Get-Content $InputNotebook 
