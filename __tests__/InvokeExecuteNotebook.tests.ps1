@@ -93,6 +93,19 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
     }
 
+    It "Tests create new notebook that already exists and -Force an overwrite" {
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "TestDrive:\newParameters.ipynb"
+        
+        "" > $OutputNotebook
+
+        Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook -Force | Should -BeNullOrEmpty
+        
+        (Get-ChildItem $OutputNotebook).Length -gt 0 | Should -BeTrue
+
+        Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
+    }
+
     It "Tests Find-ParameterizedCell" {
         (Find-ParameterizedCell -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb").Count | Should -Be 0
         (Find-ParameterizedCell -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb").Count | Should -Be 1

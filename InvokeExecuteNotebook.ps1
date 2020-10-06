@@ -2,7 +2,8 @@ function Find-ParameterizedCell {
     <#
         .Synopsis
         Reads a Jupyter Notebook and returns all cells with a tag -eq to 'parameters'
-        
+        .Example
+        Invoke-ExecuteNotebook -InputNotebook .\test.ipynb "abs://$($account)/$($containerName)/test.ipynb?$($sasToken)"
     #>
     param(
         [Parameter(Mandatory)]
@@ -42,7 +43,8 @@ function Invoke-ExecuteNotebook {
     param(
         $InputNotebook,
         $OutputNotebook,
-        [hashtable]$Parameters
+        [hashtable]$Parameters,
+        [Switch]$Force
     )
 
     if (!$InputNotebook) { return }
@@ -146,7 +148,7 @@ function Invoke-ExecuteNotebook {
             }
         }
         else {
-            if (Test-Path $OutputNotebook) {
+            if ((Test-Path $OutputNotebook) -and !$Force) {
                 throw "$OutputNotebook already exists"
             }
 

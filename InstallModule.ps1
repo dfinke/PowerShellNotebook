@@ -1,6 +1,6 @@
 $moduleName = '\PowerShellNotebook'
 $targets = @(
-    'C:\Program Files\WindowsPowerShell\Modules' + $moduleName # PS 5.1
+    #'C:\Program Files\WindowsPowerShell\Modules' + $moduleName # PS 5.1
     'C:\Program Files\PowerShell\Modules' + $moduleName # PS 7+
 )
 
