@@ -43,7 +43,8 @@ function Invoke-ExecuteNotebook {
     param(
         $InputNotebook,
         $OutputNotebook,
-        [hashtable]$Parameters
+        [hashtable]$Parameters,
+        [Switch]$Force
     )
 
     if (!$InputNotebook) { return }
@@ -147,7 +148,7 @@ function Invoke-ExecuteNotebook {
             }
         }
         else {
-            if (Test-Path $OutputNotebook) {
+            if ((Test-Path $OutputNotebook) -and !$Force) {
                 throw "$OutputNotebook already exists"
             }
 
