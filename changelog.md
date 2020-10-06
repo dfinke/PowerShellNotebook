@@ -1,3 +1,7 @@
+## 10/06/2020
+
+- Invoke-ExecuteNotebook supports `-Force` to overwrite `-OutputNotebook` if it exists locally
+
 ## 10/01/2020
 
 - Invoke-ExecuteNotebook supports the following for output paths:
