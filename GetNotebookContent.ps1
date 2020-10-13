@@ -29,7 +29,8 @@ fsharp.ipynb code {printfn "hello world"}
         [Parameter(ValueFromPipelineByPropertyName)]
         $NoteBookFullName,
         [Switch]$JustCode,
-        [Switch]$JustMarkdown
+        [Switch]$JustMarkdown,
+        [Switch]$PassThru
     )
 
     Process {
@@ -41,6 +42,9 @@ fsharp.ipynb code {printfn "hello world"}
             $r = Get-Content $NoteBookFullName | ConvertFrom-Json
         }
 
+        if($PassThru) {
+            return $r
+        }
 
         if ($JustCode) { $cellType = "code" }
         if ($JustMarkdown) { $cellType = "markdown" }
