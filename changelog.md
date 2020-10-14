@@ -1,3 +1,7 @@
+## 10/14/2020
+
+- `ConvertTo-PowerShellNoteBook` now supports reading a `.ps1` from a URL
+
 ## 10/06/2020
 
 - Invoke-ExecuteNotebook supports `-Force` to overwrite `-OutputNotebook` if it exists locally
