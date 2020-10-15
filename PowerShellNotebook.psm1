@@ -6,6 +6,7 @@
 . $PSScriptRoot\ExportNotebookToSqlScript.ps1
 . $PSScriptRoot\GetNotebook.ps1
 . $PSScriptRoot\GetNotebookContent.ps1
+. $PSScriptRoot\GetNotebookDisplayData.ps1
 . $PSScriptRoot\InvokeExecuteNotebook.ps1
 . $PSScriptRoot\InvokePowerShellNotebook.ps1
 . $PSScriptRoot\NewCodeCell.ps1

@@ -1,6 +1,6 @@
 #Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
-Describe "Test PS Notebook Content" {
+Describe "Test PS Notebook Content" -Tag "Get-NotebookContent" {
 
     It "Should have Get-NotebookContent" {
         $actual = Get-Command Get-NotebookContent -ErrorAction SilentlyContinue
@@ -64,5 +64,14 @@ Describe "Test PS Notebook Content" {
         $actual = Get-NotebookContent -NoteBookFullName "https://raw.githubusercontent.com/dfinke/PowerShellNotebook/AddJupyterNotebookMetaInfo/samplenotebook/powershell.ipynb"
 
         $actual | Should -Not -Be $null
+    }
+
+    It "Tests -Passthru Switch" {
+        $fileName = "$PSScriptRoot\ChartNotebooks\charts.ipynb"
+        $actual = Get-NotebookContent -NoteBookFullName $fileName -PassThru
+
+        $actual.cells.Count | Should -Be 2
+        $actual.cells[0].outputs.output_type | Should -BeExactly 'display_data'
+        $actual.cells[0].outputs.data.'text/html'.Count  | Should -Be 25        
     }
 }
