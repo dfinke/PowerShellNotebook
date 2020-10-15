@@ -1,4 +1,7 @@
 function Get-NotebookDisplayData {
+    <#
+        .Synopsis
+    #>
     param($NoteBookFullName)
 
     $result = Get-NotebookContent -NoteBookFullName $NoteBookFullName -PassThru
