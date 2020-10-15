@@ -1,3 +1,10 @@
+## 10/15/2020
+
+- Added `-PassThru` to `Get-NotebookContent` to get back all cell types beyond markdown and 
+    - This enables extracting output types like display_data for things like JavaScript which can be saved to an `.html` file and then displayed in browser
+
+- Added `Get-NotebookDisplayData`. Gets only cells with `display_data` for `output_type`. Helper function using the above function `Get-NotebookContent`.
+
 ## 10/14/2020
 
 - `ConvertTo-PowerShellNoteBook` now supports reading a `.ps1` from a URL
