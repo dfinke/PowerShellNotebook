@@ -1,3 +1,10 @@
+## 10/17/2020
+
+- Added features to `ConvertTo-PowerShellNotebook`
+    - Pipe files to the function
+    - Handles URLs with PowerShell files as endpoints
+    - Handles any mix of Files and URLs for conversion    
+
 ## 10/15/2020
 
 - Added `-PassThru` to `Get-NotebookContent` to get back all cell types beyond markdown and 
