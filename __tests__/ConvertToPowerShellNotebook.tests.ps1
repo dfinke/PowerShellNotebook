@@ -95,4 +95,17 @@ Describe "Test ConvertTo-PowerShellNoteBook" -Tag "ConvertTo-PowerShellNoteBook"
         $actual.Source | Should -Not -BeNullOrEmpty
         $actual.Source.Length | Should -Be 45
     }
+
+    It "Test reading from multiple inputs" -Skip {
+        $(
+            'https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/DemoFiles/demo_SingleCommentSingleLineCodeBlock.ps1' 
+            Get-ChildItem "$PSScriptRoot\MultiplePSFiles" *.ps1
+        ) | ConvertTo-PowerShellNoteBook
+
+        $r = Get-ChildItem . -Recurse *.ipynb | Out-String
+        
+        $r | Out-Host
+        (Get-ChildItem $PSScriptRoot *.ipynb).count | Should -Be 4
+        # Get-ChildItem $PSScriptRoot *.ipynb | Remove-Item
+    }
 }
