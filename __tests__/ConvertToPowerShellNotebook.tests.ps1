@@ -105,7 +105,7 @@ Describe "Test ConvertTo-PowerShellNoteBook" -Tag "ConvertTo-PowerShellNoteBook"
         $r = Get-ChildItem . -Recurse *.ipynb | Out-String
         
         $r | Out-Host
-        # (Get-ChildItem $PSScriptRoot *.ipynb).count | Should -Be 4
+        (Get-ChildItem $PSScriptRoot *.ipynb).count | Should -Be 4
         # Get-ChildItem $PSScriptRoot *.ipynb | Remove-Item
     }
 }
