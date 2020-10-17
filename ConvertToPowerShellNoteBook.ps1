@@ -1,7 +1,22 @@
 function ConvertTo-PowerShellNoteBook {
     <#
+        .Synopsis
+        Convert PowerShell scripts (ps1 files) to interactive notebooks (ipynb files)
+
+        .Description
+        Convert PowerShell scripts on disk or the internet to interactive notebooks that can be run in Azure Data Studio or with `Invoke-ExecuteMethod`
+
         .Example
         ConvertTo-PowerShellNoteBook -InputFileName c:\Temp\demo.txt -OutputNotebookName c:\Temp\demo.ipynb
+
+        .Example
+        ConvertTo-PowerShellNoteBook 'https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/DemoFiles/demo_SingleCommentSingleLineCodeBlock.ps1'
+
+        .Example
+        $(
+            'https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/DemoFiles/demo_SingleCommentSingleLineCodeBlock.ps1'
+             dir *.ps1 
+        ) | ConvertTo-PowerShellNoteBook
     #>
     param(
         [parameter(ValueFromPipelineByPropertyName, ValueFromPipeline)]        
@@ -15,6 +30,8 @@ function ConvertTo-PowerShellNoteBook {
             Parsing section.
         #>
 
+        Write-Progress -Activity "Converting PowerShell file to Notebook" -Status "Converting $($InputFileName)"
+
         if ([System.Uri]::IsWellFormedUriString($InputFileName, [System.UriKind]::Absolute)) {    
             $s = Invoke-RestMethod -Uri $InputFileName
         }
@@ -23,7 +40,7 @@ function ConvertTo-PowerShellNoteBook {
             $s = Get-Content -Raw $InputFileName            
         }
 
-        # if not  $OutputNotebookName, grab the filename and replace the ps1
+        # if no $OutputNotebookName, grab the filename and replace the ps1
         # should work with both filenames and uri's
         if (!$OutputNotebookName) {
             $OutputNotebookName = (Split-Path -leaf  $InputFileName) -replace '.ps1', '.ipynb'
