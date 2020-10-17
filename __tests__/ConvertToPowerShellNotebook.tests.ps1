@@ -96,7 +96,7 @@ Describe "Test ConvertTo-PowerShellNoteBook" -Tag "ConvertTo-PowerShellNoteBook"
         $actual.Source.Length | Should -Be 45
     }
 
-    It "Test reading from multiple inputs" {
+    It "Test reading from multiple inputs" -Skip {
         $(
             'https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/DemoFiles/demo_SingleCommentSingleLineCodeBlock.ps1' 
             Get-ChildItem "$PSScriptRoot\MultiplePSFiles" *.ps1
