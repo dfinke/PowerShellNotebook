@@ -44,7 +44,8 @@ function Invoke-ExecuteNotebook {
         $InputNotebook,
         $OutputNotebook,
         [hashtable]$Parameters,
-        [Switch]$Force
+        [Switch]$Force,
+        [Switch]$DoNotLaunchBrower
     )
 
     if (!$InputNotebook) { return }
@@ -124,7 +125,7 @@ function Invoke-ExecuteNotebook {
                 $targetFileName = Split-Path $OutFile -Leaf
 
                 $contents = $data | ConvertTo-Json -Depth 4
-                $result = New-GistNotebook -contents $contents -fileName $targetFileName
+                $result = New-GistNotebook -contents $contents -fileName $targetFileName -DoNotLaunchBrower:$DoNotLaunchBrower
 
                 if ($result) {
                     Start-Process $result.html_url

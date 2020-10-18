@@ -4,7 +4,8 @@ function New-GistNotebook {
         $contents,
         [Parameter(Mandatory)]
         $fileName,
-        $gistDescription = "PowerShell Notebook"
+        $gistDescription = "PowerShell Notebook",
+        [Switch]$DoNotLaunchBrowser
     )
 
     if (!(test-path env:github_token)) {
@@ -23,5 +24,7 @@ function New-GistNotebook {
         }
     }
 
-    Invoke-RestMethod -Method Post -Uri 'https://api.github.com/gists' -Headers $Header -Body ($gist | ConvertTo-Json)
+    if (!$DoNotLaunchBrowser) {
+        Invoke-RestMethod -Method Post -Uri 'https://api.github.com/gists' -Headers $Header -Body ($gist | ConvertTo-Json)
+    }
 }
