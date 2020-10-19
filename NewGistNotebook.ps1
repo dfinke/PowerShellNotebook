@@ -11,7 +11,7 @@ function New-GistNotebook {
         throw "env:github_token not set. You need to set it to a GitHub PAT"
     }
 
-    $header = @{"Authorization" = "token $($env:GITHUB_TOKEN)" }
+    $header = @{"Authorization" = "token $($env:github_token)" }
 
     $gist = @{
         'description' = $gistDescription
