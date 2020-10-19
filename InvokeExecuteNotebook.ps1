@@ -125,9 +125,8 @@ function Invoke-ExecuteNotebook {
                 $targetFileName = Split-Path $OutFile -Leaf
 
                 $contents = $data | ConvertTo-Json -Depth 4
-                $result = New-GistNotebook -contents $contents -fileName $targetFileName -DoNotLaunchBrowser:$DoNotLaunchBrowser
-
-                if ($result) {
+                $result = New-GistNotebook -contents $contents -fileName $targetFileName 
+                if (!$DoNotLaunchBrowser -and $result) {
                     Start-Process $result.html_url
                 }            
             }
