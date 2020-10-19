@@ -1,5 +1,4 @@
 function New-GistNotebook {
-    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         $contents,
@@ -24,8 +23,5 @@ function New-GistNotebook {
         }
     }
 
-    Write-Verbose ("`r`n" + ($gist | ConvertTo-Json | Out-String))    
-    Write-Verbose 'https://api.github.com/gists'
-    
     Invoke-RestMethod -Method Post -Uri 'https://api.github.com/gists' -Headers $Header -Body ($gist | ConvertTo-Json)
 }
