@@ -1,4 +1,5 @@
 function New-GistNotebook {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         $contents,
@@ -11,7 +12,7 @@ function New-GistNotebook {
         throw "env:github_token not set. You need to set it to a GitHub PAT"
     }
 
-    $header = @{"Authorization" = "token $($env:GITHUB_TOKEN)" }
+    $header = @{"Authorization" = "token $($env:github_token)" }
 
     $gist = @{
         'description' = $gistDescription
@@ -23,5 +24,8 @@ function New-GistNotebook {
         }
     }
 
+    Write-Verbose ("`r`n" + ($gist | ConvertTo-Json | Out-String))    
+    Write-Verbose 'https://api.github.com/gists'
+    
     Invoke-RestMethod -Method Post -Uri 'https://api.github.com/gists' -Headers $Header -Body ($gist | ConvertTo-Json)
 }

@@ -40,6 +40,7 @@ function Get-ParameterInsertionIndex {
 }
 
 function Invoke-ExecuteNotebook {
+    [CmdletBinding()]
     param(
         $InputNotebook,
         $OutputNotebook,
