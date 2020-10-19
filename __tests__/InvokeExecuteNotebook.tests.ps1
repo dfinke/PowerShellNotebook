@@ -8,11 +8,11 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
     }
 
     It 'tests $Parameters takes a hashtable' {
-        Invoke-ExecuteNotebook -Parmeters @{b = 2 }
+        Invoke-ExecuteNotebook -Parameters @{b = 2 }
     }
 
-    It 'tests $P$arameters takes a an ordered hashtable' {
-        Invoke-ExecuteNotebook -Parmeters ([ordered]@{ a = 1 })
+    It 'tests $Parameters takes a an ordered hashtable' {
+        Invoke-ExecuteNotebook -Parameters ([ordered]@{ a = 1 })
     }
 
     It "Tests passing in a noteboook and get calculated results" {
