@@ -35,7 +35,7 @@ Describe "Test Export-AsPowerShellNotebook" -Tag Export-AsPowerShellNotebook {
         $actual[3].Source | Should -BeExactly 'get-service | select -first 5'
     }
 
-    It "Test for no text piped to function" {
+    It "Test for no text piped to function" -Skip {
         $outputNotebook = "TestDrive:\test.ipynb"
 
         $(
