@@ -2,6 +2,7 @@
 . $PSScriptRoot\ConvertMarkdownToNoteBook.ps1
 . $PSScriptRoot\ConvertToPowerShellNoteBook.ps1
 . $PSScriptRoot\ConvertToSQLNoteBook.ps1
+. $PSScriptRoot\ExportAsPowerShellNotebook.ps1
 . $PSScriptRoot\ExportNotebookToPowerShellScript.ps1
 . $PSScriptRoot\ExportNotebookToSqlScript.ps1
 . $PSScriptRoot\GetNotebook.ps1

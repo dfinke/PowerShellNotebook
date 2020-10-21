@@ -1,4 +1,12 @@
-## 10/18/2020
+## 10/21/2020
+
+- Added `Export-AsPowerShellNotebook` super useful for things like converting your PowerShell history into an interactive notebook.
+
+You need to `Install-Module -Name Microsoft.PowerShell.ConsoleGuiTools`
+
+```powershell
+Get-History | % command* | Out-ConsoleGridView | Export-AsPowerShellNotebook -OutputNotebook .\temp\testthis.ipynb
+```
 
 ## 10/17/2020
 
