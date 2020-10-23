@@ -24,7 +24,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual[1].Trim() | Should -BeExactly 'a = 1 and twice = 2'
     }
 
-    It "Tests parameterization" {
+    It "Tests parameterization" -Skip {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
         
         $params = @{
@@ -40,7 +40,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
 
     }
 
-    It "Tests parameterization with no cells as parameters" {
+    It "Tests parameterization with no cells as parameters" -Skip {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb"        
         
         $params = @{msg = "Hello from parameters" }
@@ -51,7 +51,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual[1].Trim() | Should -BeExactly "The length of 'Hello from parameters' is 21"
     }
 
-    It "Tests parameterization with mutiple cells as parameters" {
+    It "Tests parameterization with mutiple cells as parameters" -Skip {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookMoreThanOneParameterCell.ipynb"        
         
         $params = @{msg = "Hello from parameters" }
