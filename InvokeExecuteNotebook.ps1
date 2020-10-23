@@ -1,45 +1,19 @@
-function Find-ParameterizedCell {
+function Invoke-ExecuteNotebook {
     <#
         .Synopsis
-        Reads a Jupyter Notebook and returns all cells with a tag -eq to 'parameters'
+        Adds a new cell tagged with injected-parameters with input parameters in order to overwrite the values in parameters. 
+        If no cell is tagged with parameters the injected cell will be inserted at the top of the notebook.
+
+        .Description 
+        This opens up new opportunities for how notebooks can be used. For example:
+
+        Perhaps you have a financial report that you wish to run with different values on the first or last day of a month or at the beginning or end of the year, using parameters makes this task easier.
+        Do you want to run a notebook and depending on its results, choose a particular notebook to run next? You can now programmatically execute a workflow without having to copy and paste from notebook to notebook manually.        
+        
         .Example
-        Invoke-ExecuteNotebook -InputNotebook .\test.ipynb "abs://$($account)/$($containerName)/test.ipynb?$($sasToken)"
+        Invoke-ExecuteNotebook -InputNotebook .\basic.ipynb -Parameters @{arr = 1, 2, 3}
+
     #>
-    param(
-        [Parameter(Mandatory)]
-        $InputNotebook
-    )
-
-    if ([System.Uri]::IsWellFormedUriString($InputNotebook, [System.UriKind]::Absolute)) {
-        $data = Invoke-RestMethod $InputNotebook
-    }
-    else {
-        $json = Get-Content $InputNotebook 
-        $data = $json | ConvertFrom-Json
-    }    
-
-    for ($idx = 0; $idx -lt $data.cells.Count; $idx++) {
-        $currentCell = $data.cells[$idx]
-        if ($currentCell.metadata.tags -eq 'parameters') {
-            $idx
-        }
-    }
-}
-
-function Get-ParameterInsertionIndex {
-    param(
-        [Parameter(Mandatory)]
-        $InputNotebook
-    )
-
-    $cell = Find-ParameterizedCell $InputNotebook | Select-Object -First 1
-    if ([string]::IsNullOrEmpty($cell)) {
-        return 0
-    }
-    $cell + 1
-}
-
-function Invoke-ExecuteNotebook {
     param(
         $InputNotebook,
         $OutputNotebook,
@@ -69,18 +43,32 @@ function Invoke-ExecuteNotebook {
     $PSNotebookRunspace = New-PSNotebookRunspace
 
     if ($Parameters) {        
-        $newVars = @("# override parameters")
-        $newVars += $(
-            foreach ($entry in $parameters.GetEnumerator() ) {
-                $quote = $null
-                $currentValue = $entry.value
+
+        # $newVars = @("# override parameters")
+        # $newVars += $(
+        #     foreach ($entry in $parameters.GetEnumerator() ) {
+        #         $quote = $null
+        #         $currentValue = $entry.value
                                 
-                if ($currentValue -is [string]) { $quote = "'" }
-                '${0} = {1}{2}{1}' -f $entry.name, $quote, $currentValue                
-            }
-        )
+        #         if ($currentValue -is [string]) { $quote = "'" }
+        #         '${0} = {1}{2}{1}' -f $entry.name, $quote, $currentValue                
+        #     }
+        # )
             
-        $newParams = New-CodeCell ($newVars -join "`r`n") | ConvertFrom-Json
+        # $newParams = New-CodeCell ($newVars -join "`r`n") | ConvertFrom-Json
+
+        $source = @'
+# override parameters        
+$payload = '{0}' | ConvertFrom-Json
+
+$names = $payload.psobject.Properties.name
+$names | foreach-object {{ Set-Variable -Name $_ -Value $payload.$_ }}
+
+Remove-Variable payload -ErrorAction SilentlyContinue
+Remove-Variable names -ErrorAction SilentlyContinue
+'@ -f ($parameters | ConvertTo-Json -Depth 3)
+        
+        $newParams = New-CodeCell $source | ConvertFrom-Json -Depth 3
 
         $index = Get-ParameterInsertionIndex -InputNotebook $InputNotebook
         $cells.Insert($index, $newParams)
@@ -167,22 +155,4 @@ function Invoke-ExecuteNotebook {
     else {
         $data.cells.outputs.text
     }    
-}
-
-function Test-AzureBlobStorageUrl {
-    param(
-        $Url
-    )
-
-    $pattern = "abs://(.*)\.blob\.core\.windows\.net\/(.*)\/(.*)\?(.*)$"
-
-    [regex]::Match($Url, $pattern).Success
-}
-
-function Test-Uri {
-    param(
-        $FullName
-    )
-
-    [System.Uri]::IsWellFormedUriString($FullName, [System.UriKind]::Absolute)
 }

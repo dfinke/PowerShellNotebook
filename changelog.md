@@ -8,6 +8,18 @@ You need to `Install-Module -Name Microsoft.PowerShell.ConsoleGuiTools`
 Get-History | % command* | Out-ConsoleGridView | Export-AsPowerShellNotebook -OutputNotebook .\temp\testthis.ipynb
 ```
 
+- Added better handling of parameters to be injected into the notebook.
+- This will inject the variable `$arr = 1, 2, 3` as the first cell in the notebook .\basic.ipynb and then execute all the cells in the notebook and output them to `stdout`.
+
+
+```powershell
+$params = @{
+    arr = 1, 2, 3
+}
+
+Invoke-ExecuteNotebook -InputNotebook .\basic.ipynb -Parameters $params
+```
+
 ## 10/17/2020
 
 - Added features to `ConvertTo-PowerShellNotebook`
