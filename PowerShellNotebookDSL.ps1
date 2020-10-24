@@ -15,7 +15,8 @@ class PSNotebookRunspace {
     }
 
     [object]Invoke($code) {
-        $this.PowerShell.AddScript([scriptblock]::Create($code))
+        # $this.PowerShell.AddScript([scriptblock]::Create($code))
+        $this.PowerShell.AddScript(($code -join "`r`n"))
         $null = $this.PowerShell.AddCommand("Out-String")
         return $this.PowerShell.Invoke()
     }
