@@ -42,31 +42,20 @@ function Invoke-ExecuteNotebook {
     
     $PSNotebookRunspace = New-PSNotebookRunspace
 
-    if ($Parameters) {        
-
-        # $newVars = @("# override parameters")
-        # $newVars += $(
-        #     foreach ($entry in $parameters.GetEnumerator() ) {
-        #         $quote = $null
-        #         $currentValue = $entry.value
-                                
-        #         if ($currentValue -is [string]) { $quote = "'" }
-        #         '${0} = {1}{2}{1}' -f $entry.name, $quote, $currentValue                
-        #     }
-        # )
-            
-        # $newParams = New-CodeCell ($newVars -join "`r`n") | ConvertFrom-Json
-
+    if ($Parameters) {
+        # $cvt = "'" + ($Parameters | ConvertTo-Json -Depth 3) + "'"
+        $cvt = "@'`r`n" + ($Parameters | ConvertTo-Json) + "`r`n'@"
         $source = @'
 # override parameters        
-$payload = '{0}' | ConvertFrom-Json
+$payload = {0} | ConvertFrom-Json
 
 $names = $payload.psobject.Properties.name
 $names | foreach-object {{ Set-Variable -Name $_ -Value $payload.$_ }}
 
 Remove-Variable payload -ErrorAction SilentlyContinue
 Remove-Variable names -ErrorAction SilentlyContinue
-'@ -f ($parameters | ConvertTo-Json -Depth 3)
+'@ -f $cvt
+        #'@ -f ($parameters | ConvertTo-Json -Depth 3)
         
         $newParams = New-CodeCell $source | ConvertFrom-Json -Depth 3
 
