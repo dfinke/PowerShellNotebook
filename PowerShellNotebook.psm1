@@ -16,4 +16,5 @@
 . $PSScriptRoot\NewGistNotebook.ps1
 . $PSScriptRoot\PowerShellNotebookDSL.ps1
 . $PSScriptRoot\TestAzureBlobStorageUrl.ps1
+. $PSScriptRoot\TestHasParameterizedCell.ps1
 . $PSScriptRoot\TestUri.ps1
