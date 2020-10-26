@@ -66,6 +66,8 @@ a = 10 and twice = 20
 
 You can execute the notebook and save it to a new notebook either locally, or as a a GitHub gist.
 
+_Note_: You'll need to get a GitHub Public Access Token (PAT) and set `$env:GITHUB_TOKEN` to it.
+
 ```powershell
 Invoke-ExecuteNotebook .\input.ipynb gist://input_run1.ipynb -Parameters @{ alpha=0.6; ratio=0.1 }
 ```
