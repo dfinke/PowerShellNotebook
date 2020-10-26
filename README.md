@@ -20,7 +20,7 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 
 To parameterize your notebook designate a cell with the tag `parameters`. This is easy using `Azure Data Studio`.
 
-![](.\media\ParametersTag.gif)
+![](./media/ParametersTag.gif)
 
 `Invoke-ExecuteNotebook` looks for the parameters cell and treats this cell as defaults for the parameters passed in at execution time. `Invoke-ExecuteNotebook` will add a new cell tagged with injected-parameters with input parameters in order to overwrite the values in parameters. If no cell is tagged with parameters the injected cell will be inserted at the top of the notebook.
 
