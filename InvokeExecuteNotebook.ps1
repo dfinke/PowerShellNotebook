@@ -18,6 +18,8 @@ function Invoke-ExecuteNotebook {
         $InputNotebook,
         $OutputNotebook,
         [hashtable]$Parameters,
+        # When cells are run, it returns objects not strings
+        [Switch]$ReturnAsObjects,
         [Switch]$Force,
         [Switch]$DoNotLaunchBrowser
     )
@@ -37,10 +39,9 @@ function Invoke-ExecuteNotebook {
         $data = $json | ConvertFrom-Json
     }
     
-
     [System.Collections.ArrayList]$cells = $data.cells
-    
-    $PSNotebookRunspace = New-PSNotebookRunspace
+
+    $PSNotebookRunspace = New-PSNotebookRunspace -ReturnAsObjects:$ReturnAsObjects
 
     if ($Parameters) {        
         $cvt = "@'`r`n" + ($Parameters | ConvertTo-Json) + "`r`n'@"
@@ -62,7 +63,11 @@ Remove-Variable names -ErrorAction SilentlyContinue
         $cells.Insert($index, $newParams)
     }
 
+    $startedExecution = Get-Date
     for ($idx = 0; $idx -lt $cells.count; $idx++) {
+        $pct = 100 * ($idx / $cells.count)
+        Write-Progress -Activity "[$($startedExecution)] Executing Notebook $($InputNotebook)" -Status "Executing cell $($idx+1)" -PercentComplete $pct
+
         $cell = $cells[$idx]        
         if ($cell.cell_type -ne 'code') { continue }
 
