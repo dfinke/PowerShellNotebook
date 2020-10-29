@@ -1,3 +1,9 @@
+## 10/29/2020
+
+- Refactored new functions to separate files
+- Added short animation on parameterized a notebook using Azure Data Studio
+- Added `Test-HasParameterizedCell`
+
 ## 10/21/2020
 
 - Added `Export-AsPowerShellNotebook` super useful for things like converting your PowerShell history into an interactive notebook.
