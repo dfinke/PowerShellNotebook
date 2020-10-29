@@ -18,6 +18,8 @@ function Invoke-ExecuteNotebook {
         $InputNotebook,
         $OutputNotebook,
         [hashtable]$Parameters,
+        # When cells are run, it returns objects not strings
+        [Switch]$ReturnAsObjects,
         [Switch]$Force,
         [Switch]$DoNotLaunchBrowser
     )
@@ -37,10 +39,9 @@ function Invoke-ExecuteNotebook {
         $data = $json | ConvertFrom-Json
     }
     
-
     [System.Collections.ArrayList]$cells = $data.cells
-    
-    $PSNotebookRunspace = New-PSNotebookRunspace
+
+    $PSNotebookRunspace = New-PSNotebookRunspace -ReturnAsObjects:$ReturnAsObjects
 
     if ($Parameters) {        
         $cvt = "@'`r`n" + ($Parameters | ConvertTo-Json) + "`r`n'@"
