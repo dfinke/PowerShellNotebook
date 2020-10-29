@@ -18,3 +18,5 @@
 . $PSScriptRoot\TestAzureBlobStorageUrl.ps1
 . $PSScriptRoot\TestHasParameterizedCell.ps1
 . $PSScriptRoot\TestUri.ps1
+
+Set-Alias xnb Invoke-ExecuteNotebook
