@@ -3,6 +3,14 @@
 - Refactored new functions to separate files
 - Added short animation on parameterized a notebook using Azure Data Studio
 - Added `Test-HasParameterizedCell`
+- Added alias `xnb` for `Invoke-ExecuteNotebook`
+- `Invoke-ExecuteNotebook` now has `Write-Progress`, percent done is based on each cell executed
+- Added -ReturnAdObjects to `Invoke-ExecuteNotebook`. By default `Invoke-ExecuteNotebook` returns a string.
+
+```powershell
+Invoke-ExecuteNotebook -InputNotebook .\basic.ipynb -ReturnAdObjects
+```
+
 
 ## 10/21/2020
 
