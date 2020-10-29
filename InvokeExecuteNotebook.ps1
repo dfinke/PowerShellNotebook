@@ -63,7 +63,11 @@ Remove-Variable names -ErrorAction SilentlyContinue
         $cells.Insert($index, $newParams)
     }
 
+    $startedExecution = Get-Date
     for ($idx = 0; $idx -lt $cells.count; $idx++) {
+        $pct = 100 * ($idx / $cells.count)
+        Write-Progress -Activity "[$($startedExecution)] Executing Notebook $($InputNotebook)" -Status "Executing cell $($idx+1)" -PercentComplete $pct
+
         $cell = $cells[$idx]        
         if ($cell.cell_type -ne 'code') { continue }
 
