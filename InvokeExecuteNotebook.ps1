@@ -64,9 +64,10 @@ Remove-Variable names -ErrorAction SilentlyContinue
     }
 
     $startedExecution = Get-Date
-    for ($idx = 0; $idx -lt $cells.count; $idx++) {
-        $pct = 100 * ($idx / $cells.count)
-        Write-Progress -Activity "[$($startedExecution)] Executing Notebook $($InputNotebook)" -Status "Executing cell $($idx+1)" -PercentComplete $pct
+    $totalCells = $cells.count
+    for ($idx = 0; $idx -lt $totalCells; $idx++) {
+        $pct = 100 * ($idx / $totalCells)
+        Write-Progress -Activity "[$($startedExecution)] Executing Notebook $($InputNotebook)" -Status "Running cell $($idx+1) of $($totalCells)" -PercentComplete $pct
 
         $cell = $cells[$idx]        
         if ($cell.cell_type -ne 'code') { continue }
