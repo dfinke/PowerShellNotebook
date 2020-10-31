@@ -16,7 +16,7 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 
 </br></br>
 
-# PowerShell Notebook
+# Parameterizing a PowerShell Notebook
 
 To parameterize your notebook designate a cell with the tag `parameters`. This is easy using `Azure Data Studio`.
 
