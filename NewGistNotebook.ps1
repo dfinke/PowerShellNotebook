@@ -7,11 +7,11 @@ function New-GistNotebook {
         $gistDescription = "PowerShell Notebook"
     )
 
-    if (!(test-path env:github_token)) {
-        throw "env:github_token not set. You need to set it to a GitHub PAT"
+    if (!(test-path env:GITHUB_TOKEN)) {
+        throw "env:GITHUB_TOKEN not set. You need to set it to a GitHub PAT"
     }
 
-    $header = @{"Authorization" = "token $($env:github_token)" }
+    $header = @{"Authorization" = "token $($env:GITHUB_TOKEN)" }
 
     $gist = @{
         'description' = $gistDescription
