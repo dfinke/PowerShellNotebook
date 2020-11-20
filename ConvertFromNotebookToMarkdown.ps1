@@ -12,7 +12,7 @@ function ConvertFrom-NotebookToMarkdown {
     $text = $(switch (Get-NotebookContent -NoteBookFullName $NotebookName) {
             { $_.Type -eq 'markdown' } { $_.Source }
             { $_.Type -eq 'code' } {
-                '```powershell' + "`n" + $_.Source.Replace("#!pwsh`n", "") + "`n" + '```' + "`n"
+                '```powershell' + "`n" + ($_.Source | Where-Object { -not "#!pwsh\n" }) + "`n" + '```' + "`n"
             }
         })
 
