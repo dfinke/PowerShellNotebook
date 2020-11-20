@@ -11,3 +11,4 @@
 . $PSScriptRoot\NewCodeCell.ps1
 . $PSScriptRoot\NewGistNotebook.ps1
 . $PSScriptRoot\PowerShellNotebookDSL.ps1
+. $PSScriptRoot\SetNotebookToPs.ps1

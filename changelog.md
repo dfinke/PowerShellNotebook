@@ -1,4 +1,11 @@
-## JO'N Oct 1 2020
+## JO'N Nov 20 2020
+- Fixed a bug in ConvertTo-PowerShellNotebook (missing -raw)
+- Fixed a bug in ConvertToPowerShellNotebookTests (test-pat with no H)
+- Fixed a couple of other test issues, including skipping SQL tests if SQL server module is not present.
+- Revamped New-GistNotebook - Accepts piped input. Takes -Public switch. Looks up Personal Access Token if Git is setup locally and has saved the PAT for Github in Windows Cred Manager.
+- Added Set-NotebookToPS to convert a notebook from format used by the .Net Interactive add for VS code (C# notebook with #!Pwsh magic commands to turn cells into PowerShell ones. )
+
+## JO'N Oct  1 2020
 - Export NotebookToPowerShellScript
     - Parameter change **BREAKING** Made IncludeTextCells a switch; added switch AsText, renamed Outpath to a more conventional Destination (keeping alias of outpath)
     - Removed different path split for URLs

@@ -20,7 +20,7 @@
 
     # Description of the functionality provided by this module
     Description       = @'
-Lets you automate both PowerShell & SQL Notebooks with PowerShell at the command line, exports to Excel and more.  
+Lets you automate both PowerShell & SQL Notebooks with PowerShell at the command line, exports to Excel and more.
 For detailed instructions and examples, click through the "Project Site" link or go to https://github.com/dfinke/PowerShellNotebook/blob/master/README.md
 '@
 
@@ -61,7 +61,19 @@ For detailed instructions and examples, click through the "Project Site" link or
     # NestedModules = @()
 
     # Functions to export from this module
-    FunctionsToExport = '*'
+    FunctionsToExport = @('Add-NotebookCode',                   'Add-NotebookMarkdown',
+                          'Convert-MarkdownToNoteBook',         'ConvertFrom-NotebookToMarkdown',
+                          'ConvertTo-PowerShellNoteBook',       'ConvertTo-SQLNoteBook',
+                          'Export-NotebookToPowerShellScript',  'Export-NotebookToSqlScript',
+                          'Find-ParameterizedCell',
+                          'Get-Notebook',                       'Get-NotebookContent',
+                          'Get-ParameterInsertionIndex',        'Get-ParsedSql',
+                          'Get-ParsedSqlOffsets',
+                          'Invoke-ExecuteNotebook',             'Invoke-PowerShellNotebook',
+                          'loadScriptDomModules',
+                          'New-CodeCell',                       'New-GistNotebook',
+                          'New-PSNotebook',                     'New-PSNotebookRunspace',
+                          'New-SQLNotebook',                    'Set-NotebookToPS')
 
     # Cmdlets to export from this module
     #CmdletsToExport   = '*'
@@ -70,7 +82,7 @@ For detailed instructions and examples, click through the "Project Site" link or
     #VariablesToExport = '*'
 
     # Aliases to export from this module
-    AliasesToExport   = '*'
+    AliasesToExport   =  @()
 
     # List of all modules packaged with this module
     # ModuleList = @()

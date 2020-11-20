@@ -18,7 +18,7 @@ Describe "Test Export-NotebookToPowerShellScript" {
         $contents[4]  | Should -BeExactly '#>'
         $contents[5]  | should -benullorempty
         $contents[6]  | Should -BeExactly '$PSVersionTable'
-        $contents[7]  | Should -match     '<#\s+-+\s+#>'
+        $contents[7]  | Should -match     '<#\s+#>'
         $contents[8]  | Should -BeExactly '1..10 | % {'
         $contents[9]  | Should -BeExactly '    $_ * 2'
         $contents[10] | Should -BeExactly '}'

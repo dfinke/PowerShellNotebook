@@ -6,7 +6,7 @@ Describe "Test ConvertTo-PowerShellNoteBook" -Tag ConvertTo-PowerShellNoteBook {
         $fullName = "TestDrive:\testConverted.ipynb"
 
         ConvertTo-PowerShellNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
-        { Test-Pat $fullName } | Should -Be $true
+        { Test-Path $fullName } | Should -Be $true
 
         $actual = Get-NotebookContent -NoteBookFullName $fullName
         $actual.Count | Should -Be 8
@@ -27,7 +27,7 @@ Describe "Test ConvertTo-PowerShellNoteBook" -Tag ConvertTo-PowerShellNoteBook {
         $actual[2].Source | Should -BeExactly '# Create a function'
         $actual[3].Source | Should -BeExactly '# Use the function'
     }
-    
+
     It "Should convert the file with a single comment and single line of code to an ipynb" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo_SingleCommentSingleLineCodeBlock.ps1"
         $fullName = "TestDrive:\testConverted.ipynb"

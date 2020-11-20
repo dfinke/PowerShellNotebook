@@ -1,5 +1,5 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psm1 -Force
-
+if (-not (Get-Module -ListAvailable -Name sqlserver)) { return }
 Describe "Test ConvertTo-SQLNoteBook" {
     It "Should convert the file to an ipynb with a single code cell" {
         $demoTextFile = "$PSScriptRoot/DemoFiles/demo.sql"
