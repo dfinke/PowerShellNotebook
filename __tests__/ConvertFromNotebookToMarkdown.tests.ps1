@@ -34,7 +34,7 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" {
 
         $powerShellCodeBlock = $actual[1]
         
-        $powerShellCodeBlock.Split([System.Environment]::NewLine) | Should -Not -Contain "#!pwsh"
+        $powerShellCodeBlock.Split("`n") | Should -Not -Contain "#!pwsh"
     }
     
     It "Should not remove the #!pwsh shebang in markdown blocks" {
@@ -44,6 +44,6 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" {
 
         $markDownBlock = $actual[2]
         
-        $markDownBlock.Split([System.Environment]::NewLine) | Should -Contain "#!pwsh"
+        $markDownBlock.Split("`n") | Should -Contain "#!pwsh"
     }
 }
