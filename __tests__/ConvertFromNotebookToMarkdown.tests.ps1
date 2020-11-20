@@ -26,4 +26,24 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" {
 
         Remove-Item $expected -ErrorAction SilentlyContinue
     }
+    
+    It "Should remove the #!pwsh shebang in code blocks" {
+        $targetFile = "$PSScriptRoot\DotNetInteractiveNotebooks\PwshShebangTest.ipynb"
+
+        $actual = ConvertFrom-NotebookToMarkdown -NotebookName $targetFile -AsText
+
+        $powerShellCodeBlock = $actual[1]
+        
+        $powerShellCodeBlock.Split([System.Environment]::NewLine) | Should -Not -Contain "#!pwsh"
+    }
+    
+    It "Should not remove the #!pwsh shebang in markdown blocks" {
+        $targetFile = "$PSScriptRoot\DotNetInteractiveNotebooks\PwshShebangTest.ipynb"
+
+        $actual = ConvertFrom-NotebookToMarkdown -NotebookName $targetFile -AsText
+
+        $markDownBlock = $actual[2]
+        
+        $markDownBlock.Split([System.Environment]::NewLine) | Should -Contain "#!pwsh"
+    }
 }
