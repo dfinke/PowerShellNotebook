@@ -28,14 +28,14 @@ $Script:DotNetPSTemplate = @"
             "language":     "PowerShell"
         }},
         "language_info": {{
-            "name":           "Powershell",
+            "name":           "PowerShell",
             "pygments_lexer": "powerShell",
             "mimetype":       "text/x-powershell",
             "file_extension": ".ps1",
             "version":         "7.0"
         }}
     }},
-    "nbformat_minor": 2,
+    "nbformat_minor": 4,
     "nbformat": 4,
     "cells": [
         {0}
@@ -119,7 +119,7 @@ function Add-NotebookCode {
 
     #>
     [cmdletbinding(DefaultParameterSetName="Default")]
-    [Alias("Code")]
+    [Alias("CodeCell")]
     param(
         [Parameter(Mandatory=$true,Position=0)]
         $Code,
@@ -166,15 +166,16 @@ function Add-NotebookCode {
     #>
     $newBlock  = [Ordered]@{
         'cell_type' = 'code'
-        'source'    = @($code)
-        'metadata'  = @{}
-        'outputs'   = @()
+        'execution_count'= 1
+        'metadata'       = @{}
+        'source'         = @($code)
+        'outputs'        = @()
     }
     if     ($outputText)  {
         $newBlock['outputs'] += @{
             "output_type" = "stream"
             "name"        = "stdout"
-            "text"        = $outputText
+            "text"        = $outputText -replace '\r\n',"`n"
         }
         Write-Verbose $outputText
     }
@@ -189,7 +190,7 @@ function Add-NotebookCode {
         $newblock.metadata['azdata_cell_guid'] = (New-Guid).Guid
     }
 
-    $script:codeBlocks += $newBlock | ConvertTo-Json -Depth 4
+    $script:codeBlocks += $newBlock | ConvertTo-Json -Depth 10
 }
 
 function Add-NotebookMarkdown {
@@ -227,7 +228,7 @@ function Add-NotebookMarkdown {
             }]
         }
     #>
-    [Alias("Markdown")]
+    [Alias('MDCell')]
     param($markdown)
 
     $script:codeBlocks += [PSCustomObject][Ordered]@{
@@ -323,7 +324,9 @@ function New-PSNotebook {
         [Switch]$IncludeCodeResults,
         [alias("DNI")]
         [switch]$DotNetInteractive,
-        $RunSpace
+        $RunSpace,
+        [alias('PT')]
+        [switch]$PassThru
     )
 
     $script:codeBlocks = @()
@@ -364,6 +367,7 @@ function New-PSNotebook {
     else {
         if($NoteBookName -notmatch "\.ipynb$") {$NoteBookName  = $NoteBookName  + ".ipynb"}
         $result | Set-Content -Encoding UTF8 -Path $NoteBookName
+        if ($PassThru) {Get-Item $NoteBookName}
     }
 }
 
