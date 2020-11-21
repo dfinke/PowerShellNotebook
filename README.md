@@ -16,6 +16,64 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 
 </br></br>
 
+# Parameterizing a PowerShell Notebook
+
+To parameterize your notebook designate a cell with the tag `parameters`. This is easy using `Azure Data Studio`.
+
+![](./media/ParametersTag.gif)
+
+`Invoke-ExecuteNotebook` looks for the parameters cell and treats this cell as defaults for the parameters passed in at execution time. `Invoke-ExecuteNotebook` will add a new cell tagged with injected-parameters with input parameters in order to overwrite the values in parameters. If no cell is tagged with parameters the injected cell will be inserted at the top of the notebook.
+
+## Executing a Notebook
+
+You can execute the notebook in either a PowerShell script or at the command line.
+
+```powershell
+Import-Module PowerShellNotebook
+
+Invoke-ExecuteNotebook `
+    -InputNotebook 'path/to/input.ipynb' `
+    -OutputNotebook 'path/to/output.ipynb' `
+    -Parameters @{ alpha=0.6; ratio=0.1 }
+```
+### Execute via CLI
+
+This executes the `.\input.ipynb` and outputs the results to the console.
+
+```powershell
+Invoke-ExecuteNotebook .\input.ipynb
+```
+
+```
+alpha = 1.2, ratio = 3.7, and alpha * ratio = 4.44
+
+a = 5 and twice = 10
+```
+
+This executes the `.\input.ipynb`, injects the parameters, and outputs the results to the console.
+
+```powershell
+Invoke-ExecuteNotebook .\input.ipynb -Parameters @{ alpha=0.6; ratio=0.1; a=10}
+```
+
+```
+alpha = 0.6, ratio = 0.1, and alpha * ratio = 0.06
+
+a = 10 and twice = 20
+```
+
+### Save to a new notebook
+
+You can execute the notebook and save it to a new notebook either locally, or as a a GitHub gist.
+
+_Note_: You'll need to get a GitHub Public Access Token (PAT) and set `$env:GITHUB_TOKEN` to it.
+
+```powershell
+Invoke-ExecuteNotebook .\input.ipynb gist://input_run1.ipynb -Parameters @{ alpha=0.6; ratio=0.1 }
+```
+
+# More
+
 Short video on [Invoke-ExecuteNotebook](https://youtu.be/3VE27vLtlJY?t=316)
 
 One of the uses of this Powershell tool  is for parameterizing, and executing Jupyter Notebooks, `Invoke-ExecuteNotebook`. This opens up new opportunities for how notebooks can be used. For example you may have a financial report that you want to run with different values on the first or last day of a month using parameters makes this task easier.

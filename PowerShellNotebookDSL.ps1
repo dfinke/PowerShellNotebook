@@ -51,6 +51,7 @@ class PSNotebookRunspace {
     #>
     $Runspace
     $PowerShell
+    [Boolean]$ReturnAsObjects
 
     PSNotebookRunspace() {
         $this.Runspace = [runspacefactory]::CreateRunspace()
@@ -60,8 +61,10 @@ class PSNotebookRunspace {
     }
 
     [object]Invoke($code) {
-        $this.PowerShell.AddScript([scriptblock]::Create($code))
-        $null = $this.PowerShell.AddCommand("Out-String")
+        $this.PowerShell.AddScript(($code -join "`r`n"))
+        if (!$this.ReturnAsObjects) {
+            $null = $this.PowerShell.AddCommand("Out-String")
+        }
         return $this.PowerShell.Invoke()
     }
 
@@ -78,7 +81,14 @@ function New-PSNotebookRunspace {
         .Example
         New-PSNotebookRunspace
     #>
-    [PSNotebookRunspace]::new()
+    param(
+        [Switch]$ReturnAsObjects
+    )
+
+    $obj = [PSNotebookRunspace]::new()
+    $obj.ReturnAsObjects = $ReturnAsObjects
+
+    $obj
 }
 
 function Add-NotebookCode {

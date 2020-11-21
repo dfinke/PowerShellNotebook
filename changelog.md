@@ -36,6 +36,70 @@
      - if `Runspace` is passed, add members needed to allow `.Invoke()` to work as it does for a created runspace.
      - Moved the template for the Azure-data-studio/Windows-PowerShell notebook to the top of the file, and created a template for a .net interactive notebook. Selection is made by presence of the `-DotNetInteractive` switch.
      - Made `asText` redundant - no output name = "as text" , and add `.ipynb` to file name if it is not present.
+## 10/29/2020
+
+- Refactored new functions to separate files
+- Added short animation on parameterized a notebook using Azure Data Studio
+- Added `Test-HasParameterizedCell`
+- Added alias `xnb` for `Invoke-ExecuteNotebook`
+- `Invoke-ExecuteNotebook` now has `Write-Progress`, percent done is based on each cell executed
+- Added -ReturnAdObjects to `Invoke-ExecuteNotebook`. By default `Invoke-ExecuteNotebook` returns a string.
+
+```powershell
+Invoke-ExecuteNotebook -InputNotebook .\basic.ipynb -ReturnAdObjects
+```
+
+
+## 10/21/2020
+
+- Added `Export-AsPowerShellNotebook` super useful for things like converting your PowerShell history into an interactive notebook.
+
+You need to `Install-Module -Name Microsoft.PowerShell.ConsoleGuiTools`
+
+```powershell
+Get-History | % command* | Out-ConsoleGridView | Export-AsPowerShellNotebook -OutputNotebook .\temp\testthis.ipynb
+```
+
+- Added better handling of parameters to be injected into the notebook.
+- This will inject the variable `$arr = 1, 2, 3` as the first cell in the notebook .\basic.ipynb and then execute all the cells in the notebook and output them to `stdout`.
+
+
+```powershell
+$params = @{
+    arr = 1, 2, 3
+}
+
+Invoke-ExecuteNotebook -InputNotebook .\basic.ipynb -Parameters $params
+```
+
+## 10/17/2020
+
+- Added features to `ConvertTo-PowerShellNotebook`
+    - Pipe files to the function
+    - Handles URLs with PowerShell files as endpoints
+    - Handles any mix of Files and URLs for conversion    
+
+## 10/15/2020
+
+- Added `-PassThru` to `Get-NotebookContent` to get back all cell types beyond markdown and 
+    - This enables extracting output types like display_data for things like JavaScript which can be saved to an `.html` file and then displayed in browser
+
+- Added `Get-NotebookDisplayData`. Gets only cells with `display_data` for `output_type`. Helper function using the above function `Get-NotebookContent`.
+
+## 10/14/2020
+
+- `ConvertTo-PowerShellNoteBook` now supports reading a `.ps1` from a URL
+
+## 10/06/2020
+
+- Invoke-ExecuteNotebook supports `-Force` to overwrite `-OutputNotebook` if it exists locally
+
+## 10/01/2020
+
+- Invoke-ExecuteNotebook supports the following for output paths:
+    - Local file system: `c:\temp\test.ipynb`
+    - GitHub gist: `gist://`
+    - Azure Blob Store: `abs://`
 
 ## 09/26/2020
 

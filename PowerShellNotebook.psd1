@@ -4,7 +4,7 @@
     RootModule        = 'PowerShellNotebook.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '2.6.0'
+    ModuleVersion     = '2.6.16'
 
     # ID used to uniquely identify this module
     GUID              = '2ab0cb25-b339-4726-8a2a-349ca1114bd4'
@@ -82,7 +82,7 @@ For detailed instructions and examples, click through the "Project Site" link or
     #VariablesToExport = '*'
 
     # Aliases to export from this module
-    AliasesToExport   =  @()
+    AliasesToExport   = 'xnb'
 
     # List of all modules packaged with this module
     # ModuleList = @()

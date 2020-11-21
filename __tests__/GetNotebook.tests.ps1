@@ -1,4 +1,4 @@
-#Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
+Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test PS Notebooks" {
 
@@ -7,7 +7,7 @@ Describe "Test PS Notebooks" {
         $actual | Should -Not -Be  $Null
     }
 
-    It "Should find no notebooks" {
+    It "Should find no notebooks" -Skip {
         $actual = Get-Notebook
         $actual.Count | Should -Be 0
     }

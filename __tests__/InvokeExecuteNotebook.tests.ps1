@@ -8,11 +8,11 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
     }
 
     It 'tests $Parameters takes a hashtable' {
-        Invoke-ExecuteNotebook -Parmeters @{b = 2 }
+        Invoke-ExecuteNotebook -Parameters @{b = 2 }
     }
 
-    It 'tests $P$arameters takes a an ordered hashtable' {
-        Invoke-ExecuteNotebook -Parmeters ([ordered]@{ a = 1 })
+    It 'tests $Parameters takes a an ordered hashtable' {
+        Invoke-ExecuteNotebook -Parameters ([ordered]@{ a = 1 })
     }
 
     It "Tests passing in a noteboook and get calculated results" {
@@ -24,7 +24,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual[1].Trim() | Should -BeExactly 'a = 1 and twice = 2'
     }
 
-    It "Tests parameterization" {
+    It "Tests parameterization" -Skip {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
         
         $params = @{
@@ -40,7 +40,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
 
     }
 
-    It "Tests parameterization with no cells as parameters" {
+    It "Tests parameterization with no cells as parameters" -Skip {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb"        
         
         $params = @{msg = "Hello from parameters" }
@@ -51,7 +51,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual[1].Trim() | Should -BeExactly "The length of 'Hello from parameters' is 21"
     }
 
-    It "Tests parameterization with mutiple cells as parameters" {
+    It "Tests parameterization with mutiple cells as parameters" -Skip {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookMoreThanOneParameterCell.ipynb"        
         
         $params = @{msg = "Hello from parameters" }
@@ -93,6 +93,19 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
     }
 
+    It "Tests create new notebook that already exists and -Force an overwrite" {
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "TestDrive:\newParameters.ipynb"
+        
+        "" > $OutputNotebook
+
+        Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook -Force | Should -BeNullOrEmpty
+        
+        (Get-ChildItem $OutputNotebook).Length -gt 0 | Should -BeTrue
+
+        Remove-Item $OutputNotebook -ErrorAction SilentlyContinue
+    }
+
     It "Tests Find-ParameterizedCell" {
         (Find-ParameterizedCell -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\NotebookNoParameterCells.ipynb").Count | Should -Be 0
         (Find-ParameterizedCell -InputNotebook "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb").Count | Should -Be 1
@@ -131,5 +144,58 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual = Invoke-ExecuteNotebook -InputNotebook $url
 
         $actual.Trim() | Should -Be "Hello World"
+    }
+
+    It "Tests reading from an invalid URL" {
+        $url = 'https://gist.github.com/dfinke/7e1ed8b698bb5dc4953045e79a05d95d' 
+        {Invoke-ExecuteNotebook -InputNotebook $url} | Should -Throw 'https://gist.github.com/dfinke/7e1ed8b698bb5dc4953045e79a05d95d is not a valid Jupyter Notebook'
+    }
+
+    It "Tests no such host" {
+        $account = "fakeaccount.blob.core.windows.net"
+        $containerName = $null
+        $sasToken = $null
+        $blobName = "run_1"
+        
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "abs://$($account)/$($containerName)/$($blobName)?$($sasToken)" 
+        
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw #"No such host is known."
+    }
+
+    It "Tests bad url" {
+        $account = "fakeaccount.blob.core.windows.net"
+        $containerName = $null
+        $sasToken = $null
+        $blobName = "run_1"
+        
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "bs://$($account)/$($containerName)/$($blobName)?$($sasToken)" 
+        
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw ("Invalid OutputNotebook url '{0}'" -f $OutputNotebook)
+    }
+
+    It "Tests bad url" {        
+        $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"        
+        $OutputNotebook = "ist://test.ipynb" 
+        
+        { Invoke-ExecuteNotebook -InputNotebook $InputNotebook -OutputNotebook $OutputNotebook } | Should -Throw ("Invalid OutputNotebook url '{0}'" -f $OutputNotebook)
+    }
+
+    It "Tests Test-Uri" {
+        $names = $(
+            , ($false, "A:")
+            , ($false, "B:")
+            , ($true, 'gist://doug.ipynb')
+            , ($true, 'abs://stgaccttestdcf.blob.core.windows.net/test/run_1?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-11-04T03:47:26Z&st=2020-11-30T19:47:26Z&spr=https&sig=')
+            , ($true, 'bs://stgaccttestdcf.blob.core.windows.net/test/run_1?')
+            , ($false, "$env:temp")
+        )
+
+        foreach ($name in $names) {
+            $test, $fullName = $name
+
+            Test-Uri $fullName | Should -Be $test
+        }
     }
 }

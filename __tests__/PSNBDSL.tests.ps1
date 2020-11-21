@@ -1,6 +1,6 @@
-#Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
+Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
-Describe "Test Invoke PS Notebook" {
+Describe "Test Invoke PS Notebook" -Tag 'InvokePSNotebook' {
 
     It "Should have New-PSNotebook" {
         $actual = Get-Command New-PSNotebook -ErrorAction SilentlyContinue
@@ -123,5 +123,23 @@ Describe "Test Invoke PS Notebook" {
         $actual.cells[0].cell_type | Should -BeExactly 'markdown'
         $actual.cells[0].metadata.GetType().name | Should -BeExactly "PSCustomObject"
         $actual.cells[0].source | Should -BeExactly '# Hello World'
+    }
+        
+    It "Tests Invoke returning a string" {
+        $s = "'Hello World'"
+ 
+        $PSNotebookRunspace = New-PSNotebookRunspace
+        $actual = $PSNotebookRunspace.Invoke($s)
+
+        $actual.Trim() | Should -BeExactly "Hello World"
+    }
+
+    It "Tests Invoke returning an object" {
+        $s = "[PSCustomObject]@{msg='Hello World'}"
+ 
+        $PSNotebookRunspace = New-PSNotebookRunspace -ReturnAsObjects
+        $actual = $PSNotebookRunspace.Invoke($s)
+
+        $actual.msg | Should -BeExactly "Hello World"
     }
 }
