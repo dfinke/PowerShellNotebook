@@ -61,19 +61,32 @@ For detailed instructions and examples, click through the "Project Site" link or
     # NestedModules = @()
 
     # Functions to export from this module
-    FunctionsToExport = @('Add-NotebookCode',                   'Add-NotebookMarkdown',
-                          'Convert-MarkdownToNoteBook',         'ConvertFrom-NotebookToMarkdown',
-                          'ConvertTo-PowerShellNoteBook',       'ConvertTo-SQLNoteBook',
-                          'Export-NotebookToPowerShellScript',  'Export-NotebookToSqlScript',
-                          'Find-ParameterizedCell',
-                          'Get-Notebook',                       'Get-NotebookContent',
-                          'Get-ParameterInsertionIndex',        'Get-ParsedSql',
-                          'Get-ParsedSqlOffsets',
-                          'Invoke-ExecuteNotebook',             'Invoke-PowerShellNotebook',
-                          'loadScriptDomModules',
-                          'New-CodeCell',                       'New-GistNotebook',
-                          'New-PSNotebook',                     'New-PSNotebookRunspace',
-                          'New-SQLNotebook',                    'Set-NotebookToPS')
+    FunctionsToExport = @(        
+        'Add-NotebookCode',        
+        'Add-NotebookMarkdown',
+        'Convert-MarkdownToNoteBook',
+        'ConvertFrom-NotebookToMarkdown',
+        'ConvertTo-PowerShellNoteBook',
+        'ConvertTo-SQLNoteBook',
+        'Export-NotebookToPowerShellScript', 
+        'Export-NotebookToSqlScript',
+        'Find-ParameterizedCell',
+        'Get-Notebook',
+        'Get-NotebookContent',
+        'Get-ParameterInsertionIndex',
+        'Get-ParsedSql',
+        'Get-ParsedSqlOffsets',
+        'Invoke-ExecuteNotebook',
+        'Invoke-PowerShellNotebook',
+        'loadScriptDomModules',
+        'New-CodeCell',
+        'New-GistNotebook',
+        'New-PSNotebook',
+        'New-PSNotebookRunspace',
+        'New-SQLNotebook',
+        'Set-NotebookToPS',
+        'Test-Uri'
+    )
 
     # Cmdlets to export from this module
     #CmdletsToExport   = '*'
@@ -82,7 +95,7 @@ For detailed instructions and examples, click through the "Project Site" link or
     #VariablesToExport = '*'
 
     # Aliases to export from this module
-    AliasesToExport   = @('xnb','notebook','codecell','mdcell')
+    AliasesToExport   = @('xnb', 'notebook', 'codecell', 'mdcell')
 
     # List of all modules packaged with this module
     # ModuleList = @()
