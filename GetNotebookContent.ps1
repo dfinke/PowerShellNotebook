@@ -28,6 +28,7 @@ fsharp.ipynb code {printfn "hello world"}
     [cmdletbinding(DefaultParameterSetName="MarkdownAndCode")]
     param(
         [Parameter(ValueFromPipelineByPropertyName,Position=0)]
+        [alias('FullName')]
         $NoteBookFullName,
         [parameter(ParameterSetName='JustCode')]
         [alias('NoMarkdown')]
@@ -35,6 +36,7 @@ fsharp.ipynb code {printfn "hello world"}
         [parameter(ParameterSetName='JustMarkdown')]
         [alias('NoCode')]
         [Switch]$JustMarkdown,
+        [Switch]$PassThru,
         [Switch]$Includeoutput
     )
 
@@ -47,7 +49,10 @@ fsharp.ipynb code {printfn "hello world"}
             $r = Get-Content $NoteBookFullName | ConvertFrom-Json
         }
 
-        if     ($JustCode)     { $cellType = "code"     }
+        if($PassThru) {
+            return $r
+        }
+        elseif ($JustCode)     { $cellType = "code"     }
         elseif ($JustMarkdown) { $cellType = "markdown" }
         else                   { $cellType = "."         }
 

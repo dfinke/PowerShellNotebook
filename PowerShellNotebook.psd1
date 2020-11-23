@@ -61,15 +61,16 @@ For detailed instructions and examples, click through the "Project Site" link or
     # NestedModules = @()
 
     # Functions to export from this module
-    FunctionsToExport = @(        
-        'Add-NotebookCode',        
+    FunctionsToExport = @(
+        'Add-NotebookCode',
         'Add-NotebookMarkdown',
         'Convert-MarkdownToNoteBook',
         'ConvertFrom-NotebookToMarkdown',
         'ConvertTo-PowerShellNoteBook',
         'ConvertTo-SQLNoteBook',
-        'Export-NotebookToPowerShellScript', 
+        'Export-NotebookToPowerShellScript',
         'Export-NotebookToSqlScript',
+        'Export-AsPowerShellNotebook',
         'Find-ParameterizedCell',
         'Get-Notebook',
         'Get-NotebookContent',
@@ -85,6 +86,7 @@ For detailed instructions and examples, click through the "Project Site" link or
         'New-PSNotebookRunspace',
         'New-SQLNotebook',
         'Set-NotebookToPS',
+        'Test-HasParameterizedCell',
         'Test-Uri'
     )
 

@@ -1,7 +1,7 @@
 function ConvertFrom-NotebookToMarkdown {
     <#
         .SYNOPSIS
-        Take and exiting PowerShell Notebook and convert it to markdown
+        Take an exiting PowerShell Notebook and convert it to markdown
     #>
     param(
         [Parameter(Mandatory,Position=0)]
@@ -12,17 +12,30 @@ function ConvertFrom-NotebookToMarkdown {
         [Switch]$Includeoutput
     )
 
-    $text = $(switch (Get-NotebookContent -NoteBookFullName $NotebookName -Includeoutput:$Includeoutput) {
+    $NotebookProperties = Get-Notebook $NotebookName
+    $text = $(
+        switch (Get-NotebookContent -NoteBookFullName $NotebookName -Includeoutput:$Includeoutput) {
             { $_.Type -eq 'markdown' } { $_.Source }
-            { $_.Type -eq 'code' } {
-                '```powershell' + "`n" + $_.Source + "`n" + '```' + "`n"
+            { $_.Type -eq 'code'     } {
+                #if present Convert .NetInteractive magic commands into "linguist" Names by github to the render code in markup
+                switch -Regex ($_.source) {
+                    '^#!csharp|^#!c#'       {$format = 'C#'}
+                    '^#!fsharp|^#!f#'       {$format = 'F#'}
+                    '^#!pwsh|^#!PowerShell' {$format = 'PowerShell'}
+                    '^#!js|^#!JavaScript'   {$format = 'JavaScript'}
+                    '^#!html'               {$format = 'html'}
+                    '^#!markdown'           {$format = 'MarkDown'}
+                    default                 {$format = $NotebookProperties.FormatStyle}
+                }
+                '```'+ $format + "`n" + $_.Source + "`n" + '```' + "`n"
                 #There will only be output if we specified the -IncludeOutput and we will ignore output which isn't a string or a single HTML block.
                 if ($_.Output -is [string]) {
                     '```' + "`n" + $_.Output.trim() + "`n" + '```' + "`n"
                 }
                 elseif ($_.output.count -eq 1 -and $_.output.'text/html') {$_.output.'text/html' + "`n"}
             }
-    })
+        }
+    )
 
     if ($AsText) { return $text }
 

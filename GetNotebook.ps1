@@ -1,5 +1,5 @@
 function Get-Notebook {
-    <#
+  <#
         .SYNOPSIS
         Get-Notebook reads the metadata of a single (or folder of) Jupyter Notebooks
 
@@ -26,7 +26,7 @@ SingleCodeBlock.ipynb powershell               1              0 C:\Users\Douglas
 
         .Example
         dir -Filter *.ipynb -Recurse | foreach {
-Get-Notebook -Path $_.FullName } | 
+Get-Notebook -Path $_.FullName } |
 group KernelName
 
 Count Name                      Group
@@ -39,15 +39,24 @@ Count Name                      Group
     3 pyspark3kernel            {@{NoteBookName=load-sample-data-into-bdc.ipynb; KernelName=pyspark3kernel; C...
 
 This command will allow you to serch through a directory & all sub directories to find Jupyter Notebooks & group them by Kernel used in each of those Notebook.
-    #>
-    param(
-        $Path,
-        $NoteBookName
-    )
-
-    if (!$Path) { $Path = "." }
-    if (!$NoteBookName) { $NoteBookName = '*' }
-
+  #>
+  param(
+        [Parameter(ValueFromPipeline=$true)]
+        $Path = $pwd,
+        $NoteBookName = '*'
+  )
+  begin {
+    $linguistNames = @{  #used by github to the render code in markup ```SQL will render as sql etc
+        '.net-csharp'     = 'C#'
+        '.net-fsharp'     = 'F#'
+        '.net-powershell' = 'PowerShell'
+        'not found'       = ''
+        'powershell'      = 'PowerShell'
+        'python3'         = 'Python'
+        'sql'             = 'SQL'
+    }
+  }
+  process {
     $targetName = "$($NotebookName).ipynb"
     foreach ($file in Get-ChildItem $Path $targetName) {
         $r = Get-Content $file.fullname | ConvertFrom-Json
@@ -63,6 +72,8 @@ This command will allow you to serch through a directory & all sub directories t
             CodeBlocks       = $counts.code.Count
             MarkdownBlocks   = $counts.markdown.Count
             NoteBookFullName = $file.FullName
+            FormatStyle      = $linguistNames[$kernelspecName]
         }
     }
+  }
 }

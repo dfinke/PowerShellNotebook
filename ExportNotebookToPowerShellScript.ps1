@@ -42,6 +42,7 @@ function Export-NotebookToPowerShellScript {
         $result = , (@'
 <#
     Created from: {1}
+
     Created by:   Export-NotebookToPowerShellScript
     Created on:   {0:D} {0:t}
 #>

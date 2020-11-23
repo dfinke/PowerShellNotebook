@@ -13,15 +13,15 @@ Describe "Test Export-NotebookToPowerShellScript" {
 
         $contents[0]  | Should -BeExactly '<#'
         $contents[1]  | Should -match     '^\s*Created from:.*TestWithInvokePS.ipynb$'
-        $contents[2]  | Should -match     '^\s*Created by:'
-        $contents[3]  | Should -match     '^\s*Created on:'
-        $contents[4]  | Should -BeExactly '#>'
-        $contents[5]  | should -benullorempty
-        $contents[6]  | Should -BeExactly '$PSVersionTable'
-        $contents[7]  | Should -match     '<#\s+#>'
-        $contents[8]  | Should -BeExactly '1..10 | % {'
-        $contents[9]  | Should -BeExactly '    $_ * 2'
-        $contents[10] | Should -BeExactly '}'
+        $contents[2]  | Should -benullorempty
+        $contents[3]  | Should -match     '^\s*Created by:'
+        $contents[4]  | Should -match     '^\s*Created on:'
+        $contents[5]  | Should -BeExactly '#>'
+        $contents[7]  | Should -BeExactly '$PSVersionTable'
+        $contents[8]  | Should -match     '<#\s+#>'
+        $contents[9]  | Should -BeExactly '1..10 | % {'
+        $contents[10] | Should -BeExactly '    $_ * 2'
+        $contents[11] | Should -BeExactly '}'
     }
 
     It "Should export the ipynb to ps1" {
@@ -33,11 +33,11 @@ Describe "Test Export-NotebookToPowerShellScript" {
 
         $actual = Get-Content $ps1File
 
-        $actual.Count | Should -Be 9
+        $actual.Count | Should -Be 10
 
-        $actual[6] | Should -Be 'foreach ($item in 1..10) {'
-        $actual[7] | Should -Be '    $item'
-        $actual[8] | Should -Be '}'
+        $actual[7] | Should -Be 'foreach ($item in 1..10) {'
+        $actual[8] | Should -Be '    $item'
+        $actual[9] | Should -Be '}'
 
         Remove-Item $ps1File -ErrorAction SilentlyContinue
     }

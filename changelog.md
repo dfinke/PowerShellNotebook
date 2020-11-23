@@ -9,7 +9,7 @@
 - Export NotebookToPowerShellScript
     - Parameter change **BREAKING** Made IncludeTextCells a switch; added switch AsText, renamed Outpath to a more conventional Destination (keeping alias of outpath)
     - Removed different path split for URLs
-    - Got date to output in local culture , and made the header comment neater.
+    - Got date to output in local culture , and made the aligned header. (also did this for Export-NotebooktoSqlcript.)
     - Assume any type other than code will go in a comment block (i.e. if it isn't markdown, still put it in a comment if it isn't code), and insert a dummy comment between code adjacent codeblocks to prevent them merging
     - Return the file object created if there is one.
     - Added support for piping files in.
@@ -23,13 +23,13 @@
     - `IncludeOutput` is passed to `Get-NotebookContent`. If `Get-NotebookContent `returns output and it is a string we'll output it as preformatted block of markdown. If it is a single block of HTML we'll output that to into the MD.
     - If `destination` is a directory, use the source filename converted from .ipynb to .md, otherwise treat destination  as a file name. At the end, output the file object, not the name
 - DSL/Add-NotebookCode
-    - Gave function an **experimental** alias of `code`
+    - Gave function an **experimental** alias of `codecell`
     - parameter chanages: `-code` is now mandatory, also support non text-stream output through `-Displaydata`, allow the GUID for Azure data studio to be disabled with `-NoGUID`.
     - Add support for _magic commands_ - `about` and `time`, remove `pwsh` if present.
     - Ensure code isn't run if `DisplayData` is provided.
     - Change process for building the cell to allow `DisplayData` to work, and also to make the `azdata_cell_guid` optional
 - DSL/Add-NotebookMarkdown
-    - Gave function an **experimental** alias of `markdown`
+    - Gave function an **experimental** alias of `mdcell`
 - DSL New-PSNotebook
      - Gave function an **experimental** alias of `Notebook`. The aliases allow writing `notebook {code $foo; markdown $bar} file.ipynb`
      - parameter chanages: added `Runspace` and switch `DotNetInteractive` (alias DNI)
