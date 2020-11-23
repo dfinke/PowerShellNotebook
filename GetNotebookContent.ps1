@@ -46,7 +46,14 @@ fsharp.ipynb code {printfn "hello world"}
             $r = Invoke-RestMethod $NoteBookFullName
         }
         elseif (Test-Path $NoteBookFullName -ErrorAction SilentlyContinue) {
-            $r = Get-Content $NoteBookFullName | ConvertFrom-Json
+            if ((Resolve-Path $NoteBookFullName).count -gt 1) {
+                [void]$PSBoundParameters.Remove('NotebookFullname')
+                Get-ChildItem $NoteBookFullName | Get-NotebookContent @PSBoundParameters
+                return
+            }
+            else {
+                $r = Get-Content  $NoteBookFullName | ConvertFrom-Json
+            }
         }
 
         if($PassThru) {

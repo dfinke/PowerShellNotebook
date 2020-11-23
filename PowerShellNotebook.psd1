@@ -97,7 +97,7 @@ For detailed instructions and examples, click through the "Project Site" link or
     #VariablesToExport = '*'
 
     # Aliases to export from this module
-    AliasesToExport   = @('xnb', 'notebook', 'codecell', 'mdcell')
+    AliasesToExport   = @('xnb', 'psnotebook', 'codecell', 'mdcell')
 
     # List of all modules packaged with this module
     # ModuleList = @()

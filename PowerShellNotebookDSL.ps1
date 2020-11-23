@@ -42,6 +42,27 @@ $Script:DotNetPSTemplate = @"
     ]
 }}
 "@
+$Script:SQLPSTemplate = @"
+{
+    "metadata": {
+        "kernelspec": {
+            "name": "sql",
+            "display_name": "SQL"
+        },
+        "language_info": {
+            "name": "sql",
+            "codemirror_mode": "shell",
+            "mimetype": "text/x-sh",
+            "file_extension": ".sql"
+        }
+    },
+    "nbformat_minor": 2,
+    "nbformat": 4,
+    "cells": [
+        {0}
+    ]
+}
+"@
 
 class PSNotebookRunspace {
     <#
@@ -315,8 +336,21 @@ function New-PSNotebook {
                { $_.Type -eq 'markdown' } { Add-NotebookMarkdown  $_.Source }
                { $_.Type -eq 'code'     } { Add-NotebookCode      $_.source -Verbose }
             }} -IncludeCodeResults  -DNI  "$computerName.ipynb" -RunSpace $pssession.Runspace
+
+        .example
+        psnotebook -DNI -IncludeCodeResults -NoteBookName output.ipynb  {
+            switch (NotebookContent .\input.ipynb){
+                    {$_.type -match'code'} {CodeCell -Verbose  $_.source } ;
+                    default {MDCell $_.source}
+            }
+        }
+        In the script block for a new notebook, it reads an existing notebook. For its code cells it runs
+        codeCell <<existing-block's script>> - writing results to verbose, and creating the cells
+        for non-code (markdown) cells. it calls mdCell <<existing block's markdown>>
+        So it creates a new copy of the notebook, running the code in the original and saving it in
+        with DotNetInteractive Kernel settings to output.ipynb.
     #>
-    [alias("Notebook")]
+    [alias("PSNotebook")]
     param(
         [Scriptblock]$sb,
         $NoteBookName,
@@ -324,14 +358,15 @@ function New-PSNotebook {
         [Switch]$IncludeCodeResults,
         [alias("DNI")]
         [switch]$DotNetInteractive,
+        [switch]$SQL,
         $RunSpace,
         [alias('PT')]
         [switch]$PassThru
     )
 
     $script:codeBlocks = @()
-    if ($IncludeCodeResults) {
-        $Script:IncludeCodeResults = $IncludeCodeResults
+    if ($IncludeCodeResults -or $RunSpace) {
+        $Script:IncludeCodeResults = $true
         if (-not $RunSpace) {$Script:PSNotebookRunspace = New-PSNotebookRunspace}
         else {
             if ($RunSpace.psobject.Members.name -notcontains "invoke") {
@@ -352,6 +387,9 @@ function New-PSNotebook {
 
     if ($DotNetInteractive) {
           $result = $Script:DotNetPSTemplate -f ($script:codeBlocks -join ',')
+    }
+    elseif ($SQL) {
+          $result = $Script:SQLPSTemplate    -f ($script:codeBlocks -join ',')
     }
     else {$result = $Script:WinPSTtemplate   -f ($script:codeBlocks -join ',')}
 
@@ -436,8 +474,6 @@ function New-SQLNotebook {
             }]
         }
 
-        .example
-        notebook -DNI -IncludeCodeResults -NoteBookName dd2.ipynb  {NotebookContent  .\datademo.ipynb | % {&  $_.Type   $_.Source  -Verbose }}
     #>
     param(
         [Scriptblock]$sb,

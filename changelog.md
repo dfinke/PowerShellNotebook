@@ -4,6 +4,7 @@
 - Fixed a couple of other test issues, including skipping SQL tests if SQL server module is not present.
 - Revamped New-GistNotebook - Accepts piped input. Takes -Public switch. Looks up Personal Access Token if Git is setup locally and has saved the PAT for Github in Windows Cred Manager.
 - Added Set-NotebookToPS to convert a notebook from format used by the .Net Interactive add for VS code (C# notebook with #!Pwsh magic commands to turn cells into PowerShell ones. )
+- Added Language and presence of parameterized cells to Get-Notebook results. 
 
 ## JO'N Oct  1 2020
 - Export NotebookToPowerShellScript
@@ -31,8 +32,8 @@
 - DSL/Add-NotebookMarkdown
     - Gave function an **experimental** alias of `mdcell`
 - DSL New-PSNotebook
-     - Gave function an **experimental** alias of `Notebook`. The aliases allow writing `notebook {code $foo; markdown $bar} file.ipynb`
-     - parameter chanages: added `Runspace` and switch `DotNetInteractive` (alias DNI)
+     - Gave function an **experimental** alias of `PSNotebook`. The aliases allow writing `psnotebook {codecell $foo; mdcell $bar} file.ipynb`
+     - parameter chanages: added `Runspace` and switches `DotNetInteractive` (alias DNI) and `SQL` to select templates **SQL IS UNTESTED**
      - if `Runspace` is passed, add members needed to allow `.Invoke()` to work as it does for a created runspace.
      - Moved the template for the Azure-data-studio/Windows-PowerShell notebook to the top of the file, and created a template for a .net interactive notebook. Selection is made by presence of the `-DotNetInteractive` switch.
      - Made `asText` redundant - no output name = "as text" , and add `.ipynb` to file name if it is not present.

@@ -67,12 +67,13 @@ This command will allow you to serch through a directory & all sub directories t
         $counts = $r.cells | Group-Object cell_type -AsHashTable
 
         [PSCustomObject][Ordered]@{
-            NoteBookName     = $file.Name
-            KernelName       = $kernelspecName
-            CodeBlocks       = $counts.code.Count
-            MarkdownBlocks   = $counts.markdown.Count
-            NoteBookFullName = $file.FullName
-            FormatStyle      = $linguistNames[$kernelspecName]
+            NoteBookName         = $file.Name
+            KernelName           = $kernelspecName
+            CodeBlocks           = $counts.code.Count
+            MarkdownBlocks       = $counts.markdown.Count
+            NoteBookFullName     = $file.FullName
+            FormatStyle          = $linguistNames[$kernelspecName]
+            HasParameterizedCell =  $r.cells.metadata.tags -contains "parameters"
         }
     }
   }
