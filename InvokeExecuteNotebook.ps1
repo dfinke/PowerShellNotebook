@@ -106,7 +106,7 @@ Remove-Variable names -ErrorAction SilentlyContinue
                 $OutFile = $OutputNotebook.replace("gist://", "")
                 $targetFileName = Split-Path $OutFile -Leaf
 
-                $contents = $data | ConvertTo-Json -Depth 4
+                $contents = $data | ConvertTo-Json -Depth 5
                 $result = New-GistNotebook -contents $contents -fileName $targetFileName
                 
                 Write-Progress -Activity "Creating Gist" -Status $targetFileName
@@ -119,7 +119,7 @@ Remove-Variable names -ErrorAction SilentlyContinue
                 if (Test-AzureBlobStorageUrl $outputNotebook) {
                 
                     $fullName = [System.IO.Path]::GetRandomFileName()
-                    ConvertTo-Json -InputObject $data -Depth 4 | Set-Content $fullName -Encoding utf8
+                    ConvertTo-Json -InputObject $data -Depth 5 | Set-Content $fullName -Encoding utf8
 
                     try {
                         $headers = @{'x-ms-blob-type' = 'BlockBlob' }                
@@ -142,7 +142,7 @@ Remove-Variable names -ErrorAction SilentlyContinue
                 throw "$OutputNotebook already exists"
             }
 
-            ConvertTo-Json -InputObject $data -Depth 4 |
+            ConvertTo-Json -InputObject $data -Depth 5 |
             Set-Content $OutputNotebook -Encoding utf8
         }
     }
