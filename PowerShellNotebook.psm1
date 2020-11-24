@@ -1,4 +1,5 @@
 ﻿. $PSScriptRoot\ConvertFromNotebookToMarkdown.ps1
+. $PSScriptRoot\ConvertFrom-IPYNB.ps1
 . $PSScriptRoot\ConvertMarkdownToNoteBook.ps1
 . $PSScriptRoot\ConvertToPowerShellNoteBook.ps1
 . $PSScriptRoot\ConvertToSQLNoteBook.ps1

@@ -65,6 +65,7 @@ For detailed instructions and examples, click through the "Project Site" link or
         'Add-NotebookCode',
         'Add-NotebookMarkdown',
         'Convert-MarkdownToNoteBook',
+        'ConvertFrom-IPYNB',
         'ConvertFrom-NotebookToMarkdown',
         'ConvertTo-PowerShellNoteBook',
         'ConvertTo-SQLNoteBook',

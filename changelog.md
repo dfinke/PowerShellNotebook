@@ -5,6 +5,7 @@
 - Revamped New-GistNotebook - Accepts piped input. Takes -Public switch. Looks up Personal Access Token if Git is setup locally and has saved the PAT for Github in Windows Cred Manager.
 - Added Set-NotebookToPS to convert a notebook from format used by the .Net Interactive add for VS code (C# notebook with #!Pwsh magic commands to turn cells into PowerShell ones. )
 - Added Language and presence of parameterized cells to Get-Notebook results. 
+- Created a new ConvertFrom-IPYNB which incorporates the convertFrom-NotebookToMarkdown, and export-notebookToPowerShell script functionality and adds convert to html as well.
 
 ## JO'N Oct  1 2020
 - Export NotebookToPowerShellScript
@@ -19,6 +20,7 @@
 - Get-NotebookContent
     - parameter changes: gave `JustCode` an alias of `NoMarkdown` and `JustMarkdown` an alias of `NoCode` made them mutually exclusive. Added switch  `IncludeOutput`
     - `IncludeOutput` tries to return either the _stream_ output from Jupyter or the _data::Text/plain_ output from the vs code extension sensibly, and will also return _data::Text/html_ output / make reasonable sense of mixed outputs.
+    -Also made sure that wildcards and piped input files are supported
 - ConvertFrom-NotebookToMarkdown
     - parameter changes: gave `NoteBookName` an alias of `Path`, added `Destination` - defaulting to current dir,  and switch `IncludeOutput`
     - `IncludeOutput` is passed to `Get-NotebookContent`. If `Get-NotebookContent `returns output and it is a string we'll output it as preformatted block of markdown. If it is a single block of HTML we'll output that to into the MD.
