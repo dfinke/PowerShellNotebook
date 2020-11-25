@@ -9,15 +9,15 @@ Describe "Test ConvertTo-SQLNoteBook" {
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
             { Test-Path $fullName } | Should -Be $true
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName
+            $actual = Get-NotebookContent -Path $fullName
 
             @($actual).Count | Should -Be 1
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
+            $actual = Get-NotebookContent -Path $fullName -JustMarkdown
 
             $actual.Count | Should -Be 0
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
+            $actual = Get-NotebookContent -Path $fullName -JustCode
 
             @($actual).Count | Should -Be 1
 
@@ -50,17 +50,17 @@ SELECT * FROM table4 where ID = 8'
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
             { Test-Path $fullName } | Should -Be $true
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName
+            $actual = Get-NotebookContent -Path $fullName
             $actual.Count | Should -Be 9
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
+            $actual = Get-NotebookContent -Path $fullName -JustCode
 
             $actual.Count | Should -Be 3
             write-verbose "tests $($actual[0].Source)" -Verbose
             $actual[0].Source | Should -BeLike '*table1*'
             $actual[1].Source | Should -BeLike '*table3*'
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
+            $actual = Get-NotebookContent -Path $fullName -JustMarkdown
 
             $actual.Count | Should -Be 6
             $actual[0].Source.Trim() | Should -BeExactly 'GO'
@@ -85,17 +85,17 @@ SELECT * FROM table4 where ID = 8'
             ConvertTo-SQLNoteBook -InputFileName $demoTextFile -OutputNotebookName $fullName
             { Test-Path $fullName } | Should -Be $true
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName
+            $actual = Get-NotebookContent -Path $fullName
             $actual.Count | Should -Be 7
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustCode
+            $actual = Get-NotebookContent -Path $fullName -JustCode
 
             $actual.Count | Should -Be 3
             write-verbose "Code cells: $($actual.Count)" -Verbose
             $actual[0].Source | Should -BeLike '*Person.PersonPhone*'
             $actual[1].Source | Should -BeLike '*GETUTCDATE*'
 
-            $actual = Get-NotebookContent -NoteBookFullName $fullName -JustMarkdown
+            $actual = Get-NotebookContent -Path $fullName -JustMarkdown
 
             $actual.Count | Should -Be 4
             $actual[0].Source.Trim() | Should -BeLike 'Look up user and phone number by last name*'

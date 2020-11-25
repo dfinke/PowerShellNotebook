@@ -5,16 +5,16 @@ function ConvertFrom-NotebookToMarkdown {
     #>
     param(
         [Parameter(Mandatory,Position=0)]
-        [Alias("Path")]
-        $NotebookName,
+        [Alias('NotebookName','NoteBookFullName','Fullname')]
+        $Path,
         $Destination   = $pwd,
         [Switch]$AsText,
         [Switch]$Includeoutput
     )
 
-    $NotebookProperties = Get-Notebook $NotebookName
+    $NotebookProperties = Get-Notebook $Path
     $text = $(
-        switch (Get-NotebookContent -NoteBookFullName $NotebookName -Includeoutput:$Includeoutput) {
+        switch (Get-NotebookContent -Path $Path -Includeoutput:$Includeoutput) {
             { $_.Type -eq 'markdown' } { $_.Source }
             { $_.Type -eq 'code'     } {
                 #if present Convert .NetInteractive magic commands into "linguist" Names by github to the render code in markup
@@ -40,7 +40,7 @@ function ConvertFrom-NotebookToMarkdown {
     if ($AsText) { return $text }
 
     if (Test-Path -PathType Container -Path $Destination) {
-        $Destination = join-path $Destination -ChildPath( (Split-Path -Leaf $NotebookName) -replace 'ipynb$', 'md')
+        $Destination = join-path $Destination -ChildPath( (Split-Path -Leaf $Path) -replace 'ipynb$', 'md')
     }
     $text | Set-Content -Encoding UTF8 $Destination
 

@@ -29,8 +29,8 @@ fsharp.ipynb code {printfn "hello world"}
     [cmdletbinding(DefaultParameterSetName="MarkdownAndCode")]
     param(
         [Parameter(ValueFromPipelineByPropertyName,Position=0)]
-        [alias('FullName')]
-        $NoteBookFullName,
+        [alias('FullName','NoteBookFullName')]
+        $Path,
         [parameter(ParameterSetName='JustCode')]
         [alias('NoMarkdown')]
         [Switch]$JustCode,
@@ -42,21 +42,21 @@ fsharp.ipynb code {printfn "hello world"}
     )
 
     Process {
-
-        if ([System.Uri]::IsWellFormedUriString($NoteBookFullName, [System.UriKind]::Absolute)) {
-            $r = Invoke-RestMethod $NoteBookFullName
+      #allow Path to contain more than one item, if any are wild cards call the function recursively.
+      foreach ($p in $Path) {
+        if ([System.Uri]::IsWellFormedUriString($p, [System.UriKind]::Absolute)) {
+            $r = Invoke-RestMethod $p
         }
-        elseif (Test-Path $NoteBookFullName -ErrorAction SilentlyContinue) {
-            if ((Resolve-Path $NoteBookFullName).count -gt 1) {
-                [void]$PSBoundParameters.Remove('NotebookFullname')
-                Get-ChildItem $NoteBookFullName | Get-NotebookContent @PSBoundParameters
-                return
+        elseif (Test-Path $p -ErrorAction SilentlyContinue) {
+            if ((Resolve-Path $p).count -gt 1) {
+                [void]$PSBoundParameters.Remove('Path')
+                Get-ChildItem $p | Get-NotebookContent @PSBoundParameters
+                continue
             }
             else {
-                $r = Get-Content  $NoteBookFullName | ConvertFrom-Json
+                $r = Get-Content  $p | ConvertFrom-Json
             }
         }
-
         if($PassThru) {
             return $r
         }
@@ -66,7 +66,7 @@ fsharp.ipynb code {printfn "hello world"}
 
         $r.cells | Where-Object { $_.cell_type -match $cellType } | ForEach-Object {
             $cell = [Ordered]@{
-                NoteBookName = Split-Path -Leaf $NoteBookFullName
+                NoteBookName = Split-Path -Leaf $p
                 Type         = $_.'cell_type'
                 Source       = -join $_.source
             }
@@ -95,5 +95,6 @@ fsharp.ipynb code {printfn "hello world"}
             }
             [PSCustomObject]$cell
         }
+      }
     }
 }
