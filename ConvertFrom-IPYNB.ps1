@@ -34,9 +34,9 @@ function ConvertFrom-IPYNB {
     #>
     [cmdletbinding(DefaultParameterSetName='MD')]
     param(
-        [Parameter(Position=0,ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Position=0,ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [Alias('FullName')]
-        $Path,
+        [string]$Path,
         [Alias('Outpath')]
         $Destination ,
         [Parameter(ParameterSetName="MD")]

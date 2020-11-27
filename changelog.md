@@ -7,7 +7,7 @@
 - Added Language and presence of parameterized cells to Get-Notebook results. 
 - Created a new ConvertFrom-IPYNB which incorporates the convertFrom-NotebookToMarkdown, and export-notebookToPowerShell script functionality and adds convert to html as well.
 - In several places I've changed the name of "path to notebook" parameters to be `path` (with the old name and "fullname" as aliases) and added ValueFromPipelineByProperty name so items can be pipe items in, and also ensured path can be a list and contain wildcards.
-- Added -Recurse to Get-Notebook. 
+- Added -Recurse and support for URLs as paths to Get-Notebook. 
 
 ## JO'N Oct  1 2020
 - Export NotebookToPowerShellScript

@@ -58,25 +58,35 @@ This command will allow you to serch through a directory & all sub directories t
         'Python [Root]'   = 'Python'
         'sql'             = 'SQL'
     }
-  }
-  process {
-    $targetName = "$($NotebookName).ipynb"
-    foreach ($file in Get-ChildItem $Path $targetName -Recurse:$Recurse) {
-        $r = Get-Content $file.fullname | ConvertFrom-Json
-
-        $kernelspecName = $r.metadata.kernelspec.name
+    function ObjectFromJson {
+    param(
+        $Retrieved ,
+        $SourcePath
+    )
+        $kernelspecName = $Retrieved.metadata.kernelspec.name
         if (!$kernelspecName) { $kernelspecName = "not found" }
 
-        $counts = $r.cells | Group-Object cell_type -AsHashTable
+        $counts = $Retrieved.cells | Group-Object cell_type -AsHashTable
 
         [PSCustomObject][Ordered]@{
-            NoteBookName         = $file.Name
+            NoteBookName         = (Split-Path -Leaf $SourcePath)
             KernelName           = $kernelspecName
             CodeBlocks           = $counts.code.Count
             MarkdownBlocks       = $counts.markdown.Count
-            FullName             = $file.FullName
+            FullName             = $SourcePath
             FormatStyle          = $linguistNames[$kernelspecName]
-            HasParameterizedCell = $r.cells.metadata.tags -contains "parameters"
+            HasParameterizedCell = $Retrieved.cells.metadata.tags -contains "parameters"
+        }
+    }
+  }
+  process {
+    if ([System.Uri]::IsWellFormedUriString($p, [System.UriKind]::Absolute)) {
+            ObjectFromJson (Invoke-RestMethod $p)  $p
+    }
+    else {
+        $targetName = "$($NotebookName).ipynb"
+        foreach ($file in Get-ChildItem $Path $targetName -Recurse:$Recurse) {
+            ObjectFromJson (Get-Content $file | ConvertFrom-Json) $file.FullName
         }
     }
   }

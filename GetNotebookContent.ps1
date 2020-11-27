@@ -62,7 +62,7 @@ fsharp.ipynb code {printfn "hello world"}
         }
         elseif ($JustCode)     { $cellType = "code"     }
         elseif ($JustMarkdown) { $cellType = "markdown" }
-        else                   { $cellType = "."         }
+        else                   { $cellType = "."        }
 
         $r.cells | Where-Object { $_.cell_type -match $cellType } | ForEach-Object {
             $cell = [Ordered]@{
