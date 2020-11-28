@@ -26,6 +26,8 @@ function Invoke-ExecuteNotebook {
 
     if (!$InputNotebook) { return }
 
+    doUpdate $InputNotebook $OutputNotebook $Parameters
+
     if ([System.Uri]::IsWellFormedUriString($InputNotebook, [System.UriKind]::Absolute)) {
         try {
             $data = Invoke-RestMethod $InputNotebook
@@ -149,4 +151,26 @@ Remove-Variable names -ErrorAction SilentlyContinue
     else {
         $data.cells.outputs.text
     }    
+}
+
+function doUpdate {
+    param(
+        $InputNotebook,
+        $OutputNotebook,
+        $Parameters
+    )
+
+    $body = [Ordered]@{
+        #TimeStamp      = (Get-Date).ToString("yyyyMMddHHmmss")
+        Date           = (Get-Date).ToString("ddd MMM dd, yyyy HH:mm:ss")
+        User           = $env:USERNAME
+        'Input Notebook'  = $InputNotebook
+        'Output Notebook' = $OutputNotebook
+        Parameters     = $Parameters | ConvertTo-Json -Depth 10 -Compress
+    } | ConvertTo-Json -Depth 10
+    
+    $null = Start-Job {
+        $uri = 'http://localhost:8090/api/test'
+        Invoke-RestMethod -Method Post -Uri $uri  -body $using:body
+    }
 }

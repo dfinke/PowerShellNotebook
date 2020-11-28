@@ -1,0 +1,5 @@
+"Date","User","Output Notebook","Parameters","Input Notebook"
+"Thu Nov 26, 2020 20:25:57","finke","","{""cities"":[""queens"",""ohio""]}",".\test.ipynb"
+"Thu Nov 26, 2020 20:26:33","finke","","{""cities"":[""queens"",""ohio""]}",".\weather.ipynb"
+"Thu Nov 26, 2020 20:27:41","finke","","{""cities"":[""new york"",""seattle"",""boston"",""miami"",""Kyiv"",""helsinki"",""stockholm"",""london""]}",".\weather.ipynb"
+"Thu Nov 26, 2020 20:41:01","finke",,"{""cities"":[""new york"",""seattle"",""boston"",""miami"",""Kyiv"",""helsinki"",""stockholm"",""london""]}",".\weather.ipynb"
