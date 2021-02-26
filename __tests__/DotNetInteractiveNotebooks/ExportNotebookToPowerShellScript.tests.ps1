@@ -1,6 +1,6 @@
 Import-Module $PSScriptRoot\..\..\PowerShellNotebook.psd1 -Force
 
-Describe "Test Export-NotebookToPowerShellScript" {
+Describe "Test Export-NotebookToPowerShellScript" -Tag 'Export-NotebookToPowerShellScript' {
     It "Should create ps1 file with correct contents" {        
         $outPath = "TestDrive:\"
         

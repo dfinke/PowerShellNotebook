@@ -42,7 +42,7 @@ fsharp.ipynb code {printfn "hello world"}
             $r = Get-Content $NoteBookFullName | ConvertFrom-Json
         }
 
-        if($PassThru) {
+        if ($PassThru) {
             return $r
         }
 
@@ -51,10 +51,18 @@ fsharp.ipynb code {printfn "hello world"}
         if ($JustCode -and $JustMarkdown) { $cellType = $null }
 
         $r.cells | Where-Object { $_.cell_type -match $cellType } | ForEach-Object {
+            $IsParameterCell = $false
+            if ($_.metadata.tags) {
+                if ($null -ne ($_.metadata.tags -eq 'parameters')) {
+                    $IsParameterCell = $true
+                }
+            }
+
             [PSCustomObject][Ordered]@{
-                NoteBookName = Split-Path -Leaf $NoteBookFullName
-                Type         = $_.'cell_type'
-                Source       = -join $_.source
+                NoteBookName    = Split-Path -Leaf $NoteBookFullName
+                Type            = $_.'cell_type'
+                IsParameterCell = $IsParameterCell
+                Source          = -join $_.source
             }
         }
     }

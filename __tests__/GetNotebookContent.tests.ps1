@@ -22,18 +22,21 @@ Describe "Test PS Notebook Content" -Tag "Get-NotebookContent" {
 
         $actual[0].NoteBookName | Should -Be "testPSNb1.ipynb"
         $actual[0].Type | Should -Be "code"
+        $actual[0].IsParameterCell | Should -Be $false
         $actual[0].Source | Should -Be "8+12"
 
         $actual[1].NoteBookName | Should -Be "testPSNb1.ipynb"
         $actual[1].Type | Should -Be "code"
+        $actual[2].IsParameterCell | Should -Be $false
         $actual[1].Source | Should -Be "8+3"
 
         $actual[2].NoteBookName | Should -Be "testPSNb1.ipynb"
         $actual[2].Type | Should -Be "markdown"
+        $actual[2].IsParameterCell | Should -Be $false
 
         $actual[2].Source.IndexOf('## Math') -ge 0 | Should -Be $true
         $actual[2].Source.IndexOf('- show addition') -ge 0 | Should -Be $true
-        $actual[2].Source.IndexOf('- show other') -ge 0 | Should -Be $true
+        $actual[2].Source.IndexOf('- show other') -ge 0 | Should -Be $true        
     }
 
     It "testPSNb1.ipynb should have only this code" {
@@ -74,4 +77,21 @@ Describe "Test PS Notebook Content" -Tag "Get-NotebookContent" {
         $actual.cells[0].outputs.output_type | Should -BeExactly 'display_data'
         $actual.cells[0].outputs.data.'text/html'.Count  | Should -Be 25        
     }
+
+    It "Tests IsParameterCell property" {
+        $fileName = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\parameters.ipynb"
+        $actual = Get-NotebookContent -NoteBookFullName $fileName
+
+        $actual[0].Type | Should -BeExactly 'code'
+        $actual[0].IsParameterCell | Should -BeTrue
+
+        $actual[1].Type | Should -BeExactly 'code'
+        $actual[1].IsParameterCell | Should -BeFalse
+        
+        $actual[2].Type | Should -BeExactly 'code'
+        $actual[2].IsParameterCell | Should -BeFalse
+        
+        $actual[3].Type | Should -BeExactly 'code'
+        $actual[3].IsParameterCell | Should -BeFalse
+   }
 }
