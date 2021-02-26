@@ -27,7 +27,8 @@ fsharp.ipynb code {printfn "hello world"}
     #>
     param(
         [Parameter(ValueFromPipelineByPropertyName)]
-        $NoteBookFullName,
+        [Alias('NoteBookFullName')]
+        $FullName,
         [Switch]$JustCode,
         [Switch]$JustMarkdown,
         [Switch]$PassThru
@@ -35,11 +36,11 @@ fsharp.ipynb code {printfn "hello world"}
 
     Process {
 
-        if ([System.Uri]::IsWellFormedUriString($NoteBookFullName, [System.UriKind]::Absolute)) {
-            $r = Invoke-RestMethod $NoteBookFullName 
+        if ([System.Uri]::IsWellFormedUriString($FullName, [System.UriKind]::Absolute)) {
+            $r = Invoke-RestMethod $FullName 
         }
-        elseif (Test-Path $NoteBookFullName -ErrorAction SilentlyContinue) {
-            $r = Get-Content $NoteBookFullName | ConvertFrom-Json
+        elseif (Test-Path $FullName -ErrorAction SilentlyContinue) {
+            $r = Get-Content $FullName | ConvertFrom-Json
         }
 
         if ($PassThru) {
@@ -59,7 +60,7 @@ fsharp.ipynb code {printfn "hello world"}
             }
 
             [PSCustomObject][Ordered]@{
-                NoteBookName    = Split-Path -Leaf $NoteBookFullName
+                NoteBookName    = Split-Path -Leaf $FullName
                 Type            = $_.'cell_type'
                 IsParameterCell = $IsParameterCell
                 Source          = -join $_.source
