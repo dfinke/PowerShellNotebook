@@ -1,3 +1,9 @@
+## 2/25/2021
+
+- Added `IsParameterCell` property to `Get-NotebookContent`. Shows what cell, if any, is a parameter cell
+
+![](/media/IsParameterCell.png)
+
 ## 10/29/2020
 
 - Refactored new functions to separate files
