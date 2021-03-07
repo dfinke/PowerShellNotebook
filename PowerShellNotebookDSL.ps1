@@ -75,7 +75,9 @@ function Add-NotebookCode {
     #>
     param(
         $code,
-        $outputText = ""
+        $outputText = "",
+        [ValidateSet('PowerShell', 'SQL', 'F#', 'C#')]
+        $language
     )
 
     $pattern = "^(?i)#(\s+)?exclude(\s+)?results(?-i)"
@@ -89,7 +91,22 @@ function Add-NotebookCode {
         }
     }
 
-    $script:codeBlocks += [PSCustomObject][Ordered]@{
+    # $script:codeBlocks += [PSCustomObject][Ordered]@{
+    #     'cell_type' = 'code'
+    #     'source'    = @($code)
+    #     'metadata'  = @{
+    #         'azdata_cell_guid' = '{0}' -f (New-Guid).Guid
+    #     }
+    #     'outputs'   = @(
+    #         @{
+    #             "output_type" = "stream"
+    #             "name"        = "stdout"
+    #             "text"        = $outputText
+    #         }
+    #     )
+    # } | ConvertTo-Json -Depth 2
+
+    $targetCodeBlock += [PSCustomObject][Ordered]@{
         'cell_type' = 'code'
         'source'    = @($code)
         'metadata'  = @{
@@ -102,7 +119,17 @@ function Add-NotebookCode {
                 "text"        = $outputText
             }
         )
-    } | ConvertTo-Json -Depth 2
+    }
+
+    switch ($language) {
+        'PowerShell' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'pwsh' } }
+        'C#' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'csharp' } }
+        'F#' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'fsharp' } }
+        'SQL' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'sql' } }
+        default {}
+    }
+    
+    $script:codeBlocks += $targetCodeBlock | ConvertTo-Json -Depth 2
 }
 
 function Add-NotebookMarkdown {
