@@ -59,10 +59,22 @@ fsharp.ipynb code {printfn "hello world"}
                 }
             }
 
+            $Language = "C#"
+            if ($_.metadata.dotnet_interactive) {                
+                $Language = switch ($_.metadata.dotnet_interactive.language) {
+                    'sql' { 'SQL' }
+                    'pwsh' { 'PowerShell' }
+                    'fsharp' { 'F#' }
+                    'csharp' { 'C#' }
+                }
+            }
+            $Language += ' (.NET Interactive)'
+
             [PSCustomObject][Ordered]@{
                 NoteBookName    = Split-Path -Leaf $FullName
                 Type            = $_.'cell_type'
                 IsParameterCell = $IsParameterCell
+                Language        = $Language
                 Source          = -join $_.source
             }
         }
