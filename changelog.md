@@ -1,3 +1,11 @@
+## 3/07/2021
+
+- Added support for .NET interactive notebooks, PowerShell, C#, F#, and SQL
+
+![](/media/EnableLanguageForDSL.png)
+
+
+
 ## 2/25/2021
 
 - Added `IsParameterCell` property to `Get-NotebookContent`. Shows what cell, if any, is a parameter cell
