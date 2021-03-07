@@ -93,5 +93,19 @@ Describe "Test PS Notebook Content" -Tag "Get-NotebookContent" {
         
         $actual[3].Type | Should -BeExactly 'code'
         $actual[3].IsParameterCell | Should -BeFalse
-   }
+    }
+
+    It "Tests .NET Interactive cells" {
+        $fileName = "$PSScriptRoot\DotNetInteractiveNotebooks\AllDotNetInteractive.ipynb"
+        
+        $actual = Get-NotebookContent -NoteBookFullName $fileName
+        
+        $actual.Count | Should -Be 5
+        
+        $actual[0].Language | Should -BeExactly 'C# (.NET Interactive)'
+        $actual[1].Language | Should -BeExactly 'F# (.NET Interactive)'
+        $actual[2].Language | Should -BeExactly 'PowerShell (.NET Interactive)'
+        $actual[3].Language | Should -BeExactly 'SQL (.NET Interactive)'
+        $actual[4].Language | Should -BeExactly 'C# (.NET Interactive)'
+    }
 }
