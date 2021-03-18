@@ -1,10 +1,16 @@
+## 3/18/2021
+
+- `Invoke-ExecuteNotebook` executes a notebook, headless. Using the `-DotNetInteractive` switch, add the correct metadata so the notebook works in VS Code with the .NET Notebook extension
+
+```powershell
+Invoke-ExecuteNotebook -InputNotebook .\PSInteractive.ipynb -OutputNotebook .\PSInteractiveOut.ipynb -Parameters @{max=15} -DotNetInteractive
+```
+
 ## 3/07/2021
 
 - Added support for .NET interactive notebooks, PowerShell, C#, F#, and SQL
 
 ![](/media/EnableLanguageForDSL.png)
-
-
 
 ## 2/25/2021
 

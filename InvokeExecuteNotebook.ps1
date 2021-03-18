@@ -21,7 +21,8 @@ function Invoke-ExecuteNotebook {
         # When cells are run, it returns objects not strings
         [Switch]$ReturnAsObjects,
         [Switch]$Force,
-        [Switch]$DoNotLaunchBrowser
+        [Switch]$DoNotLaunchBrowser,
+        [Switch]$DotNetInteractive
     )
 
     if (!$InputNotebook) { return }
@@ -57,7 +58,7 @@ Remove-Variable payload -ErrorAction SilentlyContinue
 Remove-Variable names -ErrorAction SilentlyContinue
 '@ -f $cvt
 
-        $newParams = New-CodeCell $source | ConvertFrom-Json -Depth 3
+        $newParams = New-CodeCell $source -DotNetInteractive:$DotNetInteractive | ConvertFrom-Json -Depth 3
 
         $index = Get-ParameterInsertionIndex -InputNotebook $InputNotebook
         $cells.Insert($index, $newParams)
@@ -106,7 +107,7 @@ Remove-Variable names -ErrorAction SilentlyContinue
                 $OutFile = $OutputNotebook.replace("gist://", "")
                 $targetFileName = Split-Path $OutFile -Leaf
 
-                $contents = $data | ConvertTo-Json -Depth 4
+                $contents = $data | ConvertTo-Json -Depth 5
                 $result = New-GistNotebook -contents $contents -fileName $targetFileName
                 
                 Write-Progress -Activity "Creating Gist" -Status $targetFileName
@@ -119,7 +120,7 @@ Remove-Variable names -ErrorAction SilentlyContinue
                 if (Test-AzureBlobStorageUrl $outputNotebook) {
                 
                     $fullName = [System.IO.Path]::GetRandomFileName()
-                    ConvertTo-Json -InputObject $data -Depth 4 | Set-Content $fullName -Encoding utf8
+                    ConvertTo-Json -InputObject $data -Depth 5 | Set-Content $fullName -Encoding utf8
 
                     try {
                         $headers = @{'x-ms-blob-type' = 'BlockBlob' }                
@@ -142,7 +143,7 @@ Remove-Variable names -ErrorAction SilentlyContinue
                 throw "$OutputNotebook already exists"
             }
 
-            ConvertTo-Json -InputObject $data -Depth 4 |
+            ConvertTo-Json -InputObject $data -Depth 5 |
             Set-Content $OutputNotebook -Encoding utf8
         }
     }
