@@ -148,7 +148,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
 
     It "Tests reading from an invalid URL" {
         $url = 'https://gist.github.com/dfinke/7e1ed8b698bb5dc4953045e79a05d95d' 
-        {Invoke-ExecuteNotebook -InputNotebook $url} | Should -Throw 'https://gist.github.com/dfinke/7e1ed8b698bb5dc4953045e79a05d95d is not a valid Jupyter Notebook'
+        { Invoke-ExecuteNotebook -InputNotebook $url } | Should -Throw 'https://gist.github.com/dfinke/7e1ed8b698bb5dc4953045e79a05d95d is not a valid Jupyter Notebook'
     }
 
     It "Tests no such host" {
@@ -197,5 +197,57 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
 
             Test-Uri $fullName | Should -Be $test
         }
+    }
+
+    Context "Tests .NET Interactive Notebook" {
+        BeforeAll {
+            $InputNotebook = "$PSScriptRoot\DotNetInteractiveNotebooks\PSInteractive.ipynb"
+        }
+
+        It "Tests without passing parameters" {
+            
+            $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook
+            
+            $actual | Should -Not -BeNullOrEmpty
+
+            $items = $actual.trim().split("`n")
+
+            $items.Count | Should -Be 5
+            $items[0] | Should -Be 1
+            $items[1] | Should -Be 3
+            $items[2] | Should -Be 5
+            $items[3] | Should -Be 7
+            $items[4] | Should -Be 9
+        }
+
+        It "Tests passing parameters" {
+            $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook -Parameters @{max = 15 } -DotNetInteractive
+        
+            $actual | Should -Not -BeNullOrEmpty
+            
+            $items = $actual.trim().split("`n")
+
+            $items.Count | Should -Be 8
+
+            $items[0] | Should -Be 1
+            $items[1] | Should -Be 3
+            $items[2] | Should -Be 5
+            $items[3] | Should -Be 7
+            $items[4] | Should -Be 9
+            $items[5] | Should -Be 11
+            $items[6] | Should -Be 13
+            $items[7] | Should -Be 15
+        }
+
+        It "Tests passing parameters and saving to new notebook" {
+            $OutputNotebook = "TestDrive:\newParameters.ipynb"
+
+            Invoke-ExecuteNotebook -InputNotebook $InputNotebook -Parameters @{max = 15 } -DotNetInteractive -OutputNotebook $OutputNotebook -Force
+            $result = Get-Content $outputNotebook | ConvertFrom-Json
+
+            $paramCell = $result.cells[0] # get the injected params
+
+            $paramCell.metadata.dotnet_interactive.language | Should -BeExactly 'pwsh'
+        } 
     }
 }
