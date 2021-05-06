@@ -51,17 +51,19 @@ fsharp.ipynb code {printfn "hello world"}
         if ($JustMarkdown) { $cellType = "markdown" }
         if ($JustCode -and $JustMarkdown) { $cellType = $null }
 
-        $r.cells | Where-Object { $_.cell_type -match $cellType } | ForEach-Object {
+        $cellnumber = 1
+        foreach ($cell in $r.cells) {        
+            # $r.cells | ForEach-Object {
             $IsParameterCell = $false
-            if ($_.metadata.tags) {
-                if ($null -ne ($_.metadata.tags -eq 'parameters')) {
+            if ($cell.metadata.tags) {
+                if ($null -ne ($cell.metadata.tags -eq 'parameters')) {
                     $IsParameterCell = $true
                 }
             }
 
             $Language = "C#"
-            if ($_.metadata.dotnet_interactive) {                
-                $Language = switch ($_.metadata.dotnet_interactive.language) {
+            if ($cell.metadata.dotnet_interactive) {                
+                $Language = switch ($cell.metadata.dotnet_interactive.language) {
                     'sql' { 'SQL' }
                     'pwsh' { 'PowerShell' }
                     'fsharp' { 'F#' }
@@ -69,13 +71,19 @@ fsharp.ipynb code {printfn "hello world"}
                 }
             }
             $Language += ' (.NET Interactive)'
-
-            [PSCustomObject][Ordered]@{
+            
+            $cellInfo = [PSCustomObject][Ordered]@{
+                Cell            = $cellNumber
                 NoteBookName    = Split-Path -Leaf $FullName
-                Type            = $_.'cell_type'
+                Type            = $cell.'cell_type'
                 IsParameterCell = $IsParameterCell
                 Language        = $Language
-                Source          = -join $_.source
+                Source          = -join $cell.source
+            }
+            
+            $cellnumber += 1
+            if ($null -eq $cellType -or $cellType -eq $cell.'cell_type') {
+                $cellInfo
             }
         }
     }
