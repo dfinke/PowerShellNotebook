@@ -1,7 +1,10 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
-$script:expectedPSNBFilename = "$PSScriptRoot\samplemarkdown\demo.ipynb"
 
-Describe "Test Convert-MarkdownToPowerShellNoteBook" {
+Describe "Test Convert-MarkdownToPowerShellNoteBook" -Tag ConvertMarkdownToPowerShellNoteBook {
+    BeforeAll {
+        $script:expectedPSNBFilename = "$PSScriptRoot\samplemarkdown\demo.ipynb"        
+    }
+
     BeforeEach {
         Remove-Item $script:expectedPSNBFilename -ErrorAction SilentlyContinue
     }
