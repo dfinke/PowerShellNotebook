@@ -73,14 +73,15 @@ fsharp.ipynb code {printfn "hello world"}
             $Language += ' (.NET Interactive)'
             
             $cellInfo = [PSCustomObject][Ordered]@{
-                Cell            = $cellNumber++
+                Cell            = $cellNumber
                 NoteBookName    = Split-Path -Leaf $FullName
                 Type            = $cell.'cell_type'
                 IsParameterCell = $IsParameterCell
                 Language        = $Language
                 Source          = -join $cell.source
             }
-
+            
+            $cellnumber += 1
             if ($null -eq $cellType -or $cellType -eq $cell.'cell_type') {
                 $cellInfo
             }
