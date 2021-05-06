@@ -1,3 +1,16 @@
+## 5/6/2021
+
+- Added `Cell` number to ouput of `Get-NotebookContent`
+
+```
+Cell NoteBookName             Type     IsParameterCell Language                      Source
+---- ------------             ----     --------------- --------                      ------
+   1 UsedForCellNumbers.ipynb markdown           False C# (.NET Interactive)         ---…
+   2 UsedForCellNumbers.ipynb code               False PowerShell (.NET Interactive) 'hello world'
+   3 UsedForCellNumbers.ipynb markdown           False C# (.NET Interactive)         ---…
+   4 UsedForCellNumbers.ipynb code               False PowerShell (.NET Interactive) 'hello world, again'
+```
+
 ## 3/18/2021
 
 - `Invoke-ExecuteNotebook` executes a notebook, headless. Using the `-DotNetInteractive` switch, add the correct metadata so the notebook works in VS Code with the .NET Notebook extension
