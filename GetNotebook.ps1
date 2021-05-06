@@ -58,35 +58,27 @@ This command will allow you to serch through a directory & all sub directories t
         'Python [Root]'   = 'Python'
         'sql'             = 'SQL'
     }
-    function ObjectFromJson {
-    param(
-        $Retrieved ,
-        $SourcePath
-    )
-        $kernelspecName = $Retrieved.metadata.kernelspec.name
+  }
+  process {
+    $targetName = "$($NotebookName).ipynb"
+    foreach ($file in Get-ChildItem $Path $targetName -Recurse:$Recurse) {
+        $r = Get-Content $file.fullname | ConvertFrom-Json
+
+        $kernelspecName = $r.metadata.kernelspec.name
         if (!$kernelspecName) { $kernelspecName = "not found" }
 
-        $counts = $Retrieved.cells | Group-Object cell_type -AsHashTable
+        $counts = $r.cells | Group-Object cell_type -AsHashTable
 
         [PSCustomObject][Ordered]@{
-            NoteBookName         = (Split-Path -Leaf $SourcePath)
+            NoteBookName         = $file.Name
             KernelName           = $kernelspecName
             CodeBlocks           = $counts.code.Count
             MarkdownBlocks       = $counts.markdown.Count
-            FullName             = $SourcePath
+            FullName             = $file.FullName
             FormatStyle          = $linguistNames[$kernelspecName]
-            HasParameterizedCell = $Retrieved.cells.metadata.tags -contains "parameters"
-        }
-    }
-  }
-  process {
-    if ([System.Uri]::IsWellFormedUriString($p, [System.UriKind]::Absolute)) {
-            ObjectFromJson (Invoke-RestMethod $p)  $p
-    }
-    else {
-        $targetName = "$($NotebookName).ipynb"
-        foreach ($file in Get-ChildItem $Path $targetName -Recurse:$Recurse) {
-            ObjectFromJson (Get-Content $file | ConvertFrom-Json) $file.FullName
+            LanguageName         = $r.metadata.language_info.name
+            Lexer                = $r.metadata.language_info.pygments_lexer
+            HasParameterizedCell = $r.cells.metadata.tags -contains "parameters"
         }
     }
   }
