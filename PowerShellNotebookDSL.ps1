@@ -148,7 +148,10 @@ function Add-NotebookCode {
         $OutputText = "",
         [Parameter(ParameterSetName="OutputObject")]
         $DispayData,
+        [ValidateSet('PowerShell', 'SQL', 'F#', 'C#','HTML')]
+        $language,
         [switch]$NoGUID
+
     )
     <# Magic commands
         #!Pwsh - removed,
@@ -185,7 +188,7 @@ function Add-NotebookCode {
      - Add a GUID used by AzureDataStudio unless told not to
      - And return everything as JSON
     #>
-    $newBlock  = [Ordered]@{
+    $targetCodeBlock  = [Ordered]@{
         'cell_type' = 'code'
         'execution_count'= 1
         'metadata'       = @{}
@@ -193,7 +196,7 @@ function Add-NotebookCode {
         'outputs'        = @()
     }
     if     ($outputText)  {
-        $newBlock['outputs'] += @{
+        $targetCodeBlock['outputs'] += @{
             "output_type" = "stream"
             "name"        = "stdout"
             "text"        = $outputText -replace '\r\n',"`n"
@@ -201,17 +204,26 @@ function Add-NotebookCode {
         Write-Verbose $outputText
     }
     elseif ($DispayData)  {
-        $newBlock.ouputs += @{
+        $targetCodeBlock.ouputs += @{
             "output_type" = "display_data"
             'metadata'    = [PSCustomObject]@{ }
             "data"        = $DispayData
         }
     }
     if     (-not $NoGUID) {
-        $newblock.metadata['azdata_cell_guid'] = (New-Guid).Guid
+        $targetCodeBlock.metadata['azdata_cell_guid'] = (New-Guid).Guid
     }
 
-    $script:codeBlocks += $newBlock | ConvertTo-Json -Depth 10
+    switch ($language) {
+        'PowerShell' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'pwsh'   } }
+        'C#'         { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'csharp' } }
+        'F#'         { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'fsharp' } }
+        'SQL'        { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'sql'    } }
+        'HTML'       { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'html'   } }
+
+        default {}
+    }
+    $script:codeBlocks += $targetCodeBlock | ConvertTo-Json -Depth 10
 }
 
 function Add-NotebookMarkdown {

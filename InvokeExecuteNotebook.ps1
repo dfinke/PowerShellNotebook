@@ -21,7 +21,8 @@ function Invoke-ExecuteNotebook {
         # When cells are run, it returns objects not strings
         [Switch]$ReturnAsObjects,
         [Switch]$Force,
-        [Switch]$DoNotLaunchBrowser
+        [Switch]$DoNotLaunchBrowser,
+        [Switch]$DotNetInteractive
     )
 
     if (!$InputNotebook) { return }
@@ -57,7 +58,7 @@ Remove-Variable payload -ErrorAction SilentlyContinue
 Remove-Variable names -ErrorAction SilentlyContinue
 '@ -f $cvt
 
-        $newParams = New-CodeCell $source | ConvertFrom-Json -Depth 3
+        $newParams = New-CodeCell $source -DotNetInteractive:$DotNetInteractive | ConvertFrom-Json -Depth 3
 
         $index = Get-ParameterInsertionIndex -InputNotebook $InputNotebook
         $cells.Insert($index, $newParams)

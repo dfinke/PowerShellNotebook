@@ -142,4 +142,54 @@ Describe "Test Invoke PS Notebook" -Tag 'InvokePSNotebook' {
 
         $actual.msg | Should -BeExactly "Hello World"
     }
+ 
+    It "Tests code cell with null language specified" {
+        $actualJson = New-PSNotebook -AsText {
+            Add-NotebookCode '1..2'            
+        } | ConvertFrom-Json
+
+        $actualJson.cells.Count | Should -Be 1
+        $actualJson.cells[0].metadata.'dotnet_interactive' | Should -BeNullOrEmpty
+        $actualJson.cells[0].metadata.'dotnet_interactive'.language | Should -BeNullOrEmpty
+    }
+
+    It "Tests code cell with PowerShell language specified" {
+        $actualJson = New-PSNotebook -AsText {
+            Add-NotebookCode '1..2' -language PowerShell
+        } | ConvertFrom-Json
+
+        $actualJson.cells.Count | Should -Be 1
+        $actualJson.cells[0].metadata.'dotnet_interactive' | Should -Not -BeNullOrEmpty
+        $actualJson.cells[0].metadata.'dotnet_interactive'.language | Should -BeExactly 'pwsh'
+    }
+
+    It "Tests code cell with C# language specified" {
+        $actualJson = New-PSNotebook -AsText {
+            Add-NotebookCode '1..2' -language C#
+        } | ConvertFrom-Json
+
+        $actualJson.cells.Count | Should -Be 1
+        $actualJson.cells[0].metadata.'dotnet_interactive' | Should -Not -BeNullOrEmpty
+        $actualJson.cells[0].metadata.'dotnet_interactive'.language | Should -BeExactly 'csharp'
+    }
+
+    It "Tests code cell with F# language specified" {
+        $actualJson = New-PSNotebook -AsText {
+            Add-NotebookCode '1..2' -language F#
+        } | ConvertFrom-Json
+
+        $actualJson.cells.Count | Should -Be 1
+        $actualJson.cells[0].metadata.'dotnet_interactive' | Should -Not -BeNullOrEmpty
+        $actualJson.cells[0].metadata.'dotnet_interactive'.language | Should -BeExactly 'fsharp'
+    }
+
+    It "Tests code cell with SQL language specified" {
+        $actualJson = New-PSNotebook -AsText {
+            Add-NotebookCode '1..2' -language SQL
+        } | ConvertFrom-Json
+
+        $actualJson.cells.Count | Should -Be 1
+        $actualJson.cells[0].metadata.'dotnet_interactive' | Should -Not -BeNullOrEmpty
+        $actualJson.cells[0].metadata.'dotnet_interactive'.language | Should -BeExactly 'sql'
+    }    
 }

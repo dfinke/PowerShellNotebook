@@ -59,7 +59,7 @@ West   melon 76
             
             $PSNotebookRunspace.Close()
             
-            $notebookJson | ConvertTo-Json -Depth 4 | Set-Content $OutFile -Encoding UTF8            
+            $notebookJson | ConvertTo-Json -Depth 5 | Set-Content $OutFile -Encoding UTF8            
         }
         else {
 

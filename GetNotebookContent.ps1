@@ -57,20 +57,41 @@ fsharp.ipynb code {printfn "hello world"}
                 $r = Get-Content  $p | ConvertFrom-Json
             }
         }
-        if($PassThru) {
-            return $r
-        }
+        if     ($PassThru)     { return $r}
         elseif ($JustCode)     { $cellType = 'code'     }
         elseif ($JustMarkdown) { $cellType = 'markdown' }
         else                   { $cellType = '.'        }
 
         $r.cells | Where-Object { $_.cell_type -match $cellType } | ForEach-Object {
-            $cell = [Ordered]@{
-                NoteBookName = Split-Path -Leaf $p
-                Type         = $_.'cell_type'
-                Source       = -join $_.source
+            $IsParameterCell = $false
+            if ($_.metadata.tags) {
+                if ($null -ne ($_.metadata.tags -eq 'parameters')) {
+                    $IsParameterCell = $true
+                }
             }
-            if ($_.metadata.dotnet_interactive.language) {$cell['Language'] = $_.metadata.dotnet_interactive.language}
+
+            if ($_.metadata.dotnet_interactive) {
+                $Language = switch ($_.metadata.dotnet_interactive.language) {
+                    'sql'    { 'SQL' }
+                    'pwsh'   { 'PowerShell' }
+                    'fsharp' { 'F#' }
+                    'csharp' { 'C#' }
+                    'html'   { 'html'}
+                    Default  { 'C#' }
+                }
+                $Language += ' (.NET Interactive)'
+            }
+            else {
+                $Language = $r.metadata.kernelspec.language
+            }
+            $cell = [Ordered]@{
+                NoteBookName    = Split-Path -Leaf $p
+                Type            = $_.'cell_type'
+                Language        = $Language
+                IsParameterCell = $IsParameterCell
+                Source          = -join $_.source
+            }
+
             if ($IncludeOutput) {
                 # There may be one or many outputs. For each output
                 # either a single string if has a .text field containing a string or array of strings

@@ -1,13 +1,34 @@
-conv## JO'N Nov 20 2020
+## DF 3/18/2021
+
+- `Invoke-ExecuteNotebook` executes a notebook, headless. Using the `-DotNetInteractive` switch, add the correct metadata so the notebook works in VS Code with the .NET Notebook extension
+
+```powershell
+Invoke-ExecuteNotebook -InputNotebook .\PSInteractive.ipynb -OutputNotebook .\PSInteractiveOut.ipynb -Parameters @{max=15} -DotNetInteractive
+```
+
+## DF 3/07/2021
+
+- Added support for .NET interactive notebooks, PowerShell, C#, F#, and SQL
+
+![](/media/EnableLanguageForDSL.png)
+
+## DF 2/25/2021
+
+- Added `IsParameterCell` property to `Get-NotebookContent`. Shows what cell, if any, is a parameter cell
+
+![](/media/IsParameterCell.png)
+
+
+## JO'N Nov 20 2020
 - Fixed a bug in ConvertTo-PowerShellNotebook (missing -raw)
 - Fixed a bug in ConvertToPowerShellNotebookTests (test-pat with no H)
 - Fixed a couple of other test issues, including skipping SQL tests if SQL server module is not present.
 - Revamped New-GistNotebook - Accepts piped input. Takes -Public switch. Looks up Personal Access Token if Git is setup locally and has saved the PAT for Github in Windows Cred Manager.
 - Added Set-NotebookToPS to convert a notebook from format used by the .Net Interactive add for VS code (C# notebook with #!Pwsh magic commands to turn cells into PowerShell ones. )
-- Added Language and presence of parameterized cells to Get-Notebook results. 
+- Added Language and presence of parameterized cells to Get-Notebook results.
 - Created a new ConvertFrom-IPYNB which incorporates the convertFrom-NotebookToMarkdown, and export-notebookToPowerShell script functionality and adds convert to html as well.
 - In several places I've changed the name of "path to notebook" parameters to be `path` (with the old name and "fullname" as aliases) and added ValueFromPipelineByProperty name so items can be pipe items in, and also ensured path can be a list and contain wildcards.
-- Added -Recurse to Get-Notebook. 
+- Added -Recurse to Get-Notebook.
 
 ## JO'N Oct  1 2020
 - Export NotebookToPowerShellScript
@@ -41,6 +62,7 @@ conv## JO'N Nov 20 2020
      - if `Runspace` is passed, add members needed to allow `.Invoke()` to work as it does for a created runspace.
      - Moved the template for the Azure-data-studio/Windows-PowerShell notebook to the top of the file, and created a template for a .net interactive notebook. Selection is made by presence of the `-DotNetInteractive` switch.
      - Made `asText` redundant - no output name = "as text" , and add `.ipynb` to file name if it is not present.
+
 ## 10/29/2020
 
 - Refactored new functions to separate files
@@ -82,11 +104,11 @@ Invoke-ExecuteNotebook -InputNotebook .\basic.ipynb -Parameters $params
 - Added features to `ConvertTo-PowerShellNotebook`
     - Pipe files to the function
     - Handles URLs with PowerShell files as endpoints
-    - Handles any mix of Files and URLs for conversion    
+    - Handles any mix of Files and URLs for conversion
 
 ## 10/15/2020
 
-- Added `-PassThru` to `Get-NotebookContent` to get back all cell types beyond markdown and 
+- Added `-PassThru` to `Get-NotebookContent` to get back all cell types beyond markdown and
     - This enables extracting output types like display_data for things like JavaScript which can be saved to an `.html` file and then displayed in browser
 
 - Added `Get-NotebookDisplayData`. Gets only cells with `display_data` for `output_type`. Helper function using the above function `Get-NotebookContent`.
