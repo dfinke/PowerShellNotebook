@@ -5,7 +5,11 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 ## Continuous Integration Status
 </br>
 
-![.github/workflows/ci.yml](https://github.com/dfinke/PowerShellNotebook/workflows/.github/workflows/ci.yml/badge.svg)
+|Actions||
+|---|---|
+|[![.github/workflows/ci.yml](https://github.com/dfinke/PowerShellNotebook/workflows/.github/workflows/ci.yml/badge.svg)](https://github.com/dfinke/PowerShellNotebook/actions)|
+
+</br>
 
 |Environment||
 |---|---|

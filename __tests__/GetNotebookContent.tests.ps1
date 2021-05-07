@@ -108,4 +108,34 @@ Describe "Test PS Notebook Content" -Tag "Get-NotebookContent" {
         $actual[3].Language | Should -BeExactly 'SQL (.NET Interactive)'
         $actual[4].Language | Should -BeExactly 'C# (.NET Interactive)'
     }
+
+    It "Test all cell numbers" {
+        $actual = Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\UsedForCellNumbers.ipynb"
+
+        $actual.Count | Should -Be 4
+        
+        $actual[0].Cell | Should -Be 1
+        $actual[1].Cell | Should -Be 2
+        $actual[2].Cell | Should -Be 3
+        $actual[3].Cell | Should -Be 4
+    }
+
+    It "Test markdown cell numbers" {
+        $actual = Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\UsedForCellNumbers.ipynb" -JustMarkdown
+
+        $actual.Count | Should -Be 2
+        
+        $actual[0].Cell | Should -Be 1
+        $actual[1].Cell | Should -Be 3
+    }
+
+    It "Test code cell numbers" {
+        $actual = Get-NotebookContent -NoteBookFullName "$PSScriptRoot\GoodNotebooks\UsedForCellNumbers.ipynb" -JustCode
+
+        $actual.Count | Should -Be 2
+        
+        $actual[0].Cell | Should -Be 2
+        $actual[1].Cell | Should -Be 4
+    }
+
 }
