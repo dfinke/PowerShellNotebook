@@ -416,7 +416,7 @@ function New-PSNotebook {
     }
     else {
         if($NoteBookName -notmatch "\.ipynb$") {$NoteBookName  = $NoteBookName  + ".ipynb"}
-        $result | Set-Content -Encoding UTF8 -Path $NoteBookName
+        $result | Set-Content -Encoding utf8NoBOM -Path $NoteBookName
         if ($PassThru) {Get-Item $NoteBookName}
     }
 }
