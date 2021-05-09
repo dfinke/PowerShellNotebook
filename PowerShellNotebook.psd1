@@ -4,7 +4,7 @@
     RootModule        = 'PowerShellNotebook.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '2.8.0'
+    ModuleVersion     = '2.9.0'
 
     # ID used to uniquely identify this module
     GUID              = '2ab0cb25-b339-4726-8a2a-349ca1114bd4'
