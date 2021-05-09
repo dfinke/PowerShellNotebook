@@ -13,56 +13,66 @@ function Export-NotebookToPowerShellScript {
         .Example
         Export-NotebookToPowerShellScript "https://raw.githubusercontent.com/dfinke/PowerShellNotebook/AddJupyterNotebookMetaInfo/samplenotebook/powershell.ipynb"
         Get-Content .\powershell.ps1
-        
+
         .Example
-        Export-NotebookToPowerShellScript .\TestPS.ipynb -IncludeTextCells $true
+        Export-NotebookToPowerShellScript .\TestPS.ipynb -IncludeTextCells
         Get-Content .\TestPS.ps1
 
         Include exporting the the Text cells from the .IPYNB file to the .PS1 file.
         #>
     [CmdletBinding()]
     param(
+        [parameter(ValueFromPipeline=$true,ValueFromPipelineByPropertyName=$true,Position=0)]
         $FullName,
-        $outPath = "./",
-        $IncludeTextCells=$false
+        [Alias("OutPath")]
+        $Destination      = $PWD,
+        [switch]$IncludeTextCells,
+        [switch]$AsText
     )
-    Write-Progress -Activity "Exporting PowerShell Notebook" -Status $FullName
-    
-    if ([System.Uri]::IsWellFormedUriString($FullName, [System.UriKind]::Absolute)) {
-        $outFile = $FullName.split('/')[-1]
-    }
-    else {
-        $outFile = (Split-Path -Leaf $FullName)
-    }
-    
-    $outFile = $outFile -replace ".ipynb", ".ps1"
-    $fullOutFileName = $outPath + $outFile
+    Process {
+        Write-Progress -Activity "Exporting PowerShell Notebook" -Status $FullName
 
-    $heading = @"
+        if (Test-Path $Destination -PathType Container) {
+            #split-path works for well from URIs as well as filesystem paths
+            $outFile = (Split-Path -Leaf $FullName) -replace ".ipynb", ".ps1"
+            $Destination = Join-Path -Path $Destination -ChildPath $outFile
+        }
+
+        #ensure date is formated for local culture.
+        $result = , (@'
 <#
-    Created from: $($FullName)
+    Created from: {1}
 
-    Created by: Export-NotebookToPowerShellScript
-    Created on: $(Get-Date)    
+    Created by:   Export-NotebookToPowerShellScript
+    Created on:   {0:D} {0:t}
 #>
 
-"@ 
+'@      -f (Get-Date), $FullName)
 
-    $heading | Set-Content $fullOutFileName    
-    if($IncludeTextCells -eq $false)
-        {$sourceBlocks = Get-NotebookContent $FullName -JustCode}
-    else{$sourceBlocks = Get-NotebookContent $FullName}
+        if ($IncludeTextCells) {$sourceBlocks = Get-NotebookContent $FullName}
+        else                   {$sourceBlocks = Get-NotebookContent $FullName -JustCode}
 
-    $result = foreach ($sourceBlock in $sourceBlocks) {
-        
-        switch ($sourceBlock.Type) {
-            'code'     {($sourceBlock.Source)}
-            'markdown' {"<# "+($sourceBlock.Source)+" #>"}
+        #if the last cell is empty don't output it
+        if ($sourceBlocks.count -gt 1 -and  [string]::IsNullOrEmpty($sourceBlocks[-1].source)) {
+            $sourceBlocks = $sourceBlocks[0..($sourceBlocks.count -2)]
         }
-        ""
+
+        $prevCode = $false
+        $result += switch ($sourceBlocks) {
+            {$_.type -eq 'code'} {
+                    if ($prevCode) {"<# #>"}  #Avoid concatenating Code cells.
+                    ($_.Source.trimend() )
+                    $prevCode = $true
+            }
+            default {
+                    "<#`r`n"+ $_.Source.TrimEnd() +"`r`n#>"
+                    $prevCode = $false
+            }
+        }
+        if ($AsText) {return $result}
+        else {
+            $result| Set-Content $Destination
+            Get-item $Destination
+        }
     }
-
-    $result | Add-Content  $fullOutFileName
-
-    Write-Verbose "$($outFile) created"
 }

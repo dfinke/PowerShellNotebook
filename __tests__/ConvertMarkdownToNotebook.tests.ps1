@@ -94,15 +94,10 @@ Describe "Test Convert-MarkdownToPowerShellNoteBook" -Tag ConvertMarkdownToPower
         $codeBlocks = $psnb.cells | Where-Object { $_.cell_type -eq 'code' }
         $codeBlocks.count | Should -Be 3
 
-        $codeBlocks[0].outputs.text.length | Should -Be 0
-        $codeBlocks[1].outputs.text.length | Should -Be 0
+        $codeBlocks[0].outputs.text | Should -BenullorEmpty 0
+        $codeBlocks[1].outputs.text | Should -BenullorEmpty 0
 
-        if ($PSVersionTable.Platform -eq 'Unix') {
-            $codeBlocks[2].outputs.text.length | Should -Be 2
-        }
-        else {
-            $codeBlocks[2].outputs.text.length | Should -Be 3
-        }
+        $codeBlocks[2].outputs.text | Should -match  "4[\r\n]+"
 
         Remove-Item $expectedOutFileName -Force -ErrorAction SilentlyContinue
     }

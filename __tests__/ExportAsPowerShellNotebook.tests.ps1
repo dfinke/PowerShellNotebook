@@ -2,8 +2,8 @@ Import-Module $PSScriptRoot\..\PowerShellNotebook.psd1 -Force
 
 Describe "Test Export-AsPowerShellNotebook" -Tag Export-AsPowerShellNotebook {
     It "Test throw if OutputNotebook not specified" {
-        $s = "get-process *micro* | select -first 5" 
-        
+        $s = "get-process *micro* | select -first 5"
+
         { $s | Export-AsPowerShellNotebook -OutputNotebook $outputNotebook } |  Should -Throw '$OutputNotebook not specified'
     }
 
@@ -19,10 +19,10 @@ Describe "Test Export-AsPowerShellNotebook" -Tag Export-AsPowerShellNotebook {
 
         Test-Path $outputNotebook | Should -BeTrue
 
-        $actual = Get-NotebookContent -NoteBookFullName $outputNotebook 
-        
+        $actual = Get-NotebookContent -Path $outputNotebook
+
         $actual.Count | Should -Be 4
-        
+
         $actual[0].Type | Should -BeExactly 'markdown'
         $actual[0].Source | Should -BeExactly '# get-process'
 
@@ -44,10 +44,10 @@ Describe "Test Export-AsPowerShellNotebook" -Tag Export-AsPowerShellNotebook {
 
         Test-Path $outputNotebook | Should -BeFalse
 
-        # $actual = Get-NotebookContent -NoteBookFullName $outputNotebook 
-        
+        # $actual = Get-NotebookContent -Path $outputNotebook
+
         # $actual.Count | Should -Be 4
-        
+
         # $actual[0].Type | Should -BeExactly 'markdown'
         # $actual[0].Source | Should -BeExactly '# get-process'
 

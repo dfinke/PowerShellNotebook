@@ -43,7 +43,7 @@ Describe "Test Invoke PS Notebook" -Tag 'InvokePSNotebook' {
     }
 
     It "Save file" {
-        $fullName = "TestDrive:\test.ipnyb"
+        $fullName = "TestDrive:\test.ipynb"
 
         New-PSNotebook -NoteBookName $fullName {
             Add-NotebookCode "8+12"

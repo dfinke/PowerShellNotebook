@@ -1,21 +1,23 @@
 function Get-Notebook {
-    <#
+  <#
         .SYNOPSIS
-        Get-Notebook reads the metadata of a single (or folder of) Jupyter Notebooks
+        Get-Notebook reads the metadata of  Jupyter Notebooks
 
         .Example
         Get-Notebook .\samplenotebook\Chapter01code.ipynb
 
-NoteBookName     : Chapter01code.ipynb
-KernelName       : powershell
-CodeBlocks       : 83
-MarkdownBlocks   : 23
-NoteBookFullName : C:\Users\Douglas\Documents\GitHub\MyPrivateGit\PowerShellNotebook\samplenotebook\Chapter01code.ipynb
+NoteBookName         : Chapter01code.ipynb
+KernelName           : powershell
+CodeBlocks           : 83
+MarkdownBlocks       : 23
+FullName             : C:\Users\Douglas\Documents\GitHub\MyPrivateGit\PowerShellNotebook\samplenotebook\Chapter01code.ipynb
+FormatStyle          : PowerShell
+HasParameterizedCell : False
 
         .Example
         Get-Notebook .\samplenotebook\| Format-Table
 
-NoteBookName          KernelName      CodeBlocks MarkdownBlocks NoteBookFullName
+NoteBookName          KernelName      CodeBlocks MarkdownBlocks FullName
 ------------          ----------      ---------- -------------- ----------------
 Chapter01code.ipynb   powershell              83             23 C:\Users\Douglas\Documents\GitHub\MyPrivateGit\Power...
 csharp.ipynb          .net-csharp              1              0 C:\Users\Douglas\Documents\GitHub\MyPrivateGit\Power...
@@ -25,9 +27,7 @@ python.ipynb          python3                  1              0 C:\Users\Douglas
 SingleCodeBlock.ipynb powershell               1              0 C:\Users\Douglas\Documents\GitHub\MyPrivateGit\Power
 
         .Example
-        dir -Filter *.ipynb -Recurse | foreach {
-Get-Notebook -Path $_.FullName } | 
-group KernelName
+        Get-Notebook -recurse | group KernelName
 
 Count Name                      Group
 ----- ----                      -----
@@ -39,17 +39,29 @@ Count Name                      Group
     3 pyspark3kernel            {@{NoteBookName=load-sample-data-into-bdc.ipynb; KernelName=pyspark3kernel; C...
 
 This command will allow you to serch through a directory & all sub directories to find Jupyter Notebooks & group them by Kernel used in each of those Notebook.
-    #>
-    param(
-        $Path,
-        $NoteBookName
-    )
-
-    if (!$Path) { $Path = "." }
-    if (!$NoteBookName) { $NoteBookName = '*' }
-
+  #>
+  param(
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Alias('Fullname')]
+        $Path = $pwd,
+        $NoteBookName = '*',
+        [switch]$Recurse
+  )
+  begin {
+    $linguistNames = @{  #used by github to the render code in markup ```SQL will render as sql etc
+        '.net-csharp'     = 'C#'
+        '.net-fsharp'     = 'F#'
+        '.net-powershell' = 'PowerShell'
+        'not found'       = ''
+        'powershell'      = 'PowerShell'
+        'python3'         = 'Python'
+        'Python [Root]'   = 'Python'
+        'sql'             = 'SQL'
+    }
+  }
+  process {
     $targetName = "$($NotebookName).ipynb"
-    foreach ($file in Get-ChildItem $Path $targetName) {
+    foreach ($file in Get-ChildItem $Path $targetName -Recurse:$Recurse) {
         $r = Get-Content $file.fullname | ConvertFrom-Json
 
         $kernelspecName = $r.metadata.kernelspec.name
@@ -58,11 +70,16 @@ This command will allow you to serch through a directory & all sub directories t
         $counts = $r.cells | Group-Object cell_type -AsHashTable
 
         [PSCustomObject][Ordered]@{
-            NoteBookName     = $file.Name
-            KernelName       = $kernelspecName
-            CodeBlocks       = $counts.code.Count
-            MarkdownBlocks   = $counts.markdown.Count
-            NoteBookFullName = $file.FullName
+            NoteBookName         = $file.Name
+            KernelName           = $kernelspecName
+            CodeBlocks           = $counts.code.Count
+            MarkdownBlocks       = $counts.markdown.Count
+            FullName             = $file.FullName
+            FormatStyle          = $linguistNames[$kernelspecName]
+            LanguageName         = $r.metadata.language_info.name
+            Lexer                = $r.metadata.language_info.pygments_lexer
+            HasParameterizedCell = $r.cells.metadata.tags -contains "parameters"
         }
     }
+  }
 }

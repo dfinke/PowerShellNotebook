@@ -10,9 +10,8 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" -Tag ConvertFromNoteBookToMarkdow
 
         $actual[0].trim() | Should -Beexactly '# Test for converting a PS Notebook to Markdown'
         $actual[2].trim() | Should -Beexactly '## End of PS Notebook'
-
-        ($actual[1]).StartsWith('```powershell') | Should -Be $true
-        ($actual[1]).Trim().EndsWith('```') | Should -Be $true
+        $actual[1].trim() | Should -match '^```PowerShell'
+        $actual[1].Trim( )| Should -match '```$'
     }
 
     It "Should convert to markdown in a file" {
@@ -22,7 +21,7 @@ Describe "Test ConvertFrom-NoteBookToMarkdown" -Tag ConvertFromNoteBookToMarkdow
 
         $actual = ConvertFrom-NoteBookToMarkdown -NotebookName $targetFile
 
-        $actual | Should -Beexactly $expected
+        $actual | Should -Match "$expected`$"
 
         Remove-Item $expected -ErrorAction SilentlyContinue
     }

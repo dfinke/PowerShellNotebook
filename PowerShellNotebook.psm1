@@ -1,4 +1,5 @@
 ﻿. $PSScriptRoot\ConvertFromNotebookToMarkdown.ps1
+. $PSScriptRoot\ConvertFrom-IPYNB.ps1
 . $PSScriptRoot\ConvertMarkdownToNoteBook.ps1
 . $PSScriptRoot\ConvertToPowerShellNoteBook.ps1
 . $PSScriptRoot\ConvertToSQLNoteBook.ps1
@@ -15,6 +16,7 @@
 . $PSScriptRoot\NewCodeCell.ps1
 . $PSScriptRoot\NewGistNotebook.ps1
 . $PSScriptRoot\PowerShellNotebookDSL.ps1
+. $PSScriptRoot\SetNotebookToPs.ps1
 . $PSScriptRoot\TestAzureBlobStorageUrl.ps1
 . $PSScriptRoot\TestHasParameterizedCell.ps1
 . $PSScriptRoot\TestUri.ps1

@@ -4,7 +4,7 @@ function Get-NotebookDisplayData {
     #>
     param($NoteBookFullName)
 
-    $result = Get-NotebookContent -NoteBookFullName $NoteBookFullName -PassThru
+    $result = Get-NotebookContent -Path $NoteBookFullName -PassThru
 
     foreach ($cell in $result.cells) {
         if ($cell.outputs.'output_type' -eq 'display_data') {
@@ -16,4 +16,3 @@ function Get-NotebookDisplayData {
     }
 }
 
-    

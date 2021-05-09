@@ -15,29 +15,27 @@ function ConvertTo-PowerShellNoteBook {
         .Example
         $(
             'https://raw.githubusercontent.com/dfinke/PowerShellNotebook/master/__tests__/DemoFiles/demo_SingleCommentSingleLineCodeBlock.ps1'
-             dir *.ps1 
+             dir *.ps1
         ) | ConvertTo-PowerShellNoteBook
     #>
     param(
-        [parameter(ValueFromPipelineByPropertyName, ValueFromPipeline)]        
+        [parameter(ValueFromPipelineByPropertyName, ValueFromPipeline)]
         [Alias('FullName', 'Path')]
         $InputFileName,
         $OutputNotebookName
-    )    
-    
+    )
+
     Process {
-        <#
-            Parsing section.
-        #>
+        #region Parsing section.
 
         Write-Progress -Activity "Converting PowerShell file to Notebook" -Status "Converting $($InputFileName)"
 
-        if ([System.Uri]::IsWellFormedUriString($InputFileName, [System.UriKind]::Absolute)) {    
+        if ([System.Uri]::IsWellFormedUriString($InputFileName, [System.UriKind]::Absolute)) {
             $s = Invoke-RestMethod -Uri $InputFileName
         }
         else {
             $InputFileName = Resolve-Path $InputFileName
-            $s = Get-Content -Raw $InputFileName            
+            $s = Get-Content -Raw $InputFileName
         }
 
         # if no $OutputNotebookName, grab the filename and replace the ps1
@@ -50,12 +48,12 @@ function ConvertTo-PowerShellNoteBook {
         try {
             # $CommentRanges = [System.Management.Automation.PSParser]::Tokenize((Get-Content -Raw $InputFileName), [ref]$null).Where( { $_.Type -eq 'Comment' }) |
             $CommentRanges = [System.Management.Automation.PSParser]::Tokenize($s, [ref]$null).Where( { $_.Type -eq 'Comment' }) |
-            Select-Object -Property Start, Length, Type, Content 
+            Select-Object -Property Start, Length, Type, Content
         }
         Catch {
-            "This is not a valid PowerShell file" 
-        }    
-    
+            "This is not a valid PowerShell file"
+        }
+
         $BlocksWitGaps = @()
         $Previous = $null
         foreach ($CommentBlock in $CommentRanges ) {
@@ -70,12 +68,12 @@ function ConvertTo-PowerShellNoteBook {
                 GapText            = IF ($CommentBlock.Start - $Previous.StopOffset -gt 1) { [string] $s.Substring($Previous.StopOffset, ($CommentBlock.Start - $Previous.StopOffset)).trimstart() }else { [string] '' };
                 Content            = $CommentBlock.Content
             }
-    
+
             $Previous = $BlockOffsets
             $BlocksWitGaps += [pscustomobject] $BlockOffsets
         }
-    
-    
+
+
         $AllBlocks = @()
         $Previous = $null
         $AllBlocks = $CommentRanges
@@ -99,7 +97,7 @@ function ConvertTo-PowerShellNoteBook {
                 }
             }
         }
-    
+
         foreach ($GapBlock in $BlocksWitGaps ) {
             $GapOffsets = [ordered]@{
                 Start      = $GapBlock.PreviousStopOffset;
@@ -108,41 +106,36 @@ function ConvertTo-PowerShellNoteBook {
                 Type       = 'Gap';
                 Content    = $GapBlock.GapText.trimstart()
             }
-    
+
             $Previous = $GapOffsets
             $AllBlocks += if ($GapOffsets.Length -gt 0) { [pscustomobject] $GapOffsets }
         }
-    
-        <#
-            Notebook creation section.
-        #>    
-
+        #endregion
+        #region Notebook creation section.
         New-PSNotebook -NoteBookName $OutputNotebookName {
-    
+
             foreach ($Block in $AllBlocks | Sort-Object Start ) {
-    
-            
+
                 switch ($Block.Type) {
                     'Comment' {
                         $TextBlock = $s.Substring($Block.Start, $Block.Length) -replace ("\n", "   `n  ")
-    
+
                         if ($TextBlock.Trim().length -gt 0) {
                             Add-NotebookMarkdown -markdown (-join $TextBlock)
                         }
                     }
                     'Gap' {
                         $GapBlock = $s.Substring($Block.Start, $Block.Length)
-    
+
                         if ($GapBlock.Trim().length -gt 0) {
-                            Add-NotebookCode -code (-join $GapBlock.trimstart().trimend()) -replace ("\n", "   `n  ")
+                            Add-NotebookCode -code (-join $GapBlock.trimstart().trimend()) # -replace ("\n", "   `n  ")
                         }
                     }
                 }
-    
             }
         }
-
         # Set $OutputNotebookName to $null otherwise if the $InputFileName is being piped to, it won't get reset
         $OutputNotebookName = $null
+        #endregion
     }
 }

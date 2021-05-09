@@ -1,5 +1,5 @@
 Import-Module $PSScriptRoot\..\PowerShellNotebook.psm1 -Force
-
+if (-not (Get-Module -ListAvailable -Name sqlserver)) { return }
 Describe "Test Get-ParsedSqlOffsets" {
     It "Should make sure demo.sql is in the \DemoFiles folder" {
         $demoTextFile = "$PSScriptRoot\DemoFiles\demo.sql"
@@ -12,7 +12,7 @@ Describe "Test Get-ParsedSqlOffsets" {
 
             $demoTextFile = "$PSScriptRoot\DemoFiles\demo_w3GOs.sql"
             { Test-Path $demoTextFile } | Should -Be $true
-            
+
             $demoTextFile = "$PSScriptRoot\DemoFiles\AdventureWorksMultiStatementSBatch_NoGO2.sql"
             { Test-Path $demoTextFile } | Should -Be $true
         }
