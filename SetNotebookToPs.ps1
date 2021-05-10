@@ -1,4 +1,8 @@
 Function Set-NotebookToPS {
+    <#
+        .Synopsis
+        Re-write metadata from a VSCode add-in - C# with PWSH magic commands to server Jupyter style
+    #>
     param (
         [Parameter(ValueFromPipeline = $true)]
         $Path,
