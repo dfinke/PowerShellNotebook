@@ -107,14 +107,11 @@ Remove-Variable names -ErrorAction SilentlyContinue
                 $OutFile = $OutputNotebook.replace("gist://", "")
                 $targetFileName = Split-Path $OutFile -Leaf
 
-                $contents = $data | ConvertTo-Json -Depth 5
-                $result = New-GistNotebook -contents $contents -fileName $targetFileName
-                
                 Write-Progress -Activity "Creating Gist" -Status $targetFileName
-
-                if (!$DoNotLaunchBrowser -and $result) {
-                    Start-Process $result.html_url
-                }            
+                $contents = $data | ConvertTo-Json -Depth 5
+                
+                $Show = !$DoNotLaunchBrowser
+                $result = New-GistNotebook -contents $contents -fileName $targetFileName -Show:$Show
             }
             elseif ($OutputNotebook.startswith("abs://")) {
                 if (Test-AzureBlobStorageUrl $outputNotebook) {
