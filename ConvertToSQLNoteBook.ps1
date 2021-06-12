@@ -47,7 +47,7 @@ foreach($Batch in $ParsedSql.Batches) {
     $id++
 }
 
-$ScriptFrags = (Get-ParsedSql -ScriptPath $ScriptPath).ScriptTokenStream.where({$_.TokenType -eq 'MultilineComment'})
+$ScriptFrags = (Get-ParsedSql -ScriptPath $ScriptPath).ScriptTokenStream.where({$_.TokenType -in 'MultilineComment', 'SilglelineComment'})
 #If there are no comments to extract, we will skip the next section of code.
 if($ScriptFrags){
     $Comments = @()
