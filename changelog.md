@@ -1,9 +1,16 @@
+## DF 6/12/2021
+
+- Added
+    - `New-InteractiveNotebook` - Create a new interactive notebook as a `dib` or `ipynb`, launching vscode
+    - `Open-InteractiveNotebook` - Open a local notebook or from remote source
+
+
 ## JO'N May 2021
-Merged DF's code with my additions from late 2020 - see below ...
-Added Horizontal rules either side of output in `ConvertFrom-ipynb`
-Added `-AddLanguageLabels` to `ConvertFrom-ipynb` for polyglot notebooks in .net interactive
-Added improved html rendering for PowerShell and HTML code cells in `ConvertFrom-ipynb`
-Changed encoding in `New-PSNotebook` to UTFNoBOM, Byte order mark breaks in VS Code. Must check this is OK elsewhere
+- Merged DF's code with my additions from late 2020 - see below ...
+- Added Horizontal rules either side of output in `ConvertFrom-ipynb`
+- Added `-AddLanguageLabels` to `ConvertFrom-ipynb` for polyglot notebooks in .net interactive
+- Added improved html rendering for PowerShell and HTML code cells in `ConvertFrom-ipynb`
+- Changed encoding in `New-PSNotebook` to UTFNoBOM, Byte order mark breaks in VS Code. Must check this is OK elsewhere
 
 ## DF 5/6/2021
 
