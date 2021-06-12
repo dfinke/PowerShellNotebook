@@ -4,7 +4,7 @@
     RootModule        = 'PowerShellNotebook.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '2.9.1'
+    ModuleVersion     = '2.9.2'
 
     # ID used to uniquely identify this module
     GUID              = '2ab0cb25-b339-4726-8a2a-349ca1114bd4'
@@ -89,6 +89,8 @@ For detailed instructions and examples, click through the "Project Site" link or
         'New-SQLNotebook',
         'Set-NotebookToPS',
         'Test-HasParameterizedCell',
+        'New-InteractiveNotebook',
+        'Open-InteractiveNotebook',
         'Test-Uri'
     )
 
