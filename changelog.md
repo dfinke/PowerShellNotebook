@@ -4,8 +4,9 @@
     - `New-InteractiveNotebook` - Create a new interactive notebook as a `dib` or `ipynb`, launching vscode
     - `Open-InteractiveNotebook` - Open a local notebook or from remote source
 
-
+## Check out the 'How To Use' short video
 [![PowerShellNotebook](http://img.youtube.com/vi/DAI77tPY-p0/2.jpg)](http://www.youtube.com/watch?v=DAI77tPY-p0 "PowerShellNotebook")
+
 ## JO'N May 2021
 - Merged DF's code with my additions from late 2020 - see below ...
 - Added Horizontal rules either side of output in `ConvertFrom-ipynb`
