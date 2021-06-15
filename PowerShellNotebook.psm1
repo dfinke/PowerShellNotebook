@@ -11,6 +11,7 @@
 . $PSScriptRoot\GetNotebookContent.ps1
 . $PSScriptRoot\GetNotebookDisplayData.ps1
 . $PSScriptRoot\GetParameterInsertionIndex.ps1
+. $PSScriptRoot\Invoke-NotebookFormatter.ps1
 . $PSScriptRoot\InvokeExecuteNotebook.ps1
 . $PSScriptRoot\InvokePowerShellNotebook.ps1
 . $PSScriptRoot\New-InteractiveNotebook.ps1
