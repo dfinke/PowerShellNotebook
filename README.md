@@ -107,7 +107,7 @@ Convert-MarkdownToNoteBook .\multiplePSLines.md
 
 ### Exclude Results
 
-Sometimes you don't the results to be included in the converted PowerShell Notebook.
+Sometimes you don't want the results to be included in the converted PowerShell Notebook.
 
 You can suppress evaluating the PowerShell code being run and the results being included by have the following comment as the first line in the fence block.
 
