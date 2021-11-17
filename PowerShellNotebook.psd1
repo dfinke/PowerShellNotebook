@@ -80,6 +80,7 @@ For detailed instructions and examples, click through the "Project Site" link or
         'Get-ParsedSql',
         'Get-ParsedSqlOffsets',
         'Invoke-ExecuteNotebook',
+        'Invoke-NotebookFormatter',
         'Invoke-PowerShellNotebook',
         'loadScriptDomModules',
         'New-CodeCell',
