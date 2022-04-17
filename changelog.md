@@ -1,3 +1,8 @@
+## DF 2.9.3
+
+- Add `-DotNetInteractive` in `ConvertTo-PowerShellNoteBook`
+- Add `vscode` `languageId` `dotnet-interactive.pwsh` to `New-PSNotebook`
+
 ## DF 6/12/2021
 
 - Added
