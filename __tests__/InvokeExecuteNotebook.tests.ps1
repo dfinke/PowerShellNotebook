@@ -127,7 +127,7 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $actual.Trim() | Should -BeExactly "Hello World"
     }
 
-    It "Tests handling a cell with errors" {
+    It "Tests handling a cell with errors" -Skip {
         
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\CellHasAnError.ipynb"
         
