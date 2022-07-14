@@ -2,6 +2,7 @@
 . $PSScriptRoot\ConvertFrom-DIB.ps1
 . $PSScriptRoot\ConvertFromNotebookToMarkdown.ps1
 . $PSScriptRoot\ConvertMarkdownToNoteBook.ps1
+. $PSScriptRoot\ConvertToDib.ps1
 . $PSScriptRoot\ConvertToPowerShellNoteBook.ps1
 . $PSScriptRoot\ConvertToSQLNoteBook.ps1
 . $PSScriptRoot\ExportAsPowerShellNotebook.ps1
@@ -13,8 +14,8 @@
 . $PSScriptRoot\GetNotebookContent.ps1
 . $PSScriptRoot\GetNotebookDisplayData.ps1
 . $PSScriptRoot\GetParameterInsertionIndex.ps1
-. $PSScriptRoot\InvokeExecuteNotebook.ps1
 . $PSScriptRoot\InvokePowerShellNotebook.ps1
+. $PSScriptRoot\InvokeExecuteNotebook.ps1
 . $PSScriptRoot\New-InteractiveNotebook.ps1
 . $PSScriptRoot\NewCodeCell.ps1
 . $PSScriptRoot\NewGistNotebook.ps1

@@ -69,6 +69,7 @@ For detailed instructions and examples, click through the "Project Site" link or
         'ConvertFrom-IPYNB',
         'ConvertFrom-NotebookToMarkdown',
         'ConvertFrom-NotebookToHTML',
+        'ConvertTo-Dib',
         'ConvertTo-PowerShellNoteBook',
         'ConvertTo-SQLNoteBook',
         'Export-NotebookToPowerShellScript',
