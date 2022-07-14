@@ -23,9 +23,9 @@ $Script:DotNetPSTemplate = @"
 {{
     "metadata": {{
         "kernelspec": {{
-            "name":         ".net-powershell",
             "display_name": ".NET (PowerShell)",
-            "language":     "PowerShell"
+            "language":     "PowerShell",
+            "name":         ".net-powershell"
         }},
         "language_info": {{
             "name":           "PowerShell",
@@ -150,8 +150,7 @@ function Add-NotebookCode {
         $DispayData,
         [ValidateSet('PowerShell', 'SQL', 'F#', 'C#', 'HTML')]
         $language,
-        [switch]$NoGUID
-
+        [switch]$NoGUID        
     )
     <# Magic commands
         #!Pwsh - removed,
@@ -212,6 +211,21 @@ function Add-NotebookCode {
     }
     if (-not $NoGUID) {
         $targetCodeBlock.metadata['azdata_cell_guid'] = (New-Guid).Guid
+    }
+
+    if ($DotNetInteractive) {
+        <#
+        "metadata": {
+            "dotnet_interactive": {
+            "language": "pwsh"
+            },
+            "vscode": {
+            "languageId": "dotnet-interactive.pwsh"
+            }
+        },
+        #>        
+        $targetCodeBlock.metadata['dotnet_interactive'] = [PSCustomObject]@{"language" = "pwsh" }
+        $targetCodeBlock.metadata['vscode'] =  [PSCustomObject]@{"languageId" = "dotnet-interactive.pwsh" }
     }
 
     switch ($language) {

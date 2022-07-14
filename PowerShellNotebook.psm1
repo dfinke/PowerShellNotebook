@@ -1,4 +1,5 @@
 ﻿. $PSScriptRoot\ConvertFrom-IPYNB.ps1
+. $PSScriptRoot\ConvertFrom-DIB.ps1
 . $PSScriptRoot\ConvertFromNotebookToMarkdown.ps1
 . $PSScriptRoot\ConvertMarkdownToNoteBook.ps1
 . $PSScriptRoot\ConvertToDib.ps1
@@ -8,6 +9,7 @@
 . $PSScriptRoot\ExportNotebookToPowerShellScript.ps1
 . $PSScriptRoot\ExportNotebookToSqlScript.ps1
 . $PSScriptRoot\FindParameterizedCell.ps1
+. $PSScriptRoot\Get-DIBBlock.ps1
 . $PSScriptRoot\GetNotebook.ps1
 . $PSScriptRoot\GetNotebookContent.ps1
 . $PSScriptRoot\GetNotebookDisplayData.ps1

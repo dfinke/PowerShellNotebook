@@ -4,7 +4,7 @@
     RootModule        = 'PowerShellNotebook.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '2.9.3'
+    ModuleVersion     = '2.9.4'
 
     # ID used to uniquely identify this module
     GUID              = '2ab0cb25-b339-4726-8a2a-349ca1114bd4'
@@ -65,6 +65,7 @@ For detailed instructions and examples, click through the "Project Site" link or
         'Add-NotebookCode',
         'Add-NotebookMarkdown',
         'Convert-MarkdownToNoteBook',
+        'ConvertFrom-DIB',
         'ConvertFrom-IPYNB',
         'ConvertFrom-NotebookToMarkdown',
         'ConvertFrom-NotebookToHTML',
@@ -75,6 +76,7 @@ For detailed instructions and examples, click through the "Project Site" link or
         'Export-NotebookToSqlScript',
         'Export-AsPowerShellNotebook',
         'Find-ParameterizedCell',
+        'Get-DIBBlock',
         'Get-Notebook',
         'Get-NotebookContent',
         'Get-ParameterInsertionIndex',

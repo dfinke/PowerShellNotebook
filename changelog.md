@@ -1,5 +1,7 @@
-## v 2.9.4
+## 2.9.4
 
+- Added `Get-DIBBlock` and `ConvertFrom-DIB' converts a dib to an ipynb
+- Updated `Add-NotebookCode` to check `$DotNetInteractive` and gen the correct metadata
 - Added `ConvertTo-Dib`. Converts an `ipynb` file to a `dib` file.
 
 ## DF 2.9.3
