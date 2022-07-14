@@ -1,4 +1,8 @@
-## DF 2.9.3
+## 2.9.4
+
+- Added `Get-DIBBlock` and `ConvertFrom-DIB' converts a dib to an ipynb
+- Updated `Add-NotebookCode` to check `$DotNetInteractive` and gen the correct metadata
+## 2.9.3
 
 - Add `-DotNetInteractive` in `ConvertTo-PowerShellNoteBook`
 - Add `vscode` `languageId` `dotnet-interactive.pwsh` to `New-PSNotebook`
