@@ -132,8 +132,8 @@ Describe "Test Invoke Execute Notebook" -Tag 'Invoke-ExecuteNotebook' {
         $InputNotebook = "$PSScriptRoot\NotebooksForUseWithInvokeOutfile\CellHasAnError.ipynb"
         
         $actual = Invoke-ExecuteNotebook -InputNotebook $InputNotebook
-
-        $expected = "[91mRuntimeException: [91mAttempted to divide by zero.[0m"        
+        
+        $expected = "RuntimeException: Attempted to divide by zero."
              
         $actual.Trim() | Should -BeExactly $expected
     }
