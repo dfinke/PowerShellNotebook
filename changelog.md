@@ -1,6 +1,11 @@
-## v 2.9.3
+## v 2.9.4
 
 - Added `ConvertTo-Dib`. Converts an `ipynb` file to a `dib` file.
+
+## DF 2.9.3
+
+- Add `-DotNetInteractive` in `ConvertTo-PowerShellNoteBook`
+- Add `vscode` `languageId` `dotnet-interactive.pwsh` to `New-PSNotebook`
 
 ## DF 6/12/2021
 

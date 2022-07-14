@@ -112,7 +112,7 @@ function ConvertTo-PowerShellNoteBook {
         }
         #endregion
         #region Notebook creation section.
-        New-PSNotebook -NoteBookName $OutputNotebookName {
+        New-PSNotebook -NoteBookName $OutputNotebookName -DotNetInteractive {
 
             foreach ($Block in $AllBlocks | Sort-Object Start ) {
 

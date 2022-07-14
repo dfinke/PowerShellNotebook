@@ -139,16 +139,16 @@ function Add-NotebookCode {
         }]
 
     #>
-    [cmdletbinding(DefaultParameterSetName="Default")]
+    [cmdletbinding(DefaultParameterSetName = "Default")]
     [Alias("CodeCell")]
     param(
-        [Parameter(Mandatory=$true,Position=0)]
+        [Parameter(Mandatory = $true, Position = 0)]
         $Code,
-        [Parameter(ParameterSetName="Default",Position=1)]
+        [Parameter(ParameterSetName = "Default", Position = 1)]
         $OutputText = "",
-        [Parameter(ParameterSetName="OutputObject")]
+        [Parameter(ParameterSetName = "OutputObject")]
         $DispayData,
-        [ValidateSet('PowerShell', 'SQL', 'F#', 'C#','HTML')]
+        [ValidateSet('PowerShell', 'SQL', 'F#', 'C#', 'HTML')]
         $language,
         [switch]$NoGUID
 
@@ -160,25 +160,25 @@ function Add-NotebookCode {
         #!Time - if there will be output, start a stopwatch, run the code, add the time to the output.
     #>
     $pattern = "^(?i)#!?\s*exclude\s*results"
-    $code    =  $code -replace "(?i)^#!pwsh\s*"
-    if     (    $code -match   $pattern) {
-                $code = $code -replace $pattern, ""
+    $code = $code -replace "(?i)^#!pwsh\s*"
+    if (    $code -match $pattern) {
+        $code = $code -replace $pattern, ""
     }
-    elseif (    $code -match   "^(?i)#!about" -and $script:IncludeCodeResults ) {
-         $OutputText = -join $Script:PSNotebookRunspace.invoke('"PowerShell $($psversiontable.psversion) on $([System.environment]::MachineName), $([System.Environment]::OSVersion.VersionString)"')
+    elseif (    $code -match "^(?i)#!about" -and $script:IncludeCodeResults ) {
+        $OutputText = -join $Script:PSNotebookRunspace.invoke('"PowerShell $($psversiontable.psversion) on $([System.environment]::MachineName), $([System.Environment]::OSVersion.VersionString)"')
     }
-    elseif (    (-not $DispayData)            -and $script:IncludeCodeResults ) {
-            if ($code -match "^(?i)#!time") {
-                $sw = [System.Diagnostics.Stopwatch]::new()
-                $sw.Start()
-            }
+    elseif (    (-not $DispayData) -and $script:IncludeCodeResults ) {
+        if ($code -match "^(?i)#!time") {
+            $sw = [System.Diagnostics.Stopwatch]::new()
+            $sw.Start()
+        }
 
-            $outputText = -join $Script:PSNotebookRunspace.Invoke($code)
+        $outputText = -join $Script:PSNotebookRunspace.Invoke($code)
 
-            if ($code -match "^(?i)#!time") {
-                $sw.Stop()
-                $OutputText += "`nWall time {0:n0}ms" -f  $sw.Elapsed.TotalMilliseconds
-            }
+        if ($code -match "^(?i)#!time") {
+            $sw.Stop()
+            $OutputText += "`nWall time {0:n0}ms" -f $sw.Elapsed.TotalMilliseconds
+        }
     }
 
     <#Build the cell
@@ -188,38 +188,41 @@ function Add-NotebookCode {
      - Add a GUID used by AzureDataStudio unless told not to
      - And return everything as JSON
     #>
-    $targetCodeBlock  = [Ordered]@{
-        'cell_type' = 'code'
-        'execution_count'= 1
-        'metadata'       = @{}
-        'source'         = @($code)
-        'outputs'        = @()
+    $targetCodeBlock = [Ordered]@{
+        'cell_type'       = 'code'
+        'execution_count' = 1
+        'metadata'        = @{}
+        'source'          = @($code)
+        'outputs'         = @()
     }
-    if     ($outputText)  {
+    if ($outputText) {
         $targetCodeBlock['outputs'] += @{
             "output_type" = "stream"
             "name"        = "stdout"
-            "text"        = $outputText -replace '\r\n',"`n"
+            "text"        = $outputText -replace '\r\n', "`n"
         }
         Write-Verbose $outputText
     }
-    elseif ($DispayData)  {
+    elseif ($DispayData) {
         $targetCodeBlock.ouputs += @{
             "output_type" = "display_data"
             'metadata'    = [PSCustomObject]@{ }
             "data"        = $DispayData
         }
     }
-    if     (-not $NoGUID) {
+    if (-not $NoGUID) {
         $targetCodeBlock.metadata['azdata_cell_guid'] = (New-Guid).Guid
     }
 
     switch ($language) {
-        'PowerShell' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'pwsh'   } }
-        'C#'         { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'csharp' } }
-        'F#'         { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'fsharp' } }
-        'SQL'        { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'sql'    } }
-        'HTML'       { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'html'   } }
+        'PowerShell' { 
+            $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'pwsh' } 
+            $targetCodeBlock.metadata.'vscode' = @{languageId = 'dotnet-interactive.pwsh' } 
+        }
+        'C#' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'csharp' } }
+        'F#' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'fsharp' } }
+        'SQL' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'sql' } }
+        'HTML' { $targetCodeBlock.metadata.'dotnet_interactive' = @{language = 'html' } }
 
         default {}
     }
@@ -379,13 +382,13 @@ function New-PSNotebook {
     $script:codeBlocks = @()
     if ($IncludeCodeResults -or $RunSpace) {
         $Script:IncludeCodeResults = $true
-        if (-not $RunSpace) {$Script:PSNotebookRunspace = New-PSNotebookRunspace}
+        if (-not $RunSpace) { $Script:PSNotebookRunspace = New-PSNotebookRunspace }
         else {
             if ($RunSpace.psobject.Members.name -notcontains "invoke") {
                 Add-Member -InputObject $RunSpace -name PowerShell -MemberType NoteProperty -Value ([powershell]::Create())
                 $RunSpace.PowerShell.Runspace = $RunSpace
                 Add-Member -InputObject $RunSpace -name invoke -MemberType ScriptMethod -Value {
-                   param ($code)
+                    param ($code)
                     $null = $this.PowerShell.AddScript([scriptblock]::Create($code))
                     $null = $this.PowerShell.AddCommand("Out-String")
                     return  $this.PowerShell.Invoke()
@@ -398,12 +401,12 @@ function New-PSNotebook {
     &$sb
 
     if ($DotNetInteractive) {
-          $result = $Script:DotNetPSTemplate -f ($script:codeBlocks -join ',')
+        $result = $Script:DotNetPSTemplate -f ($script:codeBlocks -join ',')
     }
     elseif ($SQL) {
-          $result = $Script:SQLPSTemplate    -f ($script:codeBlocks -join ',')
+        $result = $Script:SQLPSTemplate -f ($script:codeBlocks -join ',')
     }
-    else {$result = $Script:WinPSTtemplate   -f ($script:codeBlocks -join ',')}
+    else { $result = $Script:WinPSTtemplate -f ($script:codeBlocks -join ',') }
 
     $Script:IncludeCodeResults = $false
     if ($Script:PSNotebookRunspace -and -not $RunSpace) {
@@ -415,9 +418,9 @@ function New-PSNotebook {
         return $result
     }
     else {
-        if($NoteBookName -notmatch "\.ipynb$") {$NoteBookName  = $NoteBookName  + ".ipynb"}
+        if ($NoteBookName -notmatch "\.ipynb$") { $NoteBookName = $NoteBookName + ".ipynb" }
         $result | Set-Content -Encoding utf8NoBOM -Path $NoteBookName
-        if ($PassThru) {Get-Item $NoteBookName}
+        if ($PassThru) { Get-Item $NoteBookName }
     }
 }
 
