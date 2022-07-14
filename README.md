@@ -5,20 +5,11 @@ This module includes the function `Invoke-PowerShellNotebook` which enables you 
 ## Continuous Integration Status
 </br>
 
-|Actions||
+|GitHub Actions||
 |---|---|
 |[![.github/workflows/ci.yml](https://github.com/dfinke/PowerShellNotebook/workflows/.github/workflows/ci.yml/badge.svg)](https://github.com/dfinke/PowerShellNotebook/actions)|
 
 </br>
-
-|Environment||
-|---|---|
-| Windows | [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master&jobName=Windows)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
-| Windows (Core)  | [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master&jobName=WindowsPSCore)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
-| Ubuntu | [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master&jobName=Ubuntu)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
-| macOS | [![Build Status](https://dougfinke.visualstudio.com/PowerShellNotebook/_apis/build/status/dfinke.PowerShellNotebook?branchName=master&jobName=macOS)](https://dougfinke.visualstudio.com/PowerShellNotebook/_build/latest?definitionId=22&branchName=master)
-
-</br></br>
 
 # Parameterizing a PowerShell Notebook
 
