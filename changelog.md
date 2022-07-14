@@ -1,3 +1,7 @@
+## v 2.9.4
+
+- Added `ConvertTo-Dib`. Converts an `ipynb` file to a `dib` file.
+
 ## DF 2.9.3
 
 - Add `-DotNetInteractive` in `ConvertTo-PowerShellNoteBook`
@@ -10,7 +14,7 @@
     - `Open-InteractiveNotebook` - Open a local notebook or from remote source
 
 ## Check out the 'How To Use' short video
-[![PowerShellNotebook](http://img.youtube.com/vi/DAI77tPY-p0/2.jpg)](http://www.youtube.com/watch?v=DAI77tPY-p0 "PowerShellNotebook")
+[![PowerShellNotebook](http://img.youtube.com/vi/DAI77tPY-p0/1.jpg)](http://www.youtube.com/watch?v=DAI77tPY-p0 "PowerShellNotebook")
 
 ## JO'N May 2021
 - Merged DF's code with my additions from late 2020 - see below ...
