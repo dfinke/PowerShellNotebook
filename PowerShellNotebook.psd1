@@ -4,7 +4,7 @@
     RootModule        = 'PowerShellNotebook.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '2.9.4'
+    ModuleVersion     = '3.0.0'
 
     # ID used to uniquely identify this module
     GUID              = '2ab0cb25-b339-4726-8a2a-349ca1114bd4'
@@ -25,7 +25,7 @@ For detailed instructions and examples, click through the "Project Site" link or
 '@
 
     # Minimum version of the Windows PowerShell engine required by this module
-    # PowerShellVersion = ''
+    PowerShellVersion = '6.2'
 
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
